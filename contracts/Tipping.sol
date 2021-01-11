@@ -4,14 +4,15 @@ pragma solidity ^0.7.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./IStakingRewards.sol";
 
 contract Tipping {
     using SafeMath for uint256;
 
     address constant vault = 0x0305c2119bBDC01F3F50c10f63e68920D3d61915;                        // Dev fund address
-    address public pool = address(0);                                                           // Staking pool address
-
+    address constant pool = address(0);                                                           // Staking pool address
     IERC20 constant LIBERTAS = IERC20(0x49184E6dAe8C8ecD89d8Bdc1B950c597b8167c90);              // Libertas Contract
+    IStakingRewards constant STAKING_POOL = IStakingRewards(pool);
 
     function transfer(address _from, address _to, uint256 _amount) public returns (bool success) {
         uint256 availableAmount = LIBERTAS.balanceOf(_from);
@@ -24,6 +25,7 @@ contract Tipping {
             sendAmount = _calculatePartialAmount(_amount, 45, 1);                               // Send 4.5% to vault and pool
             _transfer(_from, vault, sendAmount);
             _transfer(_from, pool, sendAmount);
+            STAKING_POOL.updatePool(sendAmount);
             return true;
         }
         return false;
