@@ -3,16 +3,13 @@
 pragma solidity ^0.7.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "./ILibertasToken.sol";
 
-contract StakingRewards {
+contract StakingPool {
     using SafeMath for uint256;
-    using SafeERC20 for IERC20;
     
-    IERC20 constant LIBERTAS = IERC20(0x49184E6dAe8C8ecD89d8Bdc1B950c597b8167c90);              // Libertas Contract
+    address public LIBERTAS;
     mapping(address => UserInfo) public userInfo;
-    
     uint256 accLibertasPerShare;
     uint256 totalDeposits;
 
@@ -21,9 +18,10 @@ contract StakingRewards {
         uint256 rewardDebt;
     }
 
-    constructor() {
+    constructor(address _libertas) {
         totalDeposits = 0;
         accLibertasPerShare = 0;
+        LIBERTAS = _libertas;
     }
 
     function deposit(uint256 _amount) public {
@@ -35,7 +33,7 @@ contract StakingRewards {
             }
         }
         if (_amount > 0) {
-            LIBERTAS.transferFrom(msg.sender, address(this), _amount);
+            ILibertasToken(LIBERTAS).transferFrom(msg.sender, address(this), _amount);
             user.amount = user.amount.add(_amount);
             totalDeposits = totalDeposits.add(_amount);
         }
@@ -53,7 +51,7 @@ contract StakingRewards {
         if (_amount > 0) {
             user.amount = user.amount.sub(_amount);
             totalDeposits = totalDeposits.sub(_amount);
-            LIBERTAS.transfer(msg.sender, _amount);            
+            ILibertasToken(LIBERTAS).transfer(msg.sender, _amount);            
         }
         user.rewardDebt = user.amount.mul(accLibertasPerShare).div(1e12);
         emit Withdraw(msg.sender, _amount);
@@ -88,11 +86,11 @@ contract StakingRewards {
     }
 
     function safeLIBERTASTransfer(address _to, uint256 _amount) internal {
-        uint256 totalBalance = LIBERTAS.balanceOf(address(this));
+        uint256 totalBalance = ILibertasToken(LIBERTAS).balanceOf(address(this));
         if (totalBalance < _amount) {
-            LIBERTAS.transfer(_to, totalBalance);
+            ILibertasToken(LIBERTAS).transfer(_to, totalBalance);
         } else {
-            LIBERTAS.transfer(_to, _amount);
+            ILibertasToken(LIBERTAS).transfer(_to, _amount);
         }
     }
 

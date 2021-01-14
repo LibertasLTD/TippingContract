@@ -1,0 +1,267 @@
+{
+  "contractName": "IStakingRewards",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "updatePool",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.7.0+commit.9e61f92b\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"updatePool\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Volumes/Data/Work/Blockchain/defi/Libertas/TippingContract/contracts/IStakingRewards.sol\":\"IStakingRewards\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Volumes/Data/Work/Blockchain/defi/Libertas/TippingContract/contracts/IStakingRewards.sol\":{\"keccak256\":\"0xcb6ec7bb8205f98b11e900ce3830a19ce75210c00ac35dd19de9ab018942381e\",\"license\":\"Undefined\",\"urls\":[\"bzz-raw://61dd4a7b112f1f815006d6586b6b7b831617e8183014da46227dfca7b72e38b6\",\"dweb:/ipfs/QmTTvaLxorwYYZzhy6hortEcsZayVDc78ZYcSRqTx6gKEu\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: Undefined\n\npragma solidity ^0.7.0;\n\ninterface IStakingRewards {\n    function updatePool(uint256) external;\n}",
+  "sourcePath": "/Volumes/Data/Work/Blockchain/defi/Libertas/TippingContract/contracts/IStakingRewards.sol",
+  "ast": {
+    "absolutePath": "/Volumes/Data/Work/Blockchain/defi/Libertas/TippingContract/contracts/IStakingRewards.sol",
+    "exportedSymbols": {
+      "IStakingRewards": [
+        55
+      ]
+    },
+    "id": 56,
+    "license": "Undefined",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 49,
+        "literals": [
+          "solidity",
+          "^",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:23:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 55,
+        "linearizedBaseContracts": [
+          55
+        ],
+        "name": "IStakingRewards",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "51eb05a6",
+            "id": 54,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "updatePool",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 52,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 51,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 54,
+                  "src": "116:7:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 50,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "116:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "115:9:1"
+            },
+            "returnParameters": {
+              "id": 53,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "133:0:1"
+            },
+            "scope": 55,
+            "src": "96:38:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 56,
+        "src": "64:72:1"
+      }
+    ],
+    "src": "39:97:1"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Volumes/Data/Work/Blockchain/defi/Libertas/TippingContract/contracts/IStakingRewards.sol",
+      "exportedSymbols": {
+        "IStakingRewards": [
+          55
+        ]
+      },
+      "license": "Undefined"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.7",
+            ".0"
+          ]
+        },
+        "id": 49,
+        "name": "PragmaDirective",
+        "src": "39:23:1"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            55
+          ],
+          "name": "IStakingRewards",
+          "scope": 56
+        },
+        "children": [
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "functionSelector": "51eb05a6",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "updatePool",
+              "overrides": null,
+              "scope": 55,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "",
+                      "overrides": null,
+                      "scope": 54,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 50,
+                        "name": "ElementaryTypeName",
+                        "src": "116:7:1"
+                      }
+                    ],
+                    "id": 51,
+                    "name": "VariableDeclaration",
+                    "src": "116:7:1"
+                  }
+                ],
+                "id": 52,
+                "name": "ParameterList",
+                "src": "115:9:1"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 53,
+                "name": "ParameterList",
+                "src": "133:0:1"
+              }
+            ],
+            "id": 54,
+            "name": "FunctionDefinition",
+            "src": "96:38:1"
+          }
+        ],
+        "id": 55,
+        "name": "ContractDefinition",
+        "src": "64:72:1"
+      }
+    ],
+    "id": 56,
+    "name": "SourceUnit",
+    "src": "39:97:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.7.0+commit.9e61f92b.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.3",
+  "updatedAt": "2021-01-14T15:32:12.547Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

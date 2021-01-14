@@ -2,7 +2,7 @@
 
 pragma solidity ^0.7.0;
 
-interface ILibertas {
+interface ILibertasToken {
     function transfer(address _to, uint256 _value) external returns (bool success);
     function transferFrom(address _from, address _to, uint256 _value) external returns (bool success);
     function balanceOf(address _owner) external returns (uint256 balance);

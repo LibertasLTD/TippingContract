@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/TheLibertasProject/TippingContract#readme",
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
     "openzeppelin-solidity": "3.3.0"
   }
 }
