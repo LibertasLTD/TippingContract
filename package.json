@@ -21,9 +21,11 @@
   },
   "homepage": "https://github.com/TheLibertasProject/TippingContract#readme",
   "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^3.0.0",
+    "dotenv": "^8.2.0",
     "openzeppelin-solidity": "3.3.0"
   }
 }
