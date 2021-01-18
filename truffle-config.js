@@ -12,18 +12,16 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `https://kovan.infura.io/${process.env.INFURA_API_KEY}`
+          `wss://kovan.infura.io/ws/v3/${process.env.INFURA_API_KEY}`
         )
       },
-      gas: 5000000,
-      gasPrice: 25000000000,
       network_id: 42
     },
     mainnet: {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `https://mainnet.infura.io/${process.env.INFURA_API_KEY}`
+          `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_API_KEY}`
         )
       },
       gas: 5000000,
