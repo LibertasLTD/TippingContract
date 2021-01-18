@@ -1,8 +1,3 @@
-/**
- *Submitted for verification at Etherscan.io on 2020-07-10
-*/
-
-/* Libertas Token */
 pragma solidity ^0.7.0;
 
 contract Token {
