@@ -1,12 +1,12 @@
 # README
 
-#INSTALL
+#INSTALL\
 Install truffle (npm install -g truffle)
 Install truffle-plugin-verify (npm -D truffle-plugin-verify)
 
-#CHECK
+#CHECK\
 Check truffle is working (truffle -v)
 
-#EXECTUTION
+#EXECTUTION\
 Command: Truffle compile (Compiles all of the contracts)
 Command: Truffle Test (Runs the tests)
