@@ -1,125 +1,98 @@
 pragma solidity ^0.7.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./interfaces/IUniswapV2Factory.sol";
-import "./interfaces/IUniswapV2Router02.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IStakingPool.sol";
 import "./ILibertasToken.sol";
 
-contract Tipping {
+contract Tipping is Ownable {
     using SafeMath for uint256;
 
-    address POOL;               // Staking pool address
-    address LIBERTAS;           // Libertas Contract
-    address USDT;               // Tether Contract
-    address WETH;               // WETH Contract
-    address constant VAULT = 0x0305c2119bBDC01F3F50c10f63e68920D3d61915;            // Dev fund address
-    IUniswapV2Factory constant UNI_V2_FACTORY = IUniswapV2Factory(address(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f));
-    IUniswapV2Router02 constant UNI_V2_ROUTER02 = IUniswapV2Router02(address(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
+    address public _STAKING_VAULT;
+    address public _LIBERTAS;
+    address public _FUND_VAULT;
 
-    mapping (address => uint256) public deposits;
+    uint256 public _burnRate;
+    uint256 public _fundRate;
+    uint256 public _rewardRate;
 
     constructor(
-        address _pool,
-        address _libertas,
-        address _usdt,
-        address _weth
+        address STAKING_VAULT,
+        address LIBERTAS,
+        uint256 burnRate,
+        uint256 fundRate,
+        uint256 rewardRate
     ) {
-        POOL = _pool;
-        LIBERTAS = _libertas;
-        USDT = _usdt;
-        WETH = _weth;
+        _STAKING_VAULT = STAKING_VAULT;
+        _LIBERTAS = LIBERTAS;
+        _burnRate = burnRate;
+        _fundRate = fundRate;
+        _rewardRate = rewardRate;
     }
 
-    function transfer(address _to, uint256 _amount) public returns (bool success) {
-        uint256 availableAmount = IERC20(LIBERTAS).balanceOf(msg.sender);
-        require(availableAmount >= _amount, "Insufficient amount");
-        
-        uint256 sendAmount = 0;
-        sendAmount = _calculatePartialAmount(_amount, 90, 0);                               // Send 90% to destination
-        _transfer(msg.sender, _to, sendAmount);
-        sendAmount = _calculatePartialAmount(_amount, 1, 0);                                // Burn 1%
-        _burn(msg.sender, sendAmount);
-        sendAmount = _calculatePartialAmount(_amount, 45, 1);                               // Send 4.5% to vault and pool
-        _transfer(msg.sender, VAULT, sendAmount);
-        _transfer(msg.sender, POOL, sendAmount);
-        IStakingPool(POOL).updatePool(sendAmount);
+    function setStakingVaultAddress(address STAKING_VAULT) public onlyOwner {
+        _STAKING_VAULT = STAKING_VAULT;
+    }
+
+    function setLibertasAddress(address LIBERTAS) public onlyOwner {
+        _LIBERTAS = LIBERTAS;
+    }
+
+    function setFundVaultAddress(address FUND_VAULT) public onlyOwner {
+        _FUND_VAULT = FUND_VAULT;
+    }
+
+    function setBurnRate(uint256 burnRate) public onlyOwner returns (bool) {
+        require(burnRate>0 && burnRate<=1000, "Out of range");
+        _burnRate = burnRate;
         return true;
     }
 
-    function transferUSDT(address _to, uint256 _amount) public returns (bool success) {
-        uint256 availableAmount = IERC20(USDT).balanceOf(msg.sender);
-        require(availableAmount >= _amount, "Insufficient amount");
-        
-        uint256 wethAmount = tokenToEth(_amount, USDT, 0, 2**256-1);
-        uint256 libertasAmount = ethToToken(wethAmount, LIBERTAS, 0, 2**256-1);
-        transfer(_to, libertasAmount);
+    function setFundRate(uint256 fundRate) public onlyOwner returns (bool) {
+        require(fundRate>0 && fundRate<=1000, "Out of range");
+        _fundRate = fundRate;
         return true;
     }
 
-    function transferETH(address _to, uint256 _amount) public returns (bool success) {
-        require(deposits[msg.sender] > _amount, "No eth deposit");
-        
-        deposits[msg.sender] = deposits[msg.sender].sub(_amount);
-        uint256 libertasAmount = ethToToken(_amount, LIBERTAS, 0, 2**256-1);
-        transfer(_to, libertasAmount);
+    function setRewardRate(uint256 rewardRate) public onlyOwner returns (bool) {
+        require(rewardRate>0 && rewardRate<=1000, "Out of range");
+        _rewardRate = rewardRate;
         return true;
     }
 
-    receive() external payable {
-        deposits[msg.sender] = deposits[msg.sender].add(msg.value);
-        emit Received(msg.sender, msg.value);
+    function transfer(address to, uint256 amount) public returns (bool) {
+        _validateTransfer(_LIBERTAS, amount);
+        
+        (uint256 transAmt, uint256 burnAmt, uint256 fundAmt, uint256 rewardAmt) = _getValues(amount);
+        _transfer(to, transAmt);
+        _transfer(address(0), burnAmt);
+        _transfer(_FUND_VAULT, fundAmt);
+        _transfer(_STAKING_VAULT, rewardAmt);
+
+        IStakingPool(_STAKING_VAULT).supplyReward(rewardAmt);
+        return true;
     }
 
-    function ethToToken(uint ethAmount, address token, uint minAmount, uint deadline) internal returns (uint) {
-        address pair = UNI_V2_FACTORY.getPair(WETH, token);
-        require (pair != address(0), "No pair exist");
-        address[] memory path = new address[](2);
-        path[0] = address(WETH);
-        path[1] = address(token);
-        uint256[] memory minOuts = UNI_V2_ROUTER02.getAmountsOut(ethAmount, path);
-        require (minOuts[1] >= minAmount, "Exceed");
-        UNI_V2_ROUTER02.swapExactETHForTokens{value: ethAmount}(minOuts[1], path, address(this), deadline);
-
-        emit UniswapTokenBought(token, ethAmount, minOuts[1]);
-        return minOuts[1];
+    function _transferFrom(address _from, address _to, uint256 _amount) internal {
+        ILibertasToken(_LIBERTAS).transferFrom(_from, _to, _amount);
     }
 
-    function tokenToEth(uint tokenAmount, address token, uint minEthAmount, uint deadline) internal returns (uint) {
-        address pair = UNI_V2_FACTORY.getPair(WETH, token);
-        require (pair != address(0), "No pair exist");
-        address[] memory path = new address[](2);
-        path[0] = address(token);
-        path[1] = address(WETH);
-        uint256[] memory minOuts = UNI_V2_ROUTER02.getAmountsOut(tokenAmount, path);
-        require (minOuts[1] >= minEthAmount, "Exceed");
-
-        UNI_V2_ROUTER02.swapExactTokensForETH(tokenAmount, minOuts[1], path, address(this), deadline);
-
-        emit UniswapEthBoughtFrom(token, minOuts[1], tokenAmount);
-        return minOuts[1];
+    function _transfer(address _to, uint256 _amount) internal {
+        ILibertasToken(_LIBERTAS).transfer(_to, _amount);
     }
 
-    function _calculatePartialAmount(uint256 _amount, uint256 _ratio, uint256 _precision) internal pure returns(uint256) {
-        uint256 partialAmount = _amount.mul(_ratio*10);
-        partialAmount = partialAmount.div(100*(10**(_precision+1)));
-        return partialAmount;
+    function _validateTransfer(address token, uint256 amount) private {
+        uint256 balance = ILibertasToken(token).balanceOf(msg.sender);
+        require(amount <= balance, "Insufficient amount");
+        require(ILibertasToken(token).transferFrom(msg.sender, address(this), amount), "Transfer tx failed");
     }
 
-    function _transfer(address _from, address _to, uint256 _amount) internal {
-        ILibertasToken(LIBERTAS).transferFrom(_from, _to, _amount);
-        emit Transfer(_from, _to, _amount);
-    }
+    function _getValues(uint256 tAmount) private view returns(uint256, uint256, uint256, uint256) {
+        uint256 burnAmt = tAmount.mul(_burnRate).div(1000);
+        uint256 fundAmt = tAmount.mul(_fundRate).div(1000);
+        uint256 rewardAmt = tAmount.mul(_rewardRate).div(1000);
+        uint256 transAmt = tAmount.sub(rewardAmt).sub(fundAmt).sub(burnAmt);
 
-    function _burn(address _from, uint256 _amount) internal {
-        ILibertasToken(LIBERTAS).transferFrom(_from, address(0), _amount);
-        emit Burn(_from, _amount);
+        return (transAmt, burnAmt, fundAmt, rewardAmt);
     }
-
-    event Burn(address indexed sender, uint256 amount);
-    event Transfer(address indexed sender, address indexed _to, uint256 amount);
-    event Received(address indexed sender, uint amount);
-    event UniswapTokenBought(address indexed token, uint ethAmount, uint tokenAmount);
-    event UniswapEthBoughtFrom(address indexed token, uint ethAmount, uint tokenAmount);
 }

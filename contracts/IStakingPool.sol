@@ -1,5 +1,5 @@
 pragma solidity ^0.7.0;
 
 interface IStakingPool {
-    function updatePool(uint256) external;
+    function supplyReward(uint256) external;
 }
