@@ -29,10 +29,9 @@ contract StakingPool {
             }
         }
         if (amount > 0) {
-            if (ILibertasToken(_LIBERTAS).transferFrom(msg.sender, address(this), amount)) {
-                user.amount = user.amount.add(amount);
-                _totalDeposits = _totalDeposits.add(amount);
-            }
+            require(ILibertasToken(_LIBERTAS).transferFrom(msg.sender, address(this), amount), "Transfer tx failed");
+            user.amount = user.amount.add(amount);
+            _totalDeposits = _totalDeposits.add(amount);
         }
         user.rewardDebt = user.amount.mul(_accLibertasPerShare).div(1e12);
         emit Deposit(msg.sender, amount);
