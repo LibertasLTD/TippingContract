@@ -65,6 +65,15 @@ contract StakingPool {
         user.rewardDebt = user.amount.mul(_accLibertasPerShare).div(1e12);
     }
 
+    function availableReward() public view returns (uint256) {
+        if (_userInfo[msg.sender].amount == 0) {
+            return 0;
+        }
+        UserInfo storage user = _userInfo[msg.sender];
+        uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
+        return pending;
+    }
+
     function emergencyWithdraw() public {
         UserInfo storage user = _userInfo[msg.sender];
         uint256 amount = user.amount;
