@@ -8,8 +8,8 @@ contract StakingPool {
     
     address public _LIBERTAS;
     mapping(address => UserInfo) public _userInfo;
-    uint256 private _accLibertasPerShare;
-    uint256 private _totalDeposits;
+    uint256 public _accLibertasPerShare;
+    uint256 public _totalDeposits;
 
     struct UserInfo {
         uint256 amount;
