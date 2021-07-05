@@ -6,7 +6,6 @@ const address = require('../address.json');
 require('chai').should();
 
 contract('Tipping', accounts => {
-
     const account_one = accounts[0];
     const account_two = accounts[1];
     const account_three = accounts[2];
@@ -16,7 +15,7 @@ contract('Tipping', accounts => {
        this.libertas = await LibertasToken.new();
        this.stakingPool = await StakingPool.new(this.libertas.address);
        this.tipping = await Tipping.new(this.stakingPool.address, this.libertas.address, address['development'].usdt, address['development'].weth);
-    });
+    }); 
 
     describe('LibertasToken Test', function() {
         it('should have valid contract address', function() {
