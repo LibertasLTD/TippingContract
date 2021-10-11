@@ -1,0 +1,32 @@
+{
+  "name": "TippingContract",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ryuheimat@github.com/TheLibertasProject/TippingContract.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheLibertasProject/TippingContract/issues"
+  },
+  "homepage": "https://github.com/TheLibertasProject/TippingContract#readme",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.1",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "dotenv": "^8.2.0",
+    "@openzeppelin/contracts": "^3.3.0",
+    "truffle-plugin-verify": "^0.5.4"
+  }
+}
