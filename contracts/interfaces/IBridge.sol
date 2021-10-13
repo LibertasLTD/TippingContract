@@ -7,7 +7,7 @@ interface IBridge  {
         address indexed _to,
         uint256 _amount
     );
-    event RequestBridgingToStard(
+    event RequestBridgingToStart(
         address indexed _tokenAtEnd,
         address indexed _from,
         address indexed _to,
