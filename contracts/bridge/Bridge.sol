@@ -3,7 +3,10 @@ pragma solidity ^0.7.0;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+
+import "../interfaces/IBridge.sol";
+import "../interfaces/IBridgedStandardERC20.sol";
 
 contract Bridge is AccessControl, IBridge {
 
@@ -31,7 +34,7 @@ contract Bridge is AccessControl, IBridge {
     }
 
     modifier onlyAtEnd {
-        require(direction, "onlyAtStart");
+        require(!direction, "onlyAtStart");
         _;
     }
 
@@ -51,9 +54,9 @@ contract Bridge is AccessControl, IBridge {
     }
 
     constructor(
-      bool _direction
-      address _bridgedStandardERC20,
-      address _botMessanger
+        bool _direction,
+        address _bridgedStandardERC20,
+        address _botMessanger
     ) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(BOT_MESSANGER_ROLE, _botMessanger);

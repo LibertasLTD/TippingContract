@@ -12,23 +12,50 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `wss://kovan.infura.io/ws/v3/${process.env.INFURA_API_KEY}`
+          `https://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KOVAN_KEY}`
         )
       },
       network_id: 42
+    },
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider(
+          process.env.MNEMONIC,
+          `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`
+        )
+      },
+      network_id: 4
     },
     mainnet: {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_API_KEY}`
+          `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`
         )
       },
       gas: 5000000,
       gasPrice: 25000000000,
       confirmations: 2,
       network_id: 1
-    }
+    },
+    fantom_testnet: {
+      provider: function() {
+        return new HDWalletProvider(
+          process.env.MNEMONIC,
+          `https://rpc.testnet.fantom.network`
+        )
+      },
+      network_id: 0xfa2
+    },
+    fantom: {
+      provider: function() {
+        return new HDWalletProvider(
+          process.env.MNEMONIC,
+          `https://rpc.ftm.tools/`
+        )
+      },
+      network_id: 250
+    },
   },
   mocha: {
     timeout: 120000
