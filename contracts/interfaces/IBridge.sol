@@ -14,8 +14,29 @@ interface IBridge  {
         uint256 _amount
     );
 
-    function requestBridgingToEnd(address _tokenAtStart, address _to, uint256 _amount) external;
-    function requestBridgingToStart(address _tokenAtEnd, address _to, uint256 _amount) external;
-    function performBridgingToEnd(address _tokenAtStart, address _to, uint256 _amount) external;
-    function performBridgingToStart(address _tokenAtEnd, address _to, uint256 _amount) external;
+    function requestBridgingToEnd(
+        address _tokenAtStart,
+        address _to,
+        uint256 _amount
+    ) external;
+
+    function requestBridgingToStart(
+        address _tokenAtEnd,
+        address _to,
+        uint256 _amount
+    ) external;
+
+    function performBridgingToEnd(
+        address _tokenAtStart,
+        address _to,
+        uint256 _amount,
+        string memory _name,
+        string memory _symbol
+    ) external;
+
+    function performBridgingToStart(
+        address _tokenAtEnd,
+        address _to,
+        uint256 _amount
+    ) external;
 }
