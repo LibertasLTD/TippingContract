@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import "../interfaces/IBridge.sol";
 import "../interfaces/IBridgedStandardERC20.sol";
+import "../interfaces/IERC20NameAndSymbol.sol";
 
 contract Bridge is AccessControl, IBridge {
 
@@ -66,9 +67,9 @@ contract Bridge is AccessControl, IBridge {
           if (_direction) {
               allowedTokens[_allowedToken] = true;
           } else {
-              IERC20NameAndSymbol allowedToken = IERC20NameAndSymbol(allowedToken);
+              IERC20NameAndSymbol allowedToken = IERC20NameAndSymbol(_allowedToken);
               _cloneAndInitializeTokenAtEndForTokenAtStart(
-                  _allowedToken
+                  _allowedToken,
                   allowedToken.name(),
                   allowedToken.symbol()
               );
@@ -138,7 +139,7 @@ contract Bridge is AccessControl, IBridge {
     }
 
     function _cloneAndInitializeTokenAtEndForTokenAtStart(
-        address _tokenAtStart
+        address _tokenAtStart,
         string memory _name,
         string memory _symbol
     )

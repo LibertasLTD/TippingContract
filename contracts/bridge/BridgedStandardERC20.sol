@@ -32,7 +32,7 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable, Ow
         address _bridgingToken,
         string memory _name,
         string memory _symbol
-    ) external initializer {
+    ) external override initializer {
         bridge = _bridge;
         bridgingToken = _bridgingToken;
         __name = _name;
