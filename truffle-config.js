@@ -12,7 +12,7 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `https://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KOVAN_KEY}`
+          `wss://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KOVAN_KEY}`
         )
       },
       network_id: 42
@@ -21,16 +21,17 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`
+          `wss://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`
         )
       },
+      // networkCheckTimeout: 1000000,
       network_id: 4
     },
     mainnet: {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`
+          `wss://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`
         )
       },
       gas: 5000000,
@@ -45,6 +46,7 @@ module.exports = {
           `https://rpc.testnet.fantom.network`
         )
       },
+      // networkCheckTimeout: 100000,
       network_id: 0xfa2
     },
     fantom: {

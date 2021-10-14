@@ -4,6 +4,12 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC165 } from "@openzeppelin/contracts/introspection/IERC165.sol";
 
 interface IBridgedStandardERC20 is IERC20, IERC165 {
+    function configure(
+        address _bridge,
+        address _bridgingToken,
+        string memory _name,
+        string memory _symbol
+    ) external;
     function bridgingToken() external returns (address);
     function mint(address _to, uint256 _amount) external;
     function burn(address _from, uint256 _amount) external;

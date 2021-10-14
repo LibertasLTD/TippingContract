@@ -25,7 +25,7 @@ contract Bridge is AccessControl, IBridge {
 
     Pair[] private tokenPairs;
 
-    // token => is allowed
+    // token => is allowed to bridge
     mapping(address => bool) public allowedTokens;
 
     modifier onlyAtStart {
@@ -56,10 +56,24 @@ contract Bridge is AccessControl, IBridge {
     constructor(
         bool _direction,
         address _bridgedStandardERC20,
-        address _botMessanger
+        address _botMessanger,
+        address _allowedToken
     ) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(BOT_MESSANGER_ROLE, _botMessanger);
+
+        if (_allowedToken != address(0)) {
+          if (_direction) {
+              allowedTokens[_allowedToken] = true;
+          } else {
+              IERC20NameAndSymbol allowedToken = IERC20NameAndSymbol(allowedToken);
+              _cloneAndInitializeTokenAtEndForTokenAtStart(
+                  _allowedToken
+                  allowedToken.name(),
+                  allowedToken.symbol()
+              );
+          }
+        }
     }
 
     function setAllowedToken(address _token, bool _status) external onlyAdmin {
@@ -89,21 +103,22 @@ contract Bridge is AccessControl, IBridge {
     function performBridgingToEnd(
         address _tokenAtStart,
         address _to,
-        uint256 _amount
+        uint256 _amount,
+        string memory _name,
+        string memory _symbol
     )
         external
         override
         onlyAtEnd
-        tokenIsAllowed(_tokenAtStart)
         onlyMessangerBot
     {
         address tokenAtEnd = _getEndTokenByStartToken(_tokenAtStart);
         if (tokenAtEnd == address(0)) {
-            tokenAtEnd = address(bridgedStandartERC20).clone();
-            tokenPairs.push(Pair({
-              tokenAtStart: _tokenAtStart,
-              tokenAtEnd: tokenAtEnd
-            }));
+            tokenAtEnd = _cloneAndInitializeTokenAtEndForTokenAtStart(
+                _tokenAtStart,
+                _name,
+                _symbol
+            );
         }
         IBridgedStandardERC20(tokenAtEnd).mint(_to, _amount);
     }
@@ -116,11 +131,32 @@ contract Bridge is AccessControl, IBridge {
         external
         override
         onlyAtStart
-        tokenIsAllowed(_tokenAtEnd)
         onlyMessangerBot
     {
         address tokenAtStart = _getStartTokenByEndToken(_tokenAtEnd);
         IERC20(tokenAtStart).safeTransfer(_to, _amount);
+    }
+
+    function _cloneAndInitializeTokenAtEndForTokenAtStart(
+        address _tokenAtStart
+        string memory _name,
+        string memory _symbol
+    )
+        internal
+        returns(address tokenAtEnd)
+    {
+        tokenAtEnd = address(bridgedStandartERC20).clone();
+        tokenPairs.push(Pair({
+          tokenAtStart: _tokenAtStart,
+          tokenAtEnd: tokenAtEnd
+        }));
+        allowedTokens[tokenAtEnd] = true;
+        IBridgedStandardERC20(tokenAtEnd).configure(
+            address(this),
+            _tokenAtStart,
+            _name,
+            _symbol
+        );
     }
 
     function _getEndTokenByStartToken(address _startToken) internal view returns(address) {
