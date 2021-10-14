@@ -46,7 +46,7 @@ module.exports = {
           `https://rpc.testnet.fantom.network`
         )
       },
-      // networkCheckTimeout: 100000,
+      networkCheckTimeout: 10000000,
       network_id: 0xfa2
     },
     fantom: {

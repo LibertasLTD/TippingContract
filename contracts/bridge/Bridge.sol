@@ -63,6 +63,10 @@ contract Bridge is AccessControl, IBridge {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(BOT_MESSANGER_ROLE, _botMessanger);
 
+        if (_bridgedStandardERC20 != address(0)) {
+            bridgedStandartERC20 = IBridgedStandardERC20(_bridgedStandardERC20);
+        }
+
         if (_allowedToken != address(0)) {
           if (_direction) {
               allowedTokens[_allowedToken] = true;
@@ -113,7 +117,7 @@ contract Bridge is AccessControl, IBridge {
         onlyAtEnd
         onlyMessangerBot
     {
-        address tokenAtEnd = _getEndTokenByStartToken(_tokenAtStart);
+        address tokenAtEnd = getEndTokenByStartToken(_tokenAtStart);
         if (tokenAtEnd == address(0)) {
             tokenAtEnd = _cloneAndInitializeTokenAtEndForTokenAtStart(
                 _tokenAtStart,
@@ -160,7 +164,7 @@ contract Bridge is AccessControl, IBridge {
         );
     }
 
-    function _getEndTokenByStartToken(address _startToken) internal view returns(address) {
+    function getEndTokenByStartToken(address _startToken) public view returns(address) {
         for (uint i = 0; i < tokenPairs.length; i++) {
             if (tokenPairs[i].tokenAtStart == _startToken) {
                 return tokenPairs[i].tokenAtEnd;

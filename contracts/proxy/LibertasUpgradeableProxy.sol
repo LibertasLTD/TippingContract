@@ -15,7 +15,7 @@ contract LibertasUpgradeableProxy is TransparentUpgradeableProxy {
     ) TransparentUpgradeableProxy(
         _logic,
         admin_,
-        abi.encode(
+        abi.encodeWithSelector(
             bytes4(bytes32(keccak256("configure(address)"))),
             _owner
         )
