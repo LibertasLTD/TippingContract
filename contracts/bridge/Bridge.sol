@@ -126,6 +126,7 @@ contract Bridge is AccessControl, IBridge {
             );
         }
         IBridgedStandardERC20(tokenAtEnd).mint(_to, _amount);
+        emit BridgingToEndPerformed(_tokenAtStart, tokenAtEnd, _to, _amount);
     }
 
     function performBridgingToStart(
@@ -140,6 +141,7 @@ contract Bridge is AccessControl, IBridge {
     {
         address tokenAtStart = _getStartTokenByEndToken(_tokenAtEnd);
         IERC20(tokenAtStart).safeTransfer(_to, _amount);
+        emit BridgingToEndPerformed(_tokenAtEnd, tokenAtStart, _to, _amount);
     }
 
     function _cloneAndInitializeTokenAtEndForTokenAtStart(
