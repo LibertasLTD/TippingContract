@@ -2,7 +2,6 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const { BN, ether, constants } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 const nodeIpc = require('node-ipc');
-const { checkEvent, obtainEventData } = require('./utils.js');
 
 const Bridge = artifacts.require("Bridge");
 
@@ -58,30 +57,44 @@ module.exports = (callback) => {
 
       Bridge.at(process.env.BRIDGE_ON_ETHEREUM_ADDRESS).then((instance) => {
 
-        ipc.of.ethereumBridge.on(
+        instance.events.RequestBridgingToEnd()
+          .on("connected", (subscriptionId) => {
+            ipc.log(`Connected to ${subscriptionId} subscription id.`);
+          })
+          .on('data', (event) => {
+            const eventData = event.returnValues;
+            ipc.of.server.emit(
+              {
+                address: '127.0.0.1',
+                port: ipc.config.networkPort
+              },
+              "RequestBridgingToEnd",
+              `${eventData._tokenAtStart}|${eventData._from}|${eventData._to}|${eventData._amount}|LIBERTAS|LIBERTAS`
+            );
+          })
+          .on('error', (error, receipt) => { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+            ipc.log(receipt);
+            callback();
+          });
+
+        ipc.of.server.on(
           "RequestBridgingToStart",
           (data) => {
             ipc.log("calling perform bridging to start: ", data);
+            const params = data.split('|');
+            instance.performBridgingToStart(
+              params[0],
+              params[1],
+              new BN(params[2])
+            ).then((receipt) => {
+              ipc.log(`bridging to end performed with args: ${params} at ${receipt.transactionHash}`, data);
+            }).catch((error) => {
+              console.error(error);
+              callback();
+            });
           }
         );
 
-        const timerId = setInterval(
-          () => {
-            try {
-              const eventData = obtainEventData(instance, "RequestBridgingToEnd");
-              if (checkEvent(eventData)) {
-                ipc.of.ethereumBridge.emit(
-                  "RequestBridgingToEnd",
-                  `${eventData.endToken}|${eventData.from}|${eventData.to}|${eventData.amount}`
-                );
-              }
-            } catch (e) {
-              clearTimer(timedId);
-              callback();
-            }
-          },
-          process.env.BOT_MESSANGER_POLLING_TIME
-        );
       });
     }
   );
