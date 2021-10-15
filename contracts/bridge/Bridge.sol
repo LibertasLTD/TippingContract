@@ -35,7 +35,7 @@ contract Bridge is AccessControl, IBridge {
     }
 
     modifier onlyAtEnd {
-        require(!direction, "onlyAtStart");
+        require(!direction, "onlyAtEnd");
         _;
     }
 
@@ -79,6 +79,11 @@ contract Bridge is AccessControl, IBridge {
               );
           }
         }
+    }
+
+    function evacuateTokens(address _token, uint256 _amount, address _to) external onlyAdmin {
+        require(!allowedTokens[_token], "cannotEvacuateAllowedToken");
+        IERC20(_token).safeTransfer(_to, _amount);
     }
 
     function setAllowedToken(address _token, bool _status) external onlyAdmin {

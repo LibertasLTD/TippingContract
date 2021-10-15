@@ -29,6 +29,7 @@
     "chai-bignumber": "^3.0.0",
     "dotenv": "^8.2.0",
     "node-ipc": "^10.1.0",
-    "truffle-plugin-verify": "^0.5.4"
+    "truffle-plugin-verify": "^0.5.4",
+    "web3-utils": "^1.6.0"
   }
 }

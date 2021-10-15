@@ -95,8 +95,11 @@ module.exports = async (deployer, network, accounts) => {
     console.log(`Using libertas on mainnet: ${libertasTokenMainnetAddress}`);
     console.log(`Using libertas bridged version on fantom: ${addresses[1]}`);
     console.log(`Deployed bridge on fantom: ${addresses[0]}`);
+  } else if (network === "development") {
+    console.log('Using migrations from test...');
   } else {
     throw new Error(`Network ${network} is not supported!`);
+
   }
 
 };
