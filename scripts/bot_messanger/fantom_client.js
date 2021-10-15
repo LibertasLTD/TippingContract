@@ -74,7 +74,7 @@ module.exports = (callback) => {
             ).then((receipt) => {
               ipc.log(`bridging to end performed with args: ${params}`, data);
             }).catch((error) => {
-              console.error(error);
+              ipc.log(error);
               callback();
             });
           }
