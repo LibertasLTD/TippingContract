@@ -1,6 +1,7 @@
 pragma solidity ^0.7.0;
 
 interface IBridge  {
+
     event RequestBridgingToEnd(
         address indexed _tokenAtStart,
         address indexed _from,
@@ -10,6 +11,19 @@ interface IBridge  {
     event RequestBridgingToStart(
         address indexed _tokenAtEnd,
         address indexed _from,
+        address indexed _to,
+        uint256 _amount
+    );
+
+    event BridgingToEndPerformed(
+        address indexed _tokenAtStart,
+        address indexed _tokenAtEnd,
+        address indexed _to,
+        uint256 _amount
+    );
+    event BridgingToStartPerformed(
+        address indexed _tokenAtEnd,
+        address indexed _tokenAtStart,
         address indexed _to,
         uint256 _amount
     );
