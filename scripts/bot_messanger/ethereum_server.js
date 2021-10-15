@@ -69,7 +69,10 @@ module.exports = (callback) => {
                 port: ipc.config.networkPort
               },
               "RequestBridgingToEnd",
-              `${eventData._tokenAtStart}|${eventData._from}|${eventData._to}|${eventData._amount}|LIBERTAS|LIBERTAS`
+              {
+                from: ipc.config.id,
+                message: `${eventData._tokenAtStart}|${eventData._from}|${eventData._to}|${eventData._amount}|LIBERTAS|LIBERTAS`
+              }
             );
           })
           .on('error', (error, receipt) => { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
