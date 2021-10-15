@@ -4,34 +4,34 @@ const { ZERO_ADDRESS } = constants;
 
 const Bridge = artifacts.require("Bridge");
 const BridgedStandardERC20 = artifacts.require("BridgedStandardERC20");
-const LibertasUpgradeableProxy = artifacts.require("LibertasUpgradeableProxy");
-const LibertasProxyAdmin = artifacts.require("LibertasProxyAdmin");
+// const LibertasUpgradeableProxy = artifacts.require("LibertasUpgradeableProxy");
+// const LibertasProxyAdmin = artifacts.require("LibertasProxyAdmin");
 
 const LibertasToken = artifacts.require("LibertasToken");
-const StakingPool = artifacts.require("StakingPool");
-const Tipping = artifacts.require("Tipping");
+// const StakingPool = artifacts.require("StakingPool");
+// const Tipping = artifacts.require("Tipping");
 
 module.exports = async (deployer, network, accounts) => {
 
   const libertasTokenMainnetAddress = "0x49184E6dAe8C8ecD89d8Bdc1B950c597b8167c90";
   const owner = accounts[0];
 
-  const deployTippingAndStaking = async (libertasTokenAddress) => {
-    await deployer.deploy(StakingPool, libertasTokenAddress);
-    await deployer.deploy(Tipping, StakingPool.address, libertasTokenAddress, owner, "10", "45", "45");
-  }
+  // const deployTippingAndStaking = async (libertasTokenAddress) => {
+  //   await deployer.deploy(StakingPool, libertasTokenAddress);
+  //   await deployer.deploy(Tipping, StakingPool.address, libertasTokenAddress, owner, "10", "45", "45");
+  // }
 
-  const deployUpgradeableLibertasToken = async () => {
-    await deployer.deploy(LibertasProxyAdmin);
-    await deployer.deploy(LibertasToken);
-    await deployer.deploy(
-      LibertasUpgradeableProxy,
-      LibertasToken.address,
-      LibertasProxyAdmin.address,
-      owner
-    );
-    return LibertasUpgradeableProxy.address;
-  }
+  // const deployUpgradeableLibertasToken = async () => {
+  //   await deployer.deploy(LibertasProxyAdmin);
+  //   await deployer.deploy(LibertasToken);
+  //   await deployer.deploy(
+  //     LibertasUpgradeableProxy,
+  //     LibertasToken.address,
+  //     LibertasProxyAdmin.address,
+  //     owner
+  //   );
+  //   return LibertasUpgradeableProxy.address;
+  // }
 
   const deployBridgeAtEnd = async (libertasTokenAddress) => {
     await deployer.deploy(BridgedStandardERC20);
@@ -42,7 +42,7 @@ module.exports = async (deployer, network, accounts) => {
       owner,
       libertasTokenAddress,
       "LIBERTAS",
-      "LIBS"
+      "ODEUM"
     );
     const bridge = await Bridge.deployed();
     const bridgedLibertasTokenAddress = await bridge.getEndTokenByStartToken(libertasTokenAddress);
@@ -78,9 +78,9 @@ module.exports = async (deployer, network, accounts) => {
   }
 
   if (network === "rinkeby" || network === "rinkeby-fork") {
-
-    testnetLibertasTokenAddress = await deployUpgradeableLibertasToken();
-    await deployTippingAndStaking(testnetLibertasTokenAddress);
+    testnetLibertasTokenAddress = readLibertasTokenAddress();
+    // testnetLibertasTokenAddress = await deployUpgradeableLibertasToken();
+    // await deployTippingAndStaking(testnetLibertasTokenAddress);
     const bridgeAddress = await deployBridgeAtStart(testnetLibertasTokenAddress);
 
     console.log(`Deployed libertas on rinkeby: ${testnetLibertasTokenAddress}`);
@@ -91,7 +91,7 @@ module.exports = async (deployer, network, accounts) => {
 
     testnetLibertasTokenAddress = readLibertasTokenAddress();
     const addresses = await deployBridgeAtEnd(testnetLibertasTokenAddress);
-    await deployTippingAndStaking(addresses[1]);
+    // await deployTippingAndStaking(addresses[1]);
 
     console.log(`Using libertas on rinkeby as start: ${testnetLibertasTokenAddress}`);
     console.log(`Using libertas bridged version on fantom testnet: ${addresses[1]}`);
@@ -99,7 +99,7 @@ module.exports = async (deployer, network, accounts) => {
 
   } else if (network === "mainnet" || network === "mainnet-fork") {
 
-    await deployTippingAndStaking(libertasTokenMainnetAddress);
+    //await deployTippingAndStaking(libertasTokenMainnetAddress);
     const bridgeAddress = await deployBridgeAtStart(libertasTokenMainnetAddress);
 
     console.log(`Using libertas on mainnet: ${libertasTokenMainnetAddress}`);
@@ -108,7 +108,7 @@ module.exports = async (deployer, network, accounts) => {
   } else if (network === "fantom" || network === "fantom-fork") {
 
     const addresses = await deployBridgeAtEnd(libertasTokenMainnetAddress);
-    await deployTippingAndStaking(addresses[1]);
+    //await deployTippingAndStaking(addresses[1]);
 
     console.log(`Using libertas on mainnet: ${libertasTokenMainnetAddress}`);
     console.log(`Using libertas bridged version on fantom: ${addresses[1]}`);
