@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { constants } = require("@openzeppelin/test-helpers");
 const { ZERO_ADDRESS } = constants;
 
@@ -40,7 +41,9 @@ module.exports = async (deployer, network, accounts) => {
       false, // direction - if true then deploy on ethereum, false - on fantom
       BridgedStandardERC20.address,
       owner,
-      libertasTokenAddress
+      libertasTokenAddress,
+      "LIBERTAS",
+      "LIBERTAS"
     );
     const bridge = await Bridge.deployed();
     const bridgedLibertasTokenAddress = await bridge.getEndTokenByStartToken(libertasTokenAddress);
@@ -54,12 +57,26 @@ module.exports = async (deployer, network, accounts) => {
       true, // direction - if true then deploy on ethereum, false - on fantom
       ZERO_ADDRESS,
       owner,
-      libertasTokenAddress
+      libertasTokenAddress,
+      "LIBERTAS",
+      "LIBERTAS"
     );
     return Bridge.address;
   }
 
   let testnetLibertasTokenAddress;
+
+  const writeLibertasTokenAddress = (libertasTokenAddress) => {
+    const json = {
+      libertasTokenAddress
+    };
+    const data = JSON.stringify(json);
+    fs.writeFileSync('./libertas_token_address.json', data);
+  }
+
+  const readLibertasTokenAddress = () => {
+    return require('../libertas_token_address.json')['libertasTokenAddress'];
+  }
 
   if (network === "rinkeby" || network === "rinkeby-fork") {
 
@@ -69,9 +86,11 @@ module.exports = async (deployer, network, accounts) => {
 
     console.log(`Deployed libertas on rinkeby: ${testnetLibertasTokenAddress}`);
     console.log(`Deployed bridge on rinkeby: ${bridgeAddress}`);
+    writeLibertasTokenAddress(testnetLibertasTokenAddress);
 
-  } else if (network === "fantom_testnet" || network === "fantom_testnet-fork") {
+  } else if (network === "fantom_testnet" || network === "fantom_testnet-fork" || network === "fantom_ganache_fork") {
 
+    testnetLibertasTokenAddress = readLibertasTokenAddress();
     const addresses = await deployBridgeAtEnd(testnetLibertasTokenAddress);
     await deployTippingAndStaking(addresses[1]);
 
@@ -84,7 +103,7 @@ module.exports = async (deployer, network, accounts) => {
     await deployTippingAndStaking(libertasTokenMainnetAddress);
     const bridgeAddress = await deployBridgeAtStart(libertasTokenMainnetAddress);
 
-    console.log(`Using libertas on mainnet: ${libertasTokenAddress}`);
+    console.log(`Using libertas on mainnet: ${libertasTokenMainnetAddress}`);
     console.log(`Deployed bridge on mainnet: ${bridgeAddress}`);
 
   } else if (network === "fantom" || network === "fantom-fork") {

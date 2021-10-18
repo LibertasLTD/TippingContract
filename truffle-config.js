@@ -1,19 +1,30 @@
 require('dotenv').config();
 const HDWalletProvider = require('@truffle/hdwallet-provider');
+const Web3 = require('web3');
+
+const ganacheConfig = {
+ host: "127.0.0.1",     // Localhost (default: none)
+ port: 8545,            // Standard Ethereum port (default: none)
+ network_id: "*",       // Any network (default: none)
+};
+
 
 module.exports = {
   networks: {
-    development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
-    },
+    development: ganacheConfig,
+    fantom_ganache_fork: ganacheConfig,
     kovan: {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `wss://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KOVAN_KEY}`
+          new Web3.providers.WebsocketProvider(`wss://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KOVAN_KEY}`)
         )
+      },
+      network_id: 42
+    },
+    kovan_ws: {
+      provider: function() {
+        return new Web3.providers.WebsocketProvider(`wss://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_KOVAN_KEY}`)
       },
       network_id: 42
     },
@@ -21,8 +32,15 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `wss://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`
+          new Web3.providers.WebsocketProvider(`wss://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`)
         )
+      },
+      // networkCheckTimeout: 1000000,
+      network_id: 4
+    },
+    rinkeby_ws: {
+      provider: function() {
+        return new Web3.providers.WebsocketProvider(`wss://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`)
       },
       // networkCheckTimeout: 1000000,
       network_id: 4
@@ -31,8 +49,17 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.MNEMONIC,
-          `wss://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`
+          new Web3.providers.WebsocketProvider(`wss://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`)
         )
+      },
+      gas: 5000000,
+      gasPrice: 25000000000,
+      confirmations: 2,
+      network_id: 1
+    },
+    mainnet_ws: {
+      provider: function() {
+        return new Web3.providers.WebsocketProvider(`wss://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`)
       },
       gas: 5000000,
       gasPrice: 25000000000,
@@ -55,6 +82,12 @@ module.exports = {
           process.env.MNEMONIC,
           `https://rpc.ftm.tools/`
         )
+      },
+      network_id: 250
+    },
+    fantom_ws: {
+      provider: function() {
+        return new Web3.providers.WebsocketProvider(`wss://wsapi.fantom.network/`)
       },
       network_id: 250
     },

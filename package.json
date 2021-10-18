@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "fantom_fork": "ganache-cli -ws -e 10000 -f https://rpc.ftm.tools/",
+    "fantom_testnet_fork": "ganache-cli -ws -e 10000 -f https://rpc.testnet.fantom.network"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^3.0.0",
     "dotenv": "^8.2.0",
+    "ethers": "^5.4.7",
     "node-ipc": "^10.1.0",
     "truffle-plugin-verify": "^0.5.4",
     "web3-utils": "^1.6.0"
