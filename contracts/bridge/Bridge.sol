@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 import "../interfaces/IBridge.sol";
 import "../interfaces/IBridgedStandardERC20.sol";
-import "../interfaces/IERC20NameAndSymbol.sol";
 
 contract Bridge is AccessControl, IBridge {
 
@@ -58,8 +57,11 @@ contract Bridge is AccessControl, IBridge {
         bool _direction,
         address _bridgedStandardERC20,
         address _botMessanger,
-        address _allowedToken
+        address _allowedToken,
+        string memory _name,
+        string memory _symbol
     ) {
+        direction = _direction;
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(BOT_MESSANGER_ROLE, _botMessanger);
 
@@ -71,12 +73,7 @@ contract Bridge is AccessControl, IBridge {
           if (_direction) {
               allowedTokens[_allowedToken] = true;
           } else {
-              IERC20NameAndSymbol allowedToken = IERC20NameAndSymbol(_allowedToken);
-              _cloneAndInitializeTokenAtEndForTokenAtStart(
-                  _allowedToken,
-                  allowedToken.name(),
-                  allowedToken.symbol()
-              );
+              _cloneAndInitializeTokenAtEndForTokenAtStart(_allowedToken, _name, _symbol);
           }
         }
     }

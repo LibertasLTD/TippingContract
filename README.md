@@ -13,12 +13,12 @@ Command: Truffle Test (Runs the tests)
 
 # ADDRESSES ETHEREUM RINKEBY
 
-* Bridge: https://rinkeby.etherscan.io/address/0x4a77255B17153e2969C019196B6E0031fb449c50#code
-* Tipping: https://rinkeby.etherscan.io/address/0x3968383B74ce42A2549742ad4Eb268108f7a1d80#code
-* StakingPool: https://rinkeby.etherscan.io/address/0xb55C4c238357ff779c6fD2D3EFaF5f0F713d6aF7#code
-* LibertasUpgradeableProxy: https://rinkeby.etherscan.io/address/0x963BBCd6acBF91BE72B876C538f7C4eaa1513523#code
-* LibertasToken: https://rinkeby.etherscan.io/address/0xb2008c6ba27A60267686016123DF6969685A0dE7#code
-* LibertasProxyAdmin: https://rinkeby.etherscan.io/address/0x92bf4E43795dbf4649Ff3caC287B86F03B260637#code
+* Bridge: https://rinkeby.etherscan.io/address/0x9E56De422B9B535419326829F030B1d0dE0aE514#code
+* Tipping: https://rinkeby.etherscan.io/address/0x3B7e9AEA88b3cdA904C702B733e9E795044955d8#code
+* StakingPool: https://rinkeby.etherscan.io/address/0x08414Bff4D110fd7fE9438772cEa17f17B9e7b6d#code
+* LibertasUpgradeableProxy: https://rinkeby.etherscan.io/address/0xBe38A83A8c37B748b3A99Cb59533A73cEaD9F9Ad#code
+* LibertasToken: https://rinkeby.etherscan.io/address/0x02a199E582899C7bC16a31035ee738aB9A758033#code
+* LibertasProxyAdmin: https://rinkeby.etherscan.io/address/0x1dB1524A3Ab0Aaf9A1F6CdD3E0f6071c5DE33514#code
 
 # ADDRESSES FANTOM TESTNET
 
