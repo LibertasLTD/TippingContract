@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "fantom_fork": "ganache-cli -ws -e 10000 -f https://rpc.ftm.tools/",
-    "fantom_testnet_fork": "ganache-cli -ws -e 10000 -f https://rpc.testnet.fantom.network"
+    "fantom_fork": "ganache-cli -e 10000 -f https://rpc.ftm.tools/",
+    "fantom_testnet_fork": "ganache-cli -e 10000 -f https://rpc.testnet.fantom.network"
   },
   "repository": {
     "type": "git",
