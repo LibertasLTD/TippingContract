@@ -132,6 +132,7 @@ contract Bridge is AccessControl, IBridge {
     }
 
     function performBridgingToStart(
+        address _tokenAtStart,
         address _tokenAtEnd,
         address _to,
         uint256 _amount
@@ -141,9 +142,8 @@ contract Bridge is AccessControl, IBridge {
         onlyAtStart
         onlyMessangerBot
     {
-        address tokenAtStart = _getStartTokenByEndToken(_tokenAtEnd);
-        IERC20(tokenAtStart).safeTransfer(_to, _amount);
-        emit BridgingToEndPerformed(_tokenAtEnd, tokenAtStart, _to, _amount);
+        IERC20(_tokenAtStart).safeTransfer(_to, _amount);
+        emit BridgingToStartPerformed(_tokenAtEnd, _tokenAtStart, _to, _amount);
     }
 
     function _cloneAndInitializeTokenAtEndForTokenAtStart(
@@ -177,7 +177,7 @@ contract Bridge is AccessControl, IBridge {
         return address(0);
     }
 
-    function _getStartTokenByEndToken(address _endToken) internal view returns(address) {
+    function getStartTokenByEndToken(address _endToken) external view returns(address) {
         for (uint i = 0; i < tokenPairs.length; i++) {
             if (tokenPairs[i].tokenAtEnd == _endToken) {
                 return tokenPairs[i].tokenAtStart;
