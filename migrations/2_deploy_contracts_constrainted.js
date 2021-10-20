@@ -2,8 +2,6 @@ const fs = require('fs');
 const { constants } = require("@openzeppelin/test-helpers");
 const { ZERO_ADDRESS } = constants;
 
-const Bridge = artifacts.require("Bridge");
-const BridgedStandardERC20 = artifacts.require("BridgedStandardERC20");
 const LibertasUpgradeableProxy = artifacts.require("LibertasUpgradeableProxy");
 const LibertasProxyAdmin = artifacts.require("LibertasProxyAdmin");
 
@@ -33,36 +31,6 @@ module.exports = async (deployer, network, accounts) => {
     return LibertasUpgradeableProxy.address;
   }
 
-  const deployBridgeAtEnd = async (libertasTokenAddress) => {
-    await deployer.deploy(BridgedStandardERC20);
-    await deployer.deploy(
-      Bridge,
-      false, // direction - if true then deploy on ethereum, false - on fantom
-      BridgedStandardERC20.address,
-      owner,
-      libertasTokenAddress,
-      "LIBERTAS",
-      "LIBERTAS"
-    );
-    const bridge = await Bridge.deployed();
-    const bridgedLibertasTokenAddress = await bridge.getEndTokenByStartToken(libertasTokenAddress);
-    console.log(`BridgedLibertasToken deployed: ${bridgedLibertasTokenAddress}`);
-    return [Bridge.address, bridgedLibertasTokenAddress];
-  }
-
-  const deployBridgeAtStart = async (libertasTokenAddress) => {
-    await deployer.deploy(
-      Bridge,
-      true, // direction - if true then deploy on ethereum, false - on fantom
-      ZERO_ADDRESS,
-      owner,
-      libertasTokenAddress,
-      "LIBERTAS",
-      "LIBERTAS"
-    );
-    return Bridge.address;
-  }
-
   let testnetLibertasTokenAddress;
 
   const writeLibertasTokenAddress = (libertasTokenAddress) => {
@@ -78,41 +46,20 @@ module.exports = async (deployer, network, accounts) => {
   }
 
   if (network === "rinkeby" || network === "rinkeby-fork") {
-
     testnetLibertasTokenAddress = await deployUpgradeableLibertasToken();
     await deployTippingAndStaking(testnetLibertasTokenAddress);
-    const bridgeAddress = await deployBridgeAtStart(testnetLibertasTokenAddress);
-
     console.log(`Deployed libertas on rinkeby: ${testnetLibertasTokenAddress}`);
-    console.log(`Deployed bridge on rinkeby: ${bridgeAddress}`);
     writeLibertasTokenAddress(testnetLibertasTokenAddress);
-
   } else if (network === "fantom_testnet" || network === "fantom_testnet-fork" || network === "fantom_ganache_fork") {
-
     testnetLibertasTokenAddress = readLibertasTokenAddress();
-    const addresses = await deployBridgeAtEnd(testnetLibertasTokenAddress);
     await deployTippingAndStaking(addresses[1]);
-
     console.log(`Using libertas on rinkeby as start: ${testnetLibertasTokenAddress}`);
-    console.log(`Using libertas bridged version on fantom testnet: ${addresses[1]}`);
-    console.log(`Deployed bridge on fantom testnet: ${addresses[0]}`);
-
   } else if (network === "mainnet" || network === "mainnet-fork") {
-
     await deployTippingAndStaking(libertasTokenMainnetAddress);
-    const bridgeAddress = await deployBridgeAtStart(libertasTokenMainnetAddress);
-
     console.log(`Using libertas on mainnet: ${libertasTokenMainnetAddress}`);
-    console.log(`Deployed bridge on mainnet: ${bridgeAddress}`);
-
   } else if (network === "fantom" || network === "fantom-fork") {
-
-    const addresses = await deployBridgeAtEnd(libertasTokenMainnetAddress);
     await deployTippingAndStaking(addresses[1]);
-
     console.log(`Using libertas on mainnet: ${libertasTokenMainnetAddress}`);
-    console.log(`Using libertas bridged version on fantom: ${addresses[1]}`);
-    console.log(`Deployed bridge on fantom: ${addresses[0]}`);
   } else if (network === "development") {
     console.log('Using migrations from test...');
   } else {
