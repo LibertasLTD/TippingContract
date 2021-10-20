@@ -2,14 +2,19 @@
 
 # INSTALL
 Install truffle (npm install -g truffle)
+Install truffle (npm install -g ganache-cli)
 Install truffle-plugin-verify (npm -D truffle-plugin-verify)
+Install dependencies (cd <path to the cloned repo> && yarn)
 
 # CHECK
 Check truffle is working (truffle -v)
 
 # EXECTUTION
-Command: Truffle compile (Compiles all of the contracts)
-Command: Truffle Test (Runs the tests)
+Command: truffle compile
+Command: ganache-cli -e 1000
+
+In new terminal window:
+Command: truffle test
 
 # ADDRESSES ETHEREUM RINKEBY
 
@@ -20,7 +25,9 @@ Command: Truffle Test (Runs the tests)
 * LibertasToken: https://rinkeby.etherscan.io/address/0x02a199E582899C7bC16a31035ee738aB9A758033#code
 * LibertasProxyAdmin: https://rinkeby.etherscan.io/address/0x1dB1524A3Ab0Aaf9A1F6CdD3E0f6071c5DE33514#code
 
-# ADDRESSES FANTOM TESTNET
+# ADDRESSES FANTOM
+
+to be deployed...
 
 * Bridge:
 * BridgedStandardERC20:
