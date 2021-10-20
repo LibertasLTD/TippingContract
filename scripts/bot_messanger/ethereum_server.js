@@ -33,7 +33,8 @@ module.exports = (callback) => {
           bridge.performBridgingToStart(
             params[0],
             params[1],
-            new BN(params[2])
+            params[2],
+            new BN(params[3])
           ).then((receipt) => {
             ipc.log(`bridging to end performed with args: ${params} at ${receipt.transactionHash}`, data);
           }).catch((error) => {
@@ -44,19 +45,14 @@ module.exports = (callback) => {
       );
       Bridge.at(process.env.BRIDGE_ON_ETHEREUM_ADDRESS).then((instance) => {
         bridge = instance;
-        // console.log(instance.RequestBridgingToEnd());
         instance.RequestBridgingToEnd()
-          // .on("connected", (subscriptionId) => {
-          //   ipc.log(`Connected to ${subscriptionId} subscription id.`);
-          // })
+          .on("connected", (subscriptionId) => {
+            ipc.log(`Connected to ${subscriptionId} subscription id.`);
+          })
           .on('data', (event) => {
             const eventData = event.returnValues;
-            ipc.log(`Gotta send event: ${event}`);
-            ipc.server.emit(
-              {
-                address: '127.0.0.1',
-                port: ipc.config.networkPort
-              },
+            ipc.log(`Gotta send event: ${event.event} at tx: ${event.transactionHash}`);
+            ipc.server.broadcast(
               "message",
               {
                 from: ipc.config.id,
@@ -64,10 +60,10 @@ module.exports = (callback) => {
               }
             );
           })
-          // .on('error', (error, receipt) => { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-          //   ipc.log(error, '\n', receipt);
-          //   callback();
-          // });
+          .on('error', (error, receipt) => { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+            ipc.log(error, '\n', receipt);
+            callback();
+          });
       });
     }
   );
