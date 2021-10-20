@@ -22,7 +22,7 @@ module.exports = (callback) => {
         "message",
         (data) => {
           ipc.log("calling perform bridging to end: ", data);
-          const params = data.split('|');
+          const params = data.message.split('|');
           bridge.performBridgingToEnd(
             params[0],
             params[1],
@@ -30,7 +30,7 @@ module.exports = (callback) => {
             params[3],
             params[4],
           ).then((receipt) => {
-            ipc.log(`bridging to end performed with args: ${params}`, data);
+            ipc.log(`bridging to end performed with args: ${params}`);
           }).catch((error) => {
             ipc.log(error);
             callback();
@@ -45,20 +45,21 @@ module.exports = (callback) => {
           Bridge.at(process.env.BRIDGE_ON_FANTOM_ADDRESS).then((instance) => {
             bridge = instance;
             instance.RequestBridgingToStart()
-              // .on("connected", (subscriptionId) => {
-              //   ipc.log(`Connected to ${subscriptionId} subscription id.`);
-              // })
+              .on("connected", (subscriptionId) => {
+                ipc.log(`Connected to ${subscriptionId} subscription id.`);
+              })
               .on('data', (event) => {
                 const eventData = event.returnValues;
+                ipc.log(`Gotta send event: ${event.event} at tx: ${event.transactionHash}`);
                 ipc.of.ethereumBridge.emit(
                   "message",
-                  `${eventData._tokenAtEnd}|${eventData._from}|${eventData._to}|${eventData._amount}`
+                  `${eventData._tokenAtStart}|${eventData._tokenAtEnd}|${eventData._from}|${eventData._to}|${eventData._amount}`
                 );
               })
-              // .on('error', (error, receipt) => { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-              //   ipc.log(receipt);
-              //   callback();
-              // });
+              .on('error', (error, receipt) => { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+                ipc.log(receipt);
+                callback();
+              });
           });
         }
       );

@@ -1,4 +1,3 @@
-const HDWalletProvider = require('@truffle/hdwallet-provider');
 const { BN, ether, constants } = require('@openzeppelin/test-helpers');
 const { ZERO_ADDRESS } = constants;
 
@@ -20,7 +19,10 @@ module.exports = (callback) => {
               instance.requestBridgingToEnd(token.address, accounts[0], amountToBridge, { from: accounts[0] })
                 .then((receipt) => {
                   console.log(receipt);
-                  callback();
+                  token.balanceOf(accounts[0]).then((newBalance) => {
+                    console.log(`Performed request bridging to end with new balance of: ${newBalance}`);
+                    callback();
+                  });
                 }).catch((err) => {
                   console.error(err);
                   callback();
