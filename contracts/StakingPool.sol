@@ -5,9 +5,9 @@ import "./ILibertasToken.sol";
 
 contract StakingPool {
     using SafeMath for uint256;
-    
+
     address public _LIBERTAS;
-    mapping(address => UserInfo) public _userInfo;
+    mapping(address => UserInfo) public userInfo;
     uint256 public _accLibertasPerShare;
     uint256 public _totalDeposits;
 
@@ -21,7 +21,7 @@ contract StakingPool {
     }
 
     function deposit(uint256 amount) public {
-        UserInfo storage user = _userInfo[msg.sender];
+        UserInfo storage user = userInfo[msg.sender];
         if (user.amount > 0) {
             uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
             if (pending > 0) {
@@ -38,7 +38,7 @@ contract StakingPool {
     }
 
     function withdraw(uint256 amount) public {
-        UserInfo storage user = _userInfo[msg.sender];
+        UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= amount, "Withdraw too much");
         uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
@@ -54,10 +54,10 @@ contract StakingPool {
     }
 
     function claim() public {
-        if (_userInfo[msg.sender].amount == 0) {
+        if (userInfo[msg.sender].amount == 0) {
             return;
         }
-        UserInfo storage user = _userInfo[msg.sender];
+        UserInfo storage user = userInfo[msg.sender];
         uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
             safeLIBERTASTransfer(msg.sender, pending);
@@ -66,16 +66,16 @@ contract StakingPool {
     }
 
     function availableReward() public view returns (uint256) {
-        if (_userInfo[msg.sender].amount == 0) {
+        if (userInfo[msg.sender].amount == 0) {
             return 0;
         }
-        UserInfo storage user = _userInfo[msg.sender];
+        UserInfo storage user = userInfo[msg.sender];
         uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
         return pending;
     }
 
     function emergencyWithdraw() public {
-        UserInfo storage user = _userInfo[msg.sender];
+        UserInfo storage user = userInfo[msg.sender];
         uint256 amount = user.amount;
         user.amount = 0;
         user.rewardDebt = 0;
