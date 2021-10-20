@@ -19,7 +19,7 @@ module.exports = async (deployer, network, accounts) => {
 
   const deployTippingAndStaking = async (libertasTokenAddress) => {
     await deployer.deploy(StakingPool, libertasTokenAddress);
-    await deployer.deploy(Tipping, StakingPool.address, libertasTokenAddress, "10", "45", "45");
+    await deployer.deploy(Tipping, StakingPool.address, libertasTokenAddress, owner, "10", "45", "45");
   }
 
   const deployUpgradeableLibertasToken = async () => {

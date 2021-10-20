@@ -19,15 +19,22 @@ contract Tipping is Ownable {
     constructor(
         address STAKING_VAULT,
         address LIBERTAS,
+        address FUND_VAULT,
         uint256 burnRate,
         uint256 fundRate,
         uint256 rewardRate
     ) {
         _STAKING_VAULT = STAKING_VAULT;
         _LIBERTAS = LIBERTAS;
+        _FUND_VAULT = FUND_VAULT;
         _burnRate = burnRate;
         _fundRate = fundRate;
         _rewardRate = rewardRate;
+    }
+
+    modifier validRate(uint256 rate) {
+        require(rate > 0 && rate <= 1000, "Out of range");
+        _;
     }
 
     function setStakingVaultAddress(address STAKING_VAULT) public onlyOwner {
@@ -42,27 +49,24 @@ contract Tipping is Ownable {
         _FUND_VAULT = FUND_VAULT;
     }
 
-    function setBurnRate(uint256 burnRate) public onlyOwner returns (bool) {
-        require(burnRate>0 && burnRate<=1000, "Out of range");
+    function setBurnRate(uint256 burnRate) public validRate(burnRate) onlyOwner returns (bool) {
         _burnRate = burnRate;
         return true;
     }
 
-    function setFundRate(uint256 fundRate) public onlyOwner returns (bool) {
-        require(fundRate>0 && fundRate<=1000, "Out of range");
+    function setFundRate(uint256 fundRate) public validRate(fundRate) onlyOwner returns (bool) {
         _fundRate = fundRate;
         return true;
     }
 
-    function setRewardRate(uint256 rewardRate) public onlyOwner returns (bool) {
-        require(rewardRate>0 && rewardRate<=1000, "Out of range");
+    function setRewardRate(uint256 rewardRate) public validRate(rewardRate) onlyOwner returns (bool) {
         _rewardRate = rewardRate;
         return true;
     }
 
     function transfer(address to, uint256 amount) public returns (bool) {
         _validateTransfer(_LIBERTAS, amount);
-        
+
         (uint256 transAmt, uint256 burnAmt, uint256 fundAmt, uint256 rewardAmt) = _getValues(amount);
         _transfer(to, transAmt);
         _transfer(address(0), burnAmt);

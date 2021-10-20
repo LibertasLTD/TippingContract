@@ -21,6 +21,14 @@ contract LibertasToken is ERC20, Initializable {
         return true;
     }
 
+    function _transfer(address sender, address recipient, uint256 amount) internal override {
+        if (recipient == address(0)) {
+            _burn(sender, amount);
+        } else {
+            super._transfer(sender, recipient, amount);
+        }
+    }
+
     function decimals() public view override returns(uint8) {
         return 2;
     }

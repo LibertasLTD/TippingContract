@@ -75,7 +75,7 @@ contract('Bridge', async (accounts) => {
     await bridge2.performBridgingToEnd(libertas.address, alice, tokensToBridge, "", "");
 
     await tokenAtEnd.approve(bridge2.address, tokensToBridge, { from: alice });
-    const receipt = await bridge2.requestBridgingToStart(tokenAtEnd.address, owner, tokensToBridge, { from: alice });
+    const receipt = await bridge2.requestBridgingToStart(libertas.address, tokenAtEnd.address, owner, tokensToBridge, { from: alice });
     expectEvent(receipt, "RequestBridgingToStart", {
       _tokenAtEnd: tokenAtEnd.address,
       _from: alice,
@@ -87,7 +87,7 @@ contract('Bridge', async (accounts) => {
 
   it('should keep directions safe', async () => {
     await expectRevert(bridge2.requestBridgingToEnd(mock.address, ZERO_ADDRESS, ZERO), "onlyAtStart");
-    await expectRevert(bridge1.requestBridgingToStart(mock.address, ZERO_ADDRESS, ZERO), "onlyAtEnd");
+    await expectRevert(bridge1.requestBridgingToStart(mock.address, mock.address, ZERO_ADDRESS, ZERO), "onlyAtEnd");
     await expectRevert(bridge1.performBridgingToEnd(mock.address, ZERO_ADDRESS, ZERO, "", ""), "onlyAtEnd");
     await expectRevert(bridge2.performBridgingToStart(ZERO_ADDRESS, mock.address, ZERO_ADDRESS, ZERO), "onlyAtStart");
   });
@@ -115,7 +115,7 @@ contract('Bridge', async (accounts) => {
     expect(tokenAtStart.address).to.be.equal(libertas.address);
 
     await tokenAtEnd.approve(bridge2.address, tokensToBridge, { from: alice });
-    await bridge2.requestBridgingToStart(tokenAtEnd.address, owner, tokensToBridge, { from: alice });
+    await bridge2.requestBridgingToStart(libertas.address, tokenAtEnd.address, owner, tokensToBridge, { from: alice });
     const receipt2 = await bridge1.performBridgingToStart(tokenAtStart.address, tokenAtEnd.address, owner, tokensToBridge, { from: owner });
 
     expect(receipt1, "BridgingToEndPerformed", {

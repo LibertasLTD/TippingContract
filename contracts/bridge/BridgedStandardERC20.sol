@@ -47,6 +47,14 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable, Ow
         return __symbol;
     }
 
+    function _transfer(address sender, address recipient, uint256 amount) internal override {
+        if (recipient == address(0)) {
+            _burn(sender, amount);
+        } else {
+            super._transfer(sender, recipient, amount);
+        }
+    }
+
     function supportsInterface(bytes4 _interfaceId) public override pure returns (bool) {
         bytes4 firstSupportedInterface = bytes4(keccak256("supportsInterface(bytes4)")); // ERC165
         bytes4 secondSupportedInterface = IBridgedStandardERC20.bridgingToken.selector
