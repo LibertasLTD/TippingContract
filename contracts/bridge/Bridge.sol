@@ -98,13 +98,14 @@ contract Bridge is AccessControl, IBridge {
     }
 
     function requestBridgingToStart(
+        address _tokenAtStart,
         address _tokenAtEnd,
         address _to,
         uint256 _amount
     ) external override onlyAtEnd tokenIsAllowed(_tokenAtEnd) {
         address sender = _msgSender();
         IBridgedStandardERC20(_tokenAtEnd).burn(sender, _amount);
-        emit RequestBridgingToStart(_tokenAtEnd, sender, _to, _amount);
+        emit RequestBridgingToStart(_tokenAtStart, _tokenAtEnd, sender, _to, _amount);
     }
 
     function performBridgingToEnd(
