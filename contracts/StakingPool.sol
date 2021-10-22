@@ -1,12 +1,16 @@
 pragma solidity ^0.7.0;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./ILibertasToken.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+
 
 contract StakingPool {
+
+    using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
-    address public _LIBERTAS;
+    IERC20 public _LIBERTAS;
     mapping(address => UserInfo) public userInfo;
     uint256 public _accLibertasPerShare;
     uint256 public _totalDeposits;
@@ -17,7 +21,7 @@ contract StakingPool {
     }
 
     constructor(address LIBERTAS) {
-        _LIBERTAS = LIBERTAS;
+        _LIBERTAS = IERC20(LIBERTAS);
     }
 
     function deposit(uint256 amount) public {
@@ -29,7 +33,7 @@ contract StakingPool {
             }
         }
         if (amount > 0) {
-            require(ILibertasToken(_LIBERTAS).transferFrom(msg.sender, address(this), amount), "Transfer tx failed");
+            _LIBERTAS.safeTransferFrom(msg.sender, address(this), amount);
             user.amount = user.amount.add(amount);
             _totalDeposits = _totalDeposits.add(amount);
         }
@@ -47,7 +51,7 @@ contract StakingPool {
         if (amount > 0) {
             user.amount = user.amount.sub(amount);
             _totalDeposits = _totalDeposits.sub(amount);
-            ILibertasToken(_LIBERTAS).transfer(msg.sender, amount);
+            _LIBERTAS.safeTransfer(msg.sender, amount);
         }
         user.rewardDebt = user.amount.mul(_accLibertasPerShare).div(1e12);
         emit Withdraw(msg.sender, amount);
@@ -91,11 +95,11 @@ contract StakingPool {
     }
 
     function safeLIBERTASTransfer(address _to, uint256 _amount) internal {
-        uint256 totalBalance = ILibertasToken(_LIBERTAS).balanceOf(address(this));
+        uint256 totalBalance = _LIBERTAS.balanceOf(address(this));
         if (totalBalance < _amount) {
-            ILibertasToken(_LIBERTAS).transfer(_to, totalBalance);
+            _LIBERTAS.safeTransfer(_to, totalBalance);
         } else {
-            ILibertasToken(_LIBERTAS).transfer(_to, _amount);
+            _LIBERTAS.safeTransfer(_to, _amount);
         }
     }
 

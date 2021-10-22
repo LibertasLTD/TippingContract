@@ -1,12 +1,15 @@
 pragma solidity ^0.7.0;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/proxy/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "../interfaces/IBridgedStandardERC20.sol";
 
-contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable, Ownable {
+contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
+
+    using SafeMath for uint256;
 
     address public override bridgingToken;
     address public bridge;
@@ -14,10 +17,12 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable, Ow
     string internal __name;
     string internal __symbol;
 
+    uint256 public override burnt = 0;
+
     constructor() ERC20("", "") {}
 
     modifier onlyBridge {
-        require(_msgSender() == bridge, "Only Bridge can mint and burn");
+        require(_msgSender() == bridge, "onlyBridge");
         _;
     }
 
@@ -39,28 +44,21 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable, Ow
         __symbol = _symbol;
     }
 
-    function name() public view override returns(string memory) {
+    function name() public view override(ERC20, IBridgedStandardERC20) returns(string memory) {
         return __name;
     }
 
-    function symbol() public view override returns(string memory) {
+    function symbol() public view override(ERC20, IBridgedStandardERC20) returns(string memory) {
         return __symbol;
     }
 
     function _transfer(address sender, address recipient, uint256 amount) internal override {
         if (recipient == address(0)) {
             _burn(sender, amount);
+            burnt = burnt.add(amount);
         } else {
             super._transfer(sender, recipient, amount);
         }
-    }
-
-    function supportsInterface(bytes4 _interfaceId) public override pure returns (bool) {
-        bytes4 firstSupportedInterface = bytes4(keccak256("supportsInterface(bytes4)")); // ERC165
-        bytes4 secondSupportedInterface = IBridgedStandardERC20.bridgingToken.selector
-            ^ IBridgedStandardERC20.mint.selector
-            ^ IBridgedStandardERC20.burn.selector;
-        return _interfaceId == firstSupportedInterface || _interfaceId == secondSupportedInterface;
     }
 
     function mint(address _to, uint256 _amount) public virtual override onlyBridge {
