@@ -25,6 +25,7 @@ contract Bridge is AccessControl, IBridge {
 
     Pair[] private tokenPairs;
 
+
     // token => is allowed to bridge
     mapping(address => bool) public allowedTokens;
 
@@ -69,18 +70,20 @@ contract Bridge is AccessControl, IBridge {
             bridgedStandartERC20 = IBridgedStandardERC20(_bridgedStandardERC20);
         }
 
-        if (_allowedToken != address(0)) {
-          if (_direction) {
-              allowedTokens[_allowedToken] = true;
-          } else {
-              _cloneAndInitializeTokenAtEndForTokenAtStart(_allowedToken, _name, _symbol);
-          }
+        if (_direction) {
+            allowedTokens[_allowedToken] = true;
+        } else {
+            _cloneAndInitializeTokenAtEndForTokenAtStart(_allowedToken, _name, _symbol);
         }
     }
 
     function evacuateTokens(address _token, uint256 _amount, address _to) external onlyAdmin {
         require(!allowedTokens[_token], "cannotEvacuateAllowedToken");
         IERC20(_token).safeTransfer(_to, _amount);
+    }
+
+    function setAdmin(address _newAdmin) external onlyAdmin {
+        grantRole(DEFAULT_ADMIN_ROLE, _newAdmin);
     }
 
     function setAllowedToken(address _token, bool _status) external onlyAdmin {

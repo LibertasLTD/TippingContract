@@ -11,11 +11,13 @@ const BridgedStandardERC20 = artifacts.require('BridgedStandardERC20');
 const IBridgedStandardERC20 = artifacts.require('IBridgedStandardERC20');
 const MockContract = artifacts.require('MockContract');
 const MockToken = artifacts.require('MockToken');
+const IERC20 = artifacts.require('IERC20');
 
 contract('Bridge', async (accounts) => {
 
   const owner = accounts[0];
   const alice = accounts[1];
+  const bob = accounts[2];
 
   let bridgedStandartERC20;
   let bridge1;
@@ -40,6 +42,42 @@ contract('Bridge', async (accounts) => {
     mockToken = await MockToken.new("Mock Token", "MT", ether('100'), { from: owner });
   });
 
+  describe('non ERC20 standard functionality in BridgedStandardERC20', () => {
+
+    it('should get name and symbol', async () => {
+        expect(await bridgedStandartERC20.name()).to.be.equal("LIBERTAS On End");
+        expect(await bridgedStandartERC20.symbol()).to.be.equal("LOE");
+
+        const tokenAtEnd = await IBridgedStandardERC20.at(await bridge2.getEndTokenByStartToken(libertas.address));
+        expect(await tokenAtEnd.name()).to.be.equal("LIBERTAS");
+        expect(await tokenAtEnd.symbol()).to.be.equal("LIBERTAS");
+    });
+
+    it('should burn if transfer to zero', async () => {
+      const tokensToBridge = new BN('10');
+      await bridge2.performBridgingToEnd(libertas.address, alice, tokensToBridge, "", "");
+      const tokenAtEnd = await IBridgedStandardERC20.at(await bridge2.getEndTokenByStartToken(libertas.address));
+      await tokenAtEnd.transfer(ZERO_ADDRESS, tokensToBridge, { from: alice });
+      expect(await tokenAtEnd.burnt()).to.be.bignumber.equal(tokensToBridge);
+    });
+
+    it('should transfer safely if recipient is not zero address', async () => {
+      const tokensToBridge = new BN('10');
+      await bridge2.performBridgingToEnd(libertas.address, alice, tokensToBridge, "", "");
+      const tokenAtEnd = await IBridgedStandardERC20.at(await bridge2.getEndTokenByStartToken(libertas.address));
+      await tokenAtEnd.approve(bob, tokensToBridge, { from: alice });
+      await tokenAtEnd.transfer(bob, tokensToBridge, { from: alice });
+      expect(await tokenAtEnd.balanceOf(bob)).to.be.bignumber.equal(tokensToBridge);
+    });
+
+  });
+
+  it('should set new admin', async () => {
+    await bridge2.setAdmin(bob, { from: owner });
+    const adminRole = "0x00";
+    expect(await bridge2.hasRole(adminRole, bob)).to.be.true;
+  });
+
   it('should evacuate tokens', async () => {
     await expectRevert(bridge1.evacuateTokens(libertas.address, ZERO, ZERO_ADDRESS, { from: alice }), 'onlyAdmin');
     await expectRevert(bridge1.evacuateTokens(libertas.address, ZERO, ZERO_ADDRESS), 'cannotEvacuateAllowedToken');
@@ -59,6 +97,7 @@ contract('Bridge', async (accounts) => {
   it('should request bridging to end', async () => {
     const tokensToBridge = new BN('10');
     await libertas.approve(bridge1.address, tokensToBridge, { from: owner });
+    await expectRevert(bridge1.requestBridgingToEnd(ZERO_ADDRESS, owner, tokensToBridge, { from: alice }), "invalidToken");
     const receipt = await bridge1.requestBridgingToEnd(libertas.address, alice, tokensToBridge);
     expectEvent(receipt, "RequestBridgingToEnd", {
       _tokenAtStart: libertas.address,
@@ -75,6 +114,7 @@ contract('Bridge', async (accounts) => {
     await bridge2.performBridgingToEnd(libertas.address, alice, tokensToBridge, "", "");
 
     await tokenAtEnd.approve(bridge2.address, tokensToBridge, { from: alice });
+    await expectRevert(bridge2.requestBridgingToStart(libertas.address, ZERO_ADDRESS, owner, tokensToBridge, { from: alice }), "invalidToken");
     const receipt = await bridge2.requestBridgingToStart(libertas.address, tokenAtEnd.address, owner, tokensToBridge, { from: alice });
     expectEvent(receipt, "RequestBridgingToStart", {
       _tokenAtEnd: tokenAtEnd.address,
@@ -130,6 +170,21 @@ contract('Bridge', async (accounts) => {
   it('should get end token by start token', async () => {
     const tokenAtEndAddress = await bridge2.getEndTokenByStartToken(libertas.address);
     expect(tokenAtEndAddress).to.not.be.equal(ZERO_ADDRESS);
+  });
+
+  it('should revert if no start token provided', async () => {
+    await expectRevert(bridge2.getStartTokenByEndToken(ZERO_ADDRESS), "noStartTokenFound");
+  });
+
+  it('should not mint or burn called not by bridge', async () => {
+    const tokenAtEnd = await IBridgedStandardERC20.at(await bridge2.getEndTokenByStartToken(libertas.address));
+    await expectRevert(tokenAtEnd.mint(ZERO_ADDRESS, ZERO), "onlyBridge");
+    await expectRevert(tokenAtEnd.burn(ZERO_ADDRESS, ZERO), "onlyBridge");
+  });
+
+  it('should revert if perform bridging called not by message bot', async () => {
+    await expectRevert(bridge1.performBridgingToStart(ZERO_ADDRESS, ZERO_ADDRESS, ZERO_ADDRESS, ZERO, { from: alice }), "onlyMessangerBot");
+    await expectRevert(bridge2.performBridgingToEnd(ZERO_ADDRESS, ZERO_ADDRESS, ZERO, "", "", { from: alice }), "onlyMessangerBot");
   });
 
 });

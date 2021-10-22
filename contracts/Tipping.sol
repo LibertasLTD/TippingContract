@@ -1,11 +1,14 @@
 pragma solidity ^0.7.0;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IStakingPool.sol";
-import "./ILibertasToken.sol";
 
 contract Tipping is Ownable {
+
+    using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
     address public _STAKING_VAULT;
@@ -65,30 +68,15 @@ contract Tipping is Ownable {
     }
 
     function transfer(address to, uint256 amount) public returns (bool) {
-        _validateTransfer(_LIBERTAS, amount);
-
+        IERC20 _libertas = IERC20(_LIBERTAS);
+        _libertas.safeTransferFrom(msg.sender, address(this), amount);
         (uint256 transAmt, uint256 burnAmt, uint256 fundAmt, uint256 rewardAmt) = _getValues(amount);
-        _transfer(to, transAmt);
-        _transfer(address(0), burnAmt);
-        _transfer(_FUND_VAULT, fundAmt);
-        _transfer(_STAKING_VAULT, rewardAmt);
-
+        _libertas.safeTransfer(to, transAmt);
+        _libertas.safeTransfer(address(0), burnAmt);
+        _libertas.safeTransfer(_FUND_VAULT, fundAmt);
+        _libertas.safeTransfer(_STAKING_VAULT, rewardAmt);
         IStakingPool(_STAKING_VAULT).supplyReward(rewardAmt);
         return true;
-    }
-
-    function _transferFrom(address _from, address _to, uint256 _amount) internal {
-        ILibertasToken(_LIBERTAS).transferFrom(_from, _to, _amount);
-    }
-
-    function _transfer(address _to, uint256 _amount) internal {
-        ILibertasToken(_LIBERTAS).transfer(_to, _amount);
-    }
-
-    function _validateTransfer(address token, uint256 amount) private {
-        uint256 balance = ILibertasToken(token).balanceOf(msg.sender);
-        require(amount <= balance, "Insufficient amount");
-        require(ILibertasToken(token).transferFrom(msg.sender, address(this), amount), "Transfer tx failed");
     }
 
     function _getValues(uint256 tAmount) private view returns(uint256, uint256, uint256, uint256) {
@@ -96,7 +84,6 @@ contract Tipping is Ownable {
         uint256 fundAmt = tAmount.mul(_fundRate).div(1000);
         uint256 rewardAmt = tAmount.mul(_rewardRate).div(1000);
         uint256 transAmt = tAmount.sub(rewardAmt).sub(fundAmt).sub(burnAmt);
-
         return (transAmt, burnAmt, fundAmt, rewardAmt);
     }
 }
