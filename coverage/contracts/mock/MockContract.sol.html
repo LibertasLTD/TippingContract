@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts/mock/MockContract.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">contracts/mock/</a> MockContract.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">1.74% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>2/115</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">2.7% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/37</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">1.68% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>2/119</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: UNLICENSED
+&nbsp;
+pragma solidity &gt;=0.7.0 &lt;=0.8.0;
+&nbsp;
+interface MockInterface {
+	/**
+	 * @dev After calling this method, the mock will return `response` when it is called
+	 * with any calldata that is not mocked more specifically below
+	 * (e.g. using givenMethodReturn).
+	 * @param response ABI encoded response that will be returned if method is invoked
+	 */
+	function givenAnyReturn(bytes calldata response) external;
+	function givenAnyReturnBool(bool response) external;
+	function givenAnyReturnUint(uint response) external;
+	function givenAnyReturnAddress(address response) external;
+&nbsp;
+	function givenAnyRevert() external;
+	function givenAnyRevertWithMessage(string calldata message) external;
+	function givenAnyRunOutOfGas() external;
+&nbsp;
+	/**
+	 * @dev After calling this method, the mock will return `response` when the given
+	 * methodId is called regardless of arguments. If the methodId and arguments
+	 * are mocked more specifically (using `givenMethodAndArguments`) the latter
+	 * will take precedence.
+	 * @param method ABI encoded methodId. It is valid to pass full calldata (including arguments). The mock will extract the methodId from it
+	 * @param response ABI encoded response that will be returned if method is invoked
+	 */
+	function givenMethodReturn(bytes calldata method, bytes calldata response) external;
+	function givenMethodReturnBool(bytes calldata method, bool response) external;
+	function givenMethodReturnUint(bytes calldata method, uint response) external;
+	function givenMethodReturnAddress(bytes calldata method, address response) external;
+&nbsp;
+	function givenMethodRevert(bytes calldata method) external;
+	function givenMethodRevertWithMessage(bytes calldata method, string calldata message) external;
+	function givenMethodRunOutOfGas(bytes calldata method) external;
+&nbsp;
+	/**
+	 * @dev After calling this method, the mock will return `response` when the given
+	 * methodId is called with matching arguments. These exact calldataMocks will take
+	 * precedence over all other calldataMocks.
+	 * @param call ABI encoded calldata (methodId and arguments)
+	 * @param response ABI encoded response that will be returned if contract is invoked with calldata
+	 */
+	function givenCalldataReturn(bytes calldata call, bytes calldata response) external;
+	function givenCalldataReturnBool(bytes calldata call, bool response) external;
+	function givenCalldataReturnUint(bytes calldata call, uint response) external;
+	function givenCalldataReturnAddress(bytes calldata call, address response) external;
+&nbsp;
+	function givenCalldataRevert(bytes calldata call) external;
+	function givenCalldataRevertWithMessage(bytes calldata call, string calldata message) external;
+	function givenCalldataRunOutOfGas(bytes calldata call) external;
+&nbsp;
+	/**
+	 * @dev Returns the number of times anything has been called on this mock since last reset
+	 */
+	function invocationCount() external returns (uint);
+&nbsp;
+	/**
+	 * @dev Returns the number of times the given method has been called on this mock since last reset
+	 * @param method ABI encoded methodId. It is valid to pass full calldata (including arguments). The mock will extract the methodId from it
+	 */
+	function invocationCountForMethod(bytes calldata method) external returns (uint);
+&nbsp;
+	/**
+	 * @dev Returns the number of times this mock has been called with the exact calldata since last reset.
+	 * @param call ABI encoded calldata (methodId and arguments)
+	 */
+	function invocationCountForCalldata(bytes calldata call) external returns (uint);
+&nbsp;
+	/**
+	 * @dev Resets all mocked methods and invocation counts.
+	 */
+	 function reset() external;
+}
+&nbsp;
+/**
+ * Implementation of the MockInterface.
+ */
+contract MockContract is MockInterface {
+	enum MockType { Return, Revert, OutOfGas }
+&nbsp;
+	bytes32 public constant MOCKS_LIST_START = hex"01";
+	bytes public constant MOCKS_LIST_END = "0xff";
+	bytes32 public constant MOCKS_LIST_END_HASH = keccak256(MOCKS_LIST_END);
+	bytes4 public constant SENTINEL_ANY_MOCKS = hex"01";
+	bytes public constant DEFAULT_FALLBACK_VALUE = abi.encode(false);
+&nbsp;
+	// A linked list allows easy iteration and inclusion checks
+	mapping(bytes32 =&gt; bytes) calldataMocks;
+	mapping(bytes =&gt; MockType) calldataMockTypes;
+	mapping(bytes =&gt; bytes) calldataExpectations;
+	mapping(bytes =&gt; string) calldataRevertMessage;
+	mapping(bytes32 =&gt; uint) calldataInvocations;
+&nbsp;
+	mapping(bytes4 =&gt; bytes4) methodIdMocks;
+	mapping(bytes4 =&gt; MockType) methodIdMockTypes;
+	mapping(bytes4 =&gt; bytes) methodIdExpectations;
+	mapping(bytes4 =&gt; string) methodIdRevertMessages;
+	mapping(bytes32 =&gt; uint) methodIdInvocations;
+&nbsp;
+	MockType fallbackMockType;
+	bytes fallbackExpectation = DEFAULT_FALLBACK_VALUE;
+	string fallbackRevertMessage;
+	uint invocations;
+	uint resetCount;
+&nbsp;
+	constructor() {
+		calldataMocks[MOCKS_LIST_START] = MOCKS_LIST_END;
+		methodIdMocks[SENTINEL_ANY_MOCKS] = SENTINEL_ANY_MOCKS;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function trackCalldataMock(bytes memory call) private {</span>
+<span class="cstat-no" title="statement not covered" >		bytes32 callHash = keccak256(call);</span>
+<span class="cstat-no" title="statement not covered" >		if (calldataMocks[callHash].length == 0) {</span>
+<span class="cstat-no" title="statement not covered" >			calldataMocks[callHash] = calldataMocks[MOCKS_LIST_START]</span>;
+<span class="cstat-no" title="statement not covered" >			calldataMocks[MOCKS_LIST_START] = call</span>;
+		}
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function trackMethodIdMock(bytes4 methodId) private {</span>
+<span class="cstat-no" title="statement not covered" >		if (methodIdMocks[methodId] == 0x0) {</span>
+<span class="cstat-no" title="statement not covered" >			methodIdMocks[methodId] = methodIdMocks[SENTINEL_ANY_MOCKS]</span>;
+<span class="cstat-no" title="statement not covered" >			methodIdMocks[SENTINEL_ANY_MOCKS] = methodId</span>;
+		}
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function _givenAnyReturn(bytes memory response) internal {</span>
+<span class="cstat-no" title="statement not covered" >		fallbackMockType = MockType.Return</span>;
+<span class="cstat-no" title="statement not covered" >		fallbackExpectation = response</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyReturn(bytes calldata response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenAnyReturn(response)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyReturnBool(bool response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		uint flag = response ? 1 : 0;</span>
+<span class="cstat-no" title="statement not covered" >		_givenAnyReturn(uintToBytes(flag))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyReturnUint(uint response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenAnyReturn(uintToBytes(response))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyReturnAddress(address response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenAnyReturn(uintToBytes(uint(uint160(response))))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyRevert() override external {</span>
+<span class="cstat-no" title="statement not covered" >		fallbackMockType = MockType.Revert</span>;
+<span class="cstat-no" title="statement not covered" >		fallbackRevertMessage = ""</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyRevertWithMessage(string calldata message) override external {</span>
+<span class="cstat-no" title="statement not covered" >		fallbackMockType = MockType.Revert</span>;
+<span class="cstat-no" title="statement not covered" >		fallbackRevertMessage = message</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenAnyRunOutOfGas() override external {</span>
+<span class="cstat-no" title="statement not covered" >		fallbackMockType = MockType.OutOfGas</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function _givenCalldataReturn(bytes memory call, bytes memory response) private  {</span>
+<span class="cstat-no" title="statement not covered" >		calldataMockTypes[call] = MockType.Return</span>;
+<span class="cstat-no" title="statement not covered" >		calldataExpectations[call] = response</span>;
+<span class="cstat-no" title="statement not covered" >		trackCalldataMock(call)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataReturn(bytes calldata call, bytes calldata response) override external  {</span>
+<span class="cstat-no" title="statement not covered" >		_givenCalldataReturn(call, response)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataReturnBool(bytes calldata call, bool response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		uint flag = response ? 1 : 0;</span>
+<span class="cstat-no" title="statement not covered" >		_givenCalldataReturn(call, uintToBytes(flag))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataReturnUint(bytes calldata call, uint response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenCalldataReturn(call, uintToBytes(response))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataReturnAddress(bytes calldata call, address response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenCalldataReturn(call, uintToBytes(uint(uint160(response))))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function _givenMethodReturn(bytes memory call, bytes memory response) private {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 method = bytesToBytes4(call);</span>
+<span class="cstat-no" title="statement not covered" >		methodIdMockTypes[method] = MockType.Return</span>;
+<span class="cstat-no" title="statement not covered" >		methodIdExpectations[method] = response</span>;
+<span class="cstat-no" title="statement not covered" >		trackMethodIdMock(method)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodReturn(bytes calldata call, bytes calldata response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenMethodReturn(call, response)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodReturnBool(bytes calldata call, bool response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		uint flag = response ? 1 : 0;</span>
+<span class="cstat-no" title="statement not covered" >		_givenMethodReturn(call, uintToBytes(flag))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodReturnUint(bytes calldata call, uint response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenMethodReturn(call, uintToBytes(response))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodReturnAddress(bytes calldata call, address response) override external {</span>
+<span class="cstat-no" title="statement not covered" >		_givenMethodReturn(call, uintToBytes(uint(uint160(response))))</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataRevert(bytes calldata call) override external {</span>
+<span class="cstat-no" title="statement not covered" >		calldataMockTypes[call] = MockType.Revert</span>;
+<span class="cstat-no" title="statement not covered" >		calldataRevertMessage[call] = ""</span>;
+<span class="cstat-no" title="statement not covered" >		trackCalldataMock(call)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodRevert(bytes calldata call) override external {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 method = bytesToBytes4(call);</span>
+<span class="cstat-no" title="statement not covered" >		methodIdMockTypes[method] = MockType.Revert</span>;
+<span class="cstat-no" title="statement not covered" >		trackMethodIdMock(method)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataRevertWithMessage(bytes calldata call, string calldata message) override external {</span>
+<span class="cstat-no" title="statement not covered" >		calldataMockTypes[call] = MockType.Revert</span>;
+<span class="cstat-no" title="statement not covered" >		calldataRevertMessage[call] = message</span>;
+<span class="cstat-no" title="statement not covered" >		trackCalldataMock(call)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodRevertWithMessage(bytes calldata call, string calldata message) override external {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 method = bytesToBytes4(call);</span>
+<span class="cstat-no" title="statement not covered" >		methodIdMockTypes[method] = MockType.Revert</span>;
+<span class="cstat-no" title="statement not covered" >		methodIdRevertMessages[method] = message</span>;
+<span class="cstat-no" title="statement not covered" >		trackMethodIdMock(method)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenCalldataRunOutOfGas(bytes calldata call) override external {</span>
+<span class="cstat-no" title="statement not covered" >		calldataMockTypes[call] = MockType.OutOfGas</span>;
+<span class="cstat-no" title="statement not covered" >		trackCalldataMock(call)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function givenMethodRunOutOfGas(bytes calldata call) override external {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 method = bytesToBytes4(call);</span>
+<span class="cstat-no" title="statement not covered" >		methodIdMockTypes[method] = MockType.OutOfGas</span>;
+<span class="cstat-no" title="statement not covered" >		trackMethodIdMock(method)</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function invocationCount() override external view returns (uint) {</span>
+<span class="cstat-no" title="statement not covered" >		return invocations;</span>
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function invocationCountForMethod(bytes calldata call) override external view returns (uint) {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 method = bytesToBytes4(call);</span>
+<span class="cstat-no" title="statement not covered" >		return methodIdInvocations[keccak256(abi.encodePacked(resetCount, method))];</span>
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function invocationCountForCalldata(bytes calldata call) override external view returns (uint) {</span>
+<span class="cstat-no" title="statement not covered" >		return calldataInvocations[keccak256(abi.encodePacked(resetCount, call))];</span>
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function reset() override external {</span>
+		// Reset all exact calldataMocks
+<span class="cstat-no" title="statement not covered" >		bytes memory nextMock = calldataMocks[MOCKS_LIST_START];</span>
+<span class="cstat-no" title="statement not covered" >		bytes32 mockHash = keccak256(nextMock);</span>
+		// We cannot compary bytes
+<span class="cstat-no" title="statement not covered" >		while(mockHash != MOCKS_LIST_END_HASH) {</span>
+			// Reset all mock maps
+<span class="cstat-no" title="statement not covered" >			calldataMockTypes[nextMock] = MockType.Return</span>;
+<span class="cstat-no" title="statement not covered" >			calldataExpectations[nextMock] = hex""</span>;
+<span class="cstat-no" title="statement not covered" >			calldataRevertMessage[nextMock] = ""</span>;
+			// Set next mock to remove
+<span class="cstat-no" title="statement not covered" >			nextMock = calldataMocks[mockHash]</span>;
+			// Remove from linked list
+<span class="cstat-no" title="statement not covered" >			calldataMocks[mockHash] = ""</span>;
+			// Update mock hash
+<span class="cstat-no" title="statement not covered" >			mockHash = keccak256(nextMock)</span>;
+		}
+		// Clear list
+<span class="cstat-no" title="statement not covered" >		calldataMocks[MOCKS_LIST_START] = MOCKS_LIST_END</span>;
+&nbsp;
+		// Reset all any calldataMocks
+<span class="cstat-no" title="statement not covered" >		bytes4 nextAnyMock = methodIdMocks[SENTINEL_ANY_MOCKS];</span>
+<span class="cstat-no" title="statement not covered" >		while(nextAnyMock != SENTINEL_ANY_MOCKS) {</span>
+<span class="cstat-no" title="statement not covered" >			bytes4 currentAnyMock = nextAnyMock;</span>
+<span class="cstat-no" title="statement not covered" >			methodIdMockTypes[currentAnyMock] = MockType.Return</span>;
+<span class="cstat-no" title="statement not covered" >			methodIdExpectations[currentAnyMock] = hex""</span>;
+<span class="cstat-no" title="statement not covered" >			methodIdRevertMessages[currentAnyMock] = ""</span>;
+<span class="cstat-no" title="statement not covered" >			nextAnyMock = methodIdMocks[currentAnyMock]</span>;
+			// Remove from linked list
+<span class="cstat-no" title="statement not covered" >			methodIdMocks[currentAnyMock] = 0x0</span>;
+		}
+		// Clear list
+<span class="cstat-no" title="statement not covered" >		methodIdMocks[SENTINEL_ANY_MOCKS] = SENTINEL_ANY_MOCKS</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		fallbackExpectation = DEFAULT_FALLBACK_VALUE</span>;
+<span class="cstat-no" title="statement not covered" >		fallbackMockType = MockType.Return</span>;
+<span class="cstat-no" title="statement not covered" >		invocations = 0</span>;
+<span class="cstat-no" title="statement not covered" >		resetCount += 1</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function useAllGas() private {</span>
+<span class="cstat-no" title="statement not covered" >		while(true) {</span>
+<span class="cstat-no" title="statement not covered" >			bool s;</span>
+			assembly {
+				//expensive call to EC multiply contract
+				s := call(sub(gas(), 2000), 6, 0, 0x0, 0xc0, 0x0, 0x60)
+			}
+		}
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function bytesToBytes4(bytes memory b) private pure returns (bytes4) {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 out;</span>
+<span class="cstat-no" title="statement not covered" >		for (uint i = 0; i &lt; 4; i++) {</span>
+<span class="cstat-no" title="statement not covered" >			out |= bytes4(b[i] &amp; 0xFF) &gt;&gt; (i * 8)</span>;
+		}
+<span class="cstat-no" title="statement not covered" >		return out;</span>
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function uintToBytes(uint256 x) private pure returns (bytes memory b) {</span>
+<span class="cstat-no" title="statement not covered" >		b = new bytes(32)</span>;
+		assembly { mstore(add(b, 32), x) }
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function updateInvocationCount(bytes4 methodId, bytes memory originalMsgData) public {</span>
+<span class="cstat-no" title="statement not covered" >		require(msg.sender == address(this), "Can only be called from the contract itself")</span>;
+<span class="cstat-no" title="statement not covered" >		invocations += 1</span>;
+<span class="cstat-no" title="statement not covered" >		methodIdInvocations[keccak256(abi.encodePacked(resetCount, methodId))] += 1</span>;
+<span class="cstat-no" title="statement not covered" >		calldataInvocations[keccak256(abi.encodePacked(resetCount, originalMsgData))] += 1</span>;
+	}
+&nbsp;
+	receive() payable external {
+		fallbackImpl();
+	}
+<span class="fstat-no" title="function not covered" >	fallback() payable external {</span>
+<span class="cstat-no" title="statement not covered" >		fallbackImpl()</span>;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function fallbackImpl() internal {</span>
+<span class="cstat-no" title="statement not covered" >		bytes4 methodId = msg.sig;</span>
+&nbsp;
+		// First, check exact matching overrides
+<span class="cstat-no" title="statement not covered" >		if (calldataMockTypes[msg.data] == MockType.Revert) {</span>
+<span class="cstat-no" title="statement not covered" >			revert(calldataRevertMessage[msg.data])</span>;
+		}
+<span class="cstat-no" title="statement not covered" >		if (calldataMockTypes[msg.data] == MockType.OutOfGas) {</span>
+<span class="cstat-no" title="statement not covered" >			useAllGas()</span>;
+		}
+<span class="cstat-no" title="statement not covered" >		bytes memory result = calldataExpectations[msg.data];</span>
+&nbsp;
+		// Then check method Id overrides
+<span class="cstat-no" title="statement not covered" >		if (result.length == 0) {</span>
+<span class="cstat-no" title="statement not covered" >			if (methodIdMockTypes[methodId] == MockType.Revert) {</span>
+<span class="cstat-no" title="statement not covered" >				revert(methodIdRevertMessages[methodId])</span>;
+			}
+<span class="cstat-no" title="statement not covered" >			if (methodIdMockTypes[methodId] == MockType.OutOfGas) {</span>
+<span class="cstat-no" title="statement not covered" >				useAllGas()</span>;
+			}
+<span class="cstat-no" title="statement not covered" >			result = methodIdExpectations[methodId]</span>;
+		}
+&nbsp;
+		// Last, use the fallback override
+<span class="cstat-no" title="statement not covered" >		if (result.length == 0) {</span>
+<span class="cstat-no" title="statement not covered" >			if (fallbackMockType == MockType.Revert) {</span>
+<span class="cstat-no" title="statement not covered" >				revert(fallbackRevertMessage)</span>;
+			}
+<span class="cstat-no" title="statement not covered" >			if (fallbackMockType == MockType.OutOfGas) {</span>
+<span class="cstat-no" title="statement not covered" >				useAllGas()</span>;
+			}
+<span class="cstat-no" title="statement not covered" >			result = fallbackExpectation</span>;
+		}
+&nbsp;
+		// Record invocation as separate call so we don't rollback in case we are called with STATICCALL
+<span class="cstat-no" title="statement not covered" >		(, bytes memory r) = address(this).call{gas: 100000}(abi.encodeWithSignature("updateInvocationCount(bytes4,bytes)", methodId, msg.data));</span>
+<span class="cstat-no" title="statement not covered" >		assert(r.length == 0)</span>;
+&nbsp;
+		assembly {
+			return(add(0x20, result), mload(result))
+		}
+	}
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Oct 22 2021 11:02:43 GMT+0300 (Moscow Standard Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
