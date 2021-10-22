@@ -31,6 +31,7 @@
     "dotenv": "^8.2.0",
     "ethers": "^5.4.7",
     "node-ipc": "^10.1.0",
+    "solidity-coverage": "^0.7.17",
     "truffle-plugin-verify": "^0.5.4",
     "web3-utils": "^1.6.0"
   }
