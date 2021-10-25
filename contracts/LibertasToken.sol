@@ -10,8 +10,10 @@ contract LibertasToken is ERC20, Initializable {
 
     constructor() ERC20("LIBERTAS", "LIBERTAS") {}
 
+    uint256 public constant CAP = 10000000000;
+
     function configure(address _owner) external initializer {
-        _mint(_owner, 10000000000);
+        _mint(_owner, CAP);
     }
 
     function approveAndCall(address _spender, uint256 _value, bytes memory _extraData) public returns(bool) {
