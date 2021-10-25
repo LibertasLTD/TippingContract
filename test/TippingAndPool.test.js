@@ -1,4 +1,4 @@
-const { BN, ether, constants, expectRevert, expectEvent, expect } = require('@openzeppelin/test-helpers')
+const { BN, ether, constants, expectRevert, expectEvent, expect, time } = require('@openzeppelin/test-helpers')
 const { ZERO_ADDRESS } = constants;
 const ZERO = new BN('0');
 const LibertasToken = artifacts.require('LibertasToken');
@@ -58,6 +58,8 @@ contract('Tipping', accounts => {
        await libertas.configure(account_one);
        stakingPool = await StakingPool.new(libertas.address);
        tipping = await Tipping.new(stakingPool.address, libertas.address, vault, burnRate, fundRate, rewardRate);
+       // 0x00 - admin
+       await stakingPool.grantRole("0x00", tipping.address);
     });
 
     describe('LibertasToken Test', function() {
@@ -118,7 +120,150 @@ contract('Tipping', accounts => {
     });
 
     describe('StakingPool Test', function() {
-      
+
+        it('should reject if trying to withdraw from contract too much', async () => {
+          await expectRevert(stakingPool.withdraw(new BN('1000'), {from: account_two}), "withdrawTooMuch");
+        });
+
+        it('should withdraw rewards even if requested amount is below actual balance of the contract', async () => {
+          const accountTwoBalance = new BN('400');
+          const reward = new BN('1000').sub(accountTwoBalance);
+
+          await libertas.approve(account_two, accountTwoBalance, {from: account_one});
+          await libertas.transfer(account_two, accountTwoBalance, {from: account_one});
+          await libertas.approve(stakingPool.address, accountTwoBalance, {from: account_two});
+          await stakingPool.deposit(accountTwoBalance, {from: account_two});
+
+          await libertas.approve(stakingPool.address, reward, {from: account_one});
+          await libertas.transfer(stakingPool.address, reward, {from: account_one});
+          await stakingPool.supplyReward(reward, {from: account_one});
+
+          await stakingPool.withdraw(accountTwoBalance.div(new BN('2')), {from: account_two});
+
+          const newReward = new BN('1000');
+          await stakingPool.supplyReward(reward, {from: account_one});
+
+          await stakingPool.withdraw(ZERO, {from: account_two});
+        });
+
+        it('should withdraw balance of the contract', async () => {
+
+          const accountTwoBalance = new BN('1000');
+          const reward = (await libertas.totalSupply()).sub(accountTwoBalance);
+
+          await libertas.approve(account_two, accountTwoBalance, {from: account_one});
+          await libertas.transfer(account_two, accountTwoBalance, {from: account_one});
+          await libertas.approve(stakingPool.address, accountTwoBalance, {from: account_two});
+          await stakingPool.deposit(accountTwoBalance, {from: account_two});
+
+          await libertas.approve(stakingPool.address, reward, {from: account_one});
+          await libertas.transfer(stakingPool.address, reward, {from: account_one});
+          await stakingPool.supplyReward(reward, {from: account_one});
+
+          const receipt = await stakingPool.withdraw(accountTwoBalance, {from: account_two});
+          expectEvent(receipt, "Withdraw", {
+            user: account_two,
+            amount: accountTwoBalance
+          });
+
+        });
+
+        it('should withdraw if zero requested', async () => {
+          const receipt = await stakingPool.withdraw(ZERO, {from: account_two});
+          expectEvent(receipt, "Withdraw", {
+            user: account_two,
+            amount: ZERO
+          });
+        })
+
+        it('should deposit when amount equals to zero', async () => {
+          const receipt = await stakingPool.deposit(ZERO, {from: account_two});
+          expectEvent(receipt, "Deposit", {
+            user: account_two,
+            amount: ZERO
+          });
+        });
+
+        it('should revert claim if not deposited first', async () => {
+          await expectRevert(stakingPool.claim({from: account_two}), "nothingToClaim");
+        });
+
+        it('should revert if providing supply from unauthorized address', async () =>{
+          await expectRevert(stakingPool.supplyReward(ZERO, {from: account_two}), "onlyAdmin");
+        });
+
+        it('should emergency withdraw', async () => {
+          const accountTwoBalance = 1000;
+          await libertas.approve(account_two, accountTwoBalance, {from: account_one});
+          await libertas.transfer(account_two, accountTwoBalance, {from: account_one});
+          await libertas.approve(stakingPool.address, accountTwoBalance, {from: account_two});
+          await stakingPool.deposit(accountTwoBalance, {from: account_two});
+
+          const receipt = await stakingPool.emergencyWithdraw({from: account_two});
+          expectEvent(receipt, "EmergencyWithdraw", {
+            user: account_two,
+            amount: new BN(accountTwoBalance.toString())
+          });
+        });
+
+        it('should deposit when user amount equals to zero', async () => {
+
+          const accountTwoBalance = 1000;
+          const reward = (await libertas.totalSupply()).sub(new BN(accountTwoBalance.toString()));
+
+          await libertas.approve(account_two, accountTwoBalance, {from: account_one});
+          await libertas.transfer(account_two, accountTwoBalance, {from: account_one});
+
+          await libertas.approve(stakingPool.address, 300, {from: account_two});
+          await stakingPool.deposit(300, {from: account_two});
+
+          await libertas.approve(stakingPool.address, reward, {from: account_one});
+          await libertas.transfer(stakingPool.address, reward, {from: account_one});
+          await stakingPool.supplyReward(reward, {from: account_one});
+
+          await libertas.approve(stakingPool.address, 100, {from: account_two});
+          let receipt = await stakingPool.deposit(100, {from: account_two});
+
+          expectEvent(receipt, "Deposit", {
+            amount: new BN('100'),
+            user: account_two
+          });
+
+          await stakingPool.claim({from: account_two});
+
+          await libertas.approve(stakingPool.address, 100, {from: account_two});
+          receipt = await stakingPool.deposit(100, {from: account_two});
+
+          expectEvent(receipt, "Deposit", {
+            amount: new BN('100'),
+            user: account_two
+          });
+
+        });
+
+        it('should get available reward', async () => {
+
+          const accountTwoBalance = 1000;
+          const reward = (await libertas.totalSupply()).sub(new BN(accountTwoBalance.toString()));
+
+          await libertas.approve(account_two, accountTwoBalance, {from: account_one});
+          await libertas.transfer(account_two, accountTwoBalance, {from: account_one});
+
+          let availableReward = await stakingPool.availableReward({from: account_two});
+          availableReward.toNumber().should.equal(0);
+
+          await libertas.approve(stakingPool.address, accountTwoBalance, {from: account_two});
+          await stakingPool.deposit(accountTwoBalance, {from: account_two});
+
+          await libertas.approve(stakingPool.address, reward, {from: account_one});
+          await libertas.transfer(stakingPool.address, reward, {from: account_one});
+          await stakingPool.supplyReward(reward, {from: account_one});
+
+          availableReward = await stakingPool.availableReward({from: account_two});
+          availableReward.toNumber().should.equal(reward.toNumber());
+        });
+
+
         it('should have valid contract address', function() {
             const address = stakingPool.address;
             address.should.not.equal(null);

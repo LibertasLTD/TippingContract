@@ -1,33 +1,40 @@
 pragma solidity ^0.7.0;
 
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 
-contract StakingPool {
+contract StakingPool is AccessControl {
 
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
     IERC20 public _LIBERTAS;
     mapping(address => UserInfo) public userInfo;
-    uint256 public _accLibertasPerShare;
-    uint256 public _totalDeposits;
+    uint256 public accLibertasPerShare;
+    uint256 public totalDeposits;
 
     struct UserInfo {
         uint256 amount;
         uint256 rewardDebt;
     }
 
-    constructor(address LIBERTAS) {
-        _LIBERTAS = IERC20(LIBERTAS);
+    modifier onlyAdmin {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "onlyAdmin");
+        _;
     }
 
-    function deposit(uint256 amount) public {
+    constructor(address LIBERTAS) {
+        _LIBERTAS = IERC20(LIBERTAS);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    function deposit(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         if (user.amount > 0) {
-            uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
+            uint256 pending = user.amount.mul(accLibertasPerShare).div(1e12).sub(user.rewardDebt);
             if (pending > 0) {
                 safeLIBERTASTransfer(msg.sender, pending);
             }
@@ -35,50 +42,48 @@ contract StakingPool {
         if (amount > 0) {
             _LIBERTAS.safeTransferFrom(msg.sender, address(this), amount);
             user.amount = user.amount.add(amount);
-            _totalDeposits = _totalDeposits.add(amount);
+            totalDeposits = totalDeposits.add(amount);
         }
-        user.rewardDebt = user.amount.mul(_accLibertasPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(accLibertasPerShare).div(1e12);
         emit Deposit(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount) public {
+    function withdraw(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
-        require(user.amount >= amount, "Withdraw too much");
-        uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
+        require(user.amount >= amount, "withdrawTooMuch");
+        uint256 pending = user.amount.mul(accLibertasPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
             safeLIBERTASTransfer(msg.sender, pending);
         }
         if (amount > 0) {
             user.amount = user.amount.sub(amount);
-            _totalDeposits = _totalDeposits.sub(amount);
+            totalDeposits = totalDeposits.sub(amount);
             _LIBERTAS.safeTransfer(msg.sender, amount);
         }
-        user.rewardDebt = user.amount.mul(_accLibertasPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(accLibertasPerShare).div(1e12);
         emit Withdraw(msg.sender, amount);
     }
 
-    function claim() public {
-        if (userInfo[msg.sender].amount == 0) {
-            return;
-        }
+    function claim() external {
+        require(userInfo[msg.sender].amount > 0, "nothingToClaim");
         UserInfo storage user = userInfo[msg.sender];
-        uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.amount.mul(accLibertasPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
             safeLIBERTASTransfer(msg.sender, pending);
         }
-        user.rewardDebt = user.amount.mul(_accLibertasPerShare).div(1e12);
+        user.rewardDebt = user.amount.mul(accLibertasPerShare).div(1e12);
     }
 
-    function availableReward() public view returns (uint256) {
+    function availableReward() external view returns (uint256) {
         if (userInfo[msg.sender].amount == 0) {
             return 0;
         }
         UserInfo storage user = userInfo[msg.sender];
-        uint256 pending = user.amount.mul(_accLibertasPerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.amount.mul(accLibertasPerShare).div(1e12).sub(user.rewardDebt);
         return pending;
     }
 
-    function emergencyWithdraw() public {
+    function emergencyWithdraw() external {
         UserInfo storage user = userInfo[msg.sender];
         uint256 amount = user.amount;
         user.amount = 0;
@@ -87,11 +92,11 @@ contract StakingPool {
         emit EmergencyWithdraw(msg.sender, amount);
     }
 
-    function supplyReward(uint256 reward) public {
-        if (_totalDeposits == 0) {
+    function supplyReward(uint256 reward) external onlyAdmin {
+        if (totalDeposits == 0) {
             return;
         }
-        _accLibertasPerShare = _accLibertasPerShare.add(reward.mul(1e12).div(_totalDeposits));
+        accLibertasPerShare = accLibertasPerShare.add(reward.mul(1e12).div(totalDeposits));
     }
 
     function safeLIBERTASTransfer(address _to, uint256 _amount) internal {
