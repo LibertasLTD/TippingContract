@@ -12,6 +12,8 @@ contract LibertasToken is ERC20, Initializable {
 
     uint256 public constant CAP = 10000000000;
 
+    uint256 public constant CAP = 10000000000;
+
     function configure(address _owner) external initializer {
         _mint(_owner, CAP);
     }
