@@ -35,8 +35,10 @@ contract Tipping is Ownable {
         _rewardRate = rewardRate;
     }
 
+    uint256 public constant MAX_BP = 10000;
+
     modifier validRate(uint256 rate) {
-        require(rate > 0 && rate <= 1000, "Out of range");
+        require(rate > 0 && rate <= MAX_BP, "Out of range");
         _;
     }
 
@@ -80,9 +82,9 @@ contract Tipping is Ownable {
     }
 
     function _getValues(uint256 tAmount) private view returns(uint256, uint256, uint256, uint256) {
-        uint256 burnAmt = tAmount.mul(_burnRate).div(1000);
-        uint256 fundAmt = tAmount.mul(_fundRate).div(1000);
-        uint256 rewardAmt = tAmount.mul(_rewardRate).div(1000);
+        uint256 burnAmt = tAmount.mul(_burnRate).div(MAX_BP);
+        uint256 fundAmt = tAmount.mul(_fundRate).div(MAX_BP);
+        uint256 rewardAmt = tAmount.mul(_rewardRate).div(MAX_BP);
         uint256 transAmt = tAmount.sub(rewardAmt).sub(fundAmt).sub(burnAmt);
         return (transAmt, burnAmt, fundAmt, rewardAmt);
     }
