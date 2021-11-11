@@ -6,14 +6,12 @@ import "@openzeppelin/contracts/proxy/Initializable.sol";
 
 contract LibertasToken is ERC20, Initializable {
 
-    string public constant version = 'V1.0';
-
     constructor() ERC20("LIBERTAS", "LIBERTAS") {}
 
-    uint256 public constant CAP = 10000000000;
+    uint256 public constant INITIAL_CAP = 10000000000;
 
     function configure(address _owner) external initializer {
-        _mint(_owner, CAP);
+        _mint(_owner, INITIAL_CAP);
     }
 
     function approveAndCall(address _spender, uint256 _value, bytes memory _extraData) public returns(bool) {
