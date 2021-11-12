@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/proxy/Initializable.sol";
 
 contract LibertasToken is ERC20, Initializable {
 
-    constructor() ERC20("LIBERTAS", "LIB") {}
+    constructor() ERC20("LIBERTAS", "LIBS") {}
 
     uint256 public constant INITIAL_CAP = 10000000000;
 
