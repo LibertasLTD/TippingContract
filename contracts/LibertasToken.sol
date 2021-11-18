@@ -8,7 +8,7 @@ contract LibertasToken is ERC20, Initializable {
 
     string public constant version = 'V1.0';
 
-    constructor() ERC20("LIBERTAS", "LIBERTAS") {}
+    constructor() ERC20("LIBERTAS", "LIBS") {}
 
     uint256 public constant CAP = 10000000000;
 
