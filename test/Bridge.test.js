@@ -31,7 +31,7 @@ contract('Bridge', async (accounts) => {
     libertas = await LibertasToken.new({ from: owner });
     await libertas.configure(owner);
     bridge1 = await Bridge.new(true, ZERO_ADDRESS, owner, libertas.address, "", "", { from: owner });
-    bridge2 = await Bridge.new(false, bridgedStandartERC20.address, owner, libertas.address, "LIBERTAS", "LIBERTAS", { from: owner });
+    bridge2 = await Bridge.new(false, bridgedStandartERC20.address, owner, libertas.address, "LIBERTAS", "LIBS", { from: owner });
     await bridgedStandartERC20.configure(
       bridge2.address,
       libertas.address,
@@ -50,7 +50,7 @@ contract('Bridge', async (accounts) => {
 
         const tokenAtEnd = await IBridgedStandardERC20.at(await bridge2.getEndTokenByStartToken(libertas.address));
         expect(await tokenAtEnd.name()).to.be.equal("LIBERTAS");
-        expect(await tokenAtEnd.symbol()).to.be.equal("LIBERTAS");
+        expect(await tokenAtEnd.symbol()).to.be.equal("LIBS");
     });
 
     it('should burn if transfer to zero', async () => {
