@@ -78,7 +78,7 @@ module.exports = {
     fantom_testnet: {
       provider: function() {
         return new HDWalletProvider(
-          process.env.MNEMONIC,
+          process.env.MNEMONIC_FANTOM,
           `https://rpc.testnet.fantom.network`
         )
       },
@@ -120,6 +120,7 @@ module.exports = {
     'solidity-coverage'
   ],
   api_keys: {
-    etherscan: process.env.ETHERSCAN_API_KEY
+    etherscan: process.env.ETHERSCAN_API_KEY,
+    ftmscan: process.env.FTMSCAN_API_KEY
   }
 };

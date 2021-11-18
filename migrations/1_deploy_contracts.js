@@ -42,7 +42,7 @@ module.exports = async (deployer, network, accounts) => {
       owner,
       libertasTokenAddress,
       "LIBERTAS",
-      "LIBERTAS"
+      "LIBS"
     );
     const bridge = await Bridge.deployed();
     const bridgedLibertasTokenAddress = await bridge.getEndTokenByStartToken(libertasTokenAddress);
@@ -58,7 +58,7 @@ module.exports = async (deployer, network, accounts) => {
       owner,
       libertasTokenAddress,
       "LIBERTAS",
-      "LIBERTAS"
+      "LIBS"
     );
     return Bridge.address;
   }
