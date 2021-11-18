@@ -26,10 +26,8 @@ Command: truffle test
 * LibertasProxyAdmin: https://rinkeby.etherscan.io/address/0x1dB1524A3Ab0Aaf9A1F6CdD3E0f6071c5DE33514#code
 
 # ADDRESSES FANTOM
-
-to be deployed...
-
-* Bridge:
-* BridgedStandardERC20:
-* Tipping:
-* StakingPool:
+ 
+* Bridge: https://testnet.ftmscan.com/address/0x4862425a8b4450D5a761D966fEd03beb05DCcB7c#code
+* BridgedStandardERC20: https://testnet.ftmscan.com/address/0xC46bD9Dd919D314e8A5Fe83DAA7B0Ed397E408d5#code
+* Tipping: https://testnet.ftmscan.com/address/0x96e630D1E64a8D9de624CbdEC0Dad5C256EE38Ad#code
+* StakingPool: https://testnet.ftmscan.com/address/0xA5baF406e12A4b7907ee04A052cDC55027A370f0#code
