@@ -8,8 +8,13 @@
   },
   "scripts": {
     "fantom_fork": "ganache-cli -e 10000 -f https://rpc.ftm.tools/",
-    "fantom_testnet_fork": "ganache-cli -e 10000 -f https://rpc.testnet.fantom.network",
-    "fantom_testnet": "truffle migrate --network fantom_testnet"
+    "fantom_testnet_fork": "ganache-cli -e 10000 -h -f https://rpc.testnet.fantom.network",
+    "fantom_testnet": "truffle migrate --network fantom_testnet",
+    "test": "sh test.sh",
+    "fork_fantom_testnet": "sh local_fork.sh",
+    "verify_fantom": "sh verify.sh allEnd fantom",
+    "verify_ethereum": "sh verify.sh allStart ethereum",
+    "remove_art": "rm -rf build/"
   },
   "repository": {
     "type": "git",
