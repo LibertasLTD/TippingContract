@@ -1,8 +1,10 @@
 const { BN, ether, constants } = require('@openzeppelin/test-helpers');
+const fs = require("fs");
 const { ZERO_ADDRESS } = constants;
+const libertasTokenAddressJSON = JSON.parse(fs.readFileSync('../libertas_token_address.json', 'utf8'));
 
 const Bridge = artifacts.require("Bridge");
-const LibertasToken = artifacts.require("LibertasToken");
+const LibertasToken = libertasTokenAddressJSON.libertasTokenAddress;
 const IERC20 = artifacts.require("IERC20");
 
 module.exports = (callback) => {
@@ -10,7 +12,7 @@ module.exports = (callback) => {
         console.log(`Got bridge instance at ${instance.address}`);
         web3.eth.getAccounts().then((accounts) => {
             console.log(`Got account: ${accounts[0]}`);
-            IERC20.at(LibertasToken.address).then((token) => {
+            IERC20.at(LibertasToken).then((token) => {
                 const amountToBridge = new BN('100');
                 console.log(`Got token: ${token.address}`);
                 token.approve(instance.address, amountToBridge, { from: accounts[0] }).then(() => {
