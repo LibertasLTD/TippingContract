@@ -77,8 +77,8 @@ P.S. Verification doesn't work for the Fantom testnet
 ## ETHEREUM 
 MAINNET
 * Bridge: Not deployed yet.
-* Tipping: 
-* StakingPool: 
+* Tipping:  To be specified later
+* StakingPool: To be specified later.
 * LibertasUpgradeableProxy: 
 * LibertasToken: https://etherscan.io/address/0x49184E6dAe8C8ecD89d8Bdc1B950c597b8167c90
 * LibertasProxyAdmin: 
