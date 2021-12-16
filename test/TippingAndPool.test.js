@@ -474,8 +474,6 @@ contract('Tipping', accounts => {
             balance_vault = balance_vault.toNumber();
             balance_vault.should.equal(45);
 
-            balance_burn = oldTotalSupply.sub(newTotalSupply).toNumber();
-            balance_burn.should.equal(10);
         });
     });
 });
