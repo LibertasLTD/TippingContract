@@ -25,7 +25,6 @@ contract Bridge is AccessControl, IBridge {
 
     Pair[] private tokenPairs;
 
-
     // token => is allowed to bridge
     mapping(address => bool) public allowedTokens;
 
@@ -75,6 +74,10 @@ contract Bridge is AccessControl, IBridge {
         } else {
             _cloneAndInitializeTokenAtEndForTokenAtStart(_allowedToken, _name, _symbol);
         }
+    }
+
+    function setBridgedStandartERC20(IBridgedStandardERC20 _bridgedStandartERC20) external onlyAdmin {
+        bridgedStandartERC20 = _bridgedStandartERC20;
     }
 
     function evacuateTokens(address _token, uint256 _amount, address _to) external onlyAdmin {
