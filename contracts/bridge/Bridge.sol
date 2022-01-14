@@ -21,7 +21,7 @@ contract Bridge is AccessControl, IBridge {
     bytes32 public constant BOT_MESSANGER_ROLE = keccak256("BOT_MESSANGER_ROLE");
 
     bool public direction; // true - on eth, false - on fantom
-    IBridgedStandardERC20 public bridgedStandartERC20;
+    IBridgedStandardERC20 public bridgedStandardERC20;
 
     Pair[] private tokenPairs;
 
@@ -66,7 +66,7 @@ contract Bridge is AccessControl, IBridge {
         _setupRole(BOT_MESSANGER_ROLE, _botMessanger);
 
         if (_bridgedStandardERC20 != address(0)) {
-            bridgedStandartERC20 = IBridgedStandardERC20(_bridgedStandardERC20);
+            bridgedStandardERC20 = IBridgedStandardERC20(_bridgedStandardERC20);
         }
 
         if (_direction) {
@@ -76,8 +76,8 @@ contract Bridge is AccessControl, IBridge {
         }
     }
 
-    function setBridgedStandardERC20(IBridgedStandardERC20 _bridgedStandartERC20) external onlyAdmin {
-        bridgedStandartERC20 = _bridgedStandartERC20;
+    function setBridgedStandardERC20(IBridgedStandardERC20 _bridgedStandardERC20) external onlyAdmin {
+        bridgedStandardERC20 = _bridgedStandardERC20;
     }
 
     function evacuateTokens(address _token, uint256 _amount, address _to) external onlyAdmin {
@@ -161,7 +161,7 @@ contract Bridge is AccessControl, IBridge {
         internal
         returns(address tokenAtEnd)
     {
-        tokenAtEnd = address(bridgedStandartERC20).clone();
+        tokenAtEnd = address(bridgedStandardERC20).clone();
         tokenPairs.push(Pair({
           tokenAtStart: _tokenAtStart,
           tokenAtEnd: tokenAtEnd
