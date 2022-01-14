@@ -76,7 +76,7 @@ contract Bridge is AccessControl, IBridge {
         }
     }
 
-    function setBridgedStandartERC20(IBridgedStandardERC20 _bridgedStandartERC20) external onlyAdmin {
+    function setBridgedStandardERC20(IBridgedStandardERC20 _bridgedStandartERC20) external onlyAdmin {
         bridgedStandartERC20 = _bridgedStandartERC20;
     }
 
