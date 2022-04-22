@@ -16,6 +16,7 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
 
     string internal __name;
     string internal __symbol;
+    uint8 internal __decimals;
 
     uint256 public override burnt = 0;
 
@@ -42,6 +43,7 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
         bridgingToken = _bridgingToken;
         __name = _name;
         __symbol = _symbol;
+        __decimals = 2;
     }
 
     function name() public view override(ERC20, IBridgedStandardERC20) returns(string memory) {
@@ -50,6 +52,10 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
 
     function symbol() public view override(ERC20, IBridgedStandardERC20) returns(string memory) {
         return __symbol;
+    }
+
+    function decimals() public view override(ERC20, IBridgedStandardERC20) returns(uint8) {
+        return __decimals;
     }
 
     function _transfer(address sender, address recipient, uint256 amount) internal override {
@@ -70,4 +76,5 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
         _burn(_from, _amount);
         emit Burn(_from, _amount);
     }
+
 }
