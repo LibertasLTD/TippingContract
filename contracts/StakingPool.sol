@@ -35,7 +35,7 @@ contract StakingPool is AccessControl {
 
     function deposit(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
-        if (user.amount > 0) {
+        if (user.amount >= 0 && amount > 0) {
             uint256 pending = user.amount.mul(accLibertasPerShare).div(PRECISION).sub(user.rewardDebt);
             if (pending > 0) {
                 safeLIBERTASTransfer(msg.sender, pending);
