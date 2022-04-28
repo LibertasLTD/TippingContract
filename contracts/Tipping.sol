@@ -38,7 +38,7 @@ contract Tipping is Ownable {
         _rewardRate = rewardRate;
     }
 
-    uint256 public constant MAX_BP = 10000;
+    uint256 public constant MAX_BP = 1000;
 
     modifier validRate(uint256 rate) {
         require(rate > 0 && rate <= MAX_BP, "Out of range");
