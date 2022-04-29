@@ -76,7 +76,7 @@ P.S. Verification doesn't work for the Fantom testnet
 
 ## ETHEREUM 
 MAINNET
-* Bridge: Not deployed yet.
+* Bridge: https://etherscan.io/address/0x035D4fd4460AD42F62090A09b9948C6D73C1c393#code
 * Tipping:  To be specified later
 * StakingPool: To be specified later.
 * LibertasUpgradeableProxy: 
@@ -93,13 +93,14 @@ RINKEBY
 
 ## FANTOM
 MAINNET
-* Bridge: Not deployed yet.
-* BridgedStandardERC20: Not deployed yet.
-* Tipping: Not deployed yet.
-* StakingPool: Not deployed yet.
+* Bridge: https://ftmscan.com/address/0x45ae8f499234a1fb584de918d91897d7eafb0beb#readContract
+* BridgedStandardERC20: https://ftmscan.com/address/0x43f3f217a892de90f8f43035c57872ff260cc9f7
+* BridgedStandardERC20 token: https://ftmscan.com/token/0x9122f3f35aa2324463b637ec94780bbcab1c5a8c#readContract
+* Tipping: https://ftmscan.com/address/0x752534A8C3059d13d16Ac2cAa85508D2E86Cb3E1#code
+* StakingPool:https://ftmscan.com/address/0xC238729a386FC776E605Fa53EDd3a31450F949f1#code
 
 TESTNET
 * Bridge: https://testnet.ftmscan.com/address/0x4862425a8b4450D5a761D966fEd03beb05DCcB7c#code
 * BridgedStandardERC20: https://testnet.ftmscan.com/address/0xC46bD9Dd919D314e8A5Fe83DAA7B0Ed397E408d5#code
-* Tipping: https://testnet.ftmscan.com/address/0x96e630D1E64a8D9de624CbdEC0Dad5C256EE38Ad#code
-* StakingPool: https://testnet.ftmscan.com/address/0xA5baF406e12A4b7907ee04A052cDC55027A370f0#code
+* Tipping: https://testnet.ftmscan.com/address/0xb13131df76ec4809C3733FD30Ed946f69A32C764
+* StakingPool: https://testnet.ftmscan.com/address/0xB831930dc0Db7F236a1F32f5a26F82be0328E1FF
