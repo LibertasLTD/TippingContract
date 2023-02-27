@@ -10,7 +10,7 @@ require("solidity-coverage");
 require("hardhat-gas-reporter");
 require("@primitivefi/hardhat-dodoc");
 
-const { POLYGONSCAN_API_KEY, ACC_PRIVATE_KEY } = process.env;
+const { FTMSCAN_API_KEY, ACC_PRIVATE_KEY } = process.env;
 
 module.exports = {
   solidity: {
@@ -29,12 +29,12 @@ module.exports = {
     localhost: {
       url: "http://127.0.0.1:8545",
     },
-    polygon_mainnet: {
-      url: `https://rpc-mainnet.maticvigil.com/`,
+    fantom_mainnet: {
+      url: `https://rpc.ankr.com/fantom/`,
       accounts: [ACC_PRIVATE_KEY],
     },
-    polygon_testnet: {
-      url: `https://matic-mumbai.chainstacklabs.com`,
+    fantom_testnet: {
+      url: `https://rpc.testnet.fantom.network/`,
       accounts: [ACC_PRIVATE_KEY],
     },
   },
@@ -49,7 +49,7 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      polygonMumbai: POLYGONSCAN_API_KEY,
+      polygonMumbai: FTMSCAN_API_KEY,
     },
   },
   skipFiles: ["node_modules"],
@@ -71,8 +71,8 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      polygon: POLYGONSCAN_API_KEY,
-      polygonMumbai: POLYGONSCAN_API_KEY,
+      fantom: FTMSCAN_API_KEY,
+      ftmTestnet: FTMSCAN_API_KEY,
     },
   },
 };
