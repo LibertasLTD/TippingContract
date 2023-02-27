@@ -1,4 +1,4 @@
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.18;
 
 interface IUniswapV2Factory {
     event PairCreated(
