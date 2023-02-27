@@ -3,14 +3,12 @@
 pragma solidity ^0.8.18;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "../interfaces/IBridgedStandardERC20.sol";
 
 contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
-    using SafeMath for uint256;
 
     address public override bridgingToken;
     address public bridge;
@@ -81,7 +79,7 @@ contract BridgedStandardERC20 is IBridgedStandardERC20, ERC20, Initializable {
     ) internal override {
         if (recipient == address(0)) {
             _burn(sender, amount);
-            burnt = burnt.add(amount);
+            burnt = burnt + amount;
         } else {
             super._transfer(sender, recipient, amount);
         }
