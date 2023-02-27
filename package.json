@@ -1,44 +1,27 @@
 {
-  "name": "TippingContract",
-  "version": "1.0.0",
-  "description": "",
-  "main": "truffle-config.js",
-  "directories": {
-    "test": "test"
+  "name": "Tipping Contract",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "1.0.3",
+    "@nomicfoundation/hardhat-toolbox": "1.0.2",
+    "@nomiclabs/hardhat-ethers": "2.2.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1",
+    "@openzeppelin/hardhat-upgrades": "^1.22.1",
+    "@primitivefi/hardhat-dodoc": "0.2.3",
+    "ethers": "5.7.1",
+    "hardhat": "^2.12.7",
+    "hardhat-contract-sizer": "^2.8.0",
+    "hardhat-deploy": "0.11.18",
+    "hardhat-tracer": "^2.0.0",
+    "prettier": "2.8.1",
+    "prettier-plugin-solidity": "1.1.0",
+    "solidity-coverage": "^0.7.21"
   },
-  "scripts": {
-    "fantom_fork": "ganache-cli -e 10000 -f https://rpc.ftm.tools/",
-    "fantom_testnet_fork": "ganache-cli -e 10000 -h -f https://rpc.testnet.fantom.network",
-    "fantom_testnet": "truffle migrate --network fantom_testnet",
-    "test": "sh test.sh",
-    "fork_fantom_testnet": "sh local_fork.sh",
-    "verify_fantom": "sh verify.sh allEnd fantom",
-    "verify_ethereum": "sh verify.sh allStart ethereum",
-    "remove_art": "rm -rf build/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://ryuheimat@github.com/TheLibertasProject/TippingContract.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/TheLibertasProject/TippingContract/issues"
-  },
-  "homepage": "https://github.com/TheLibertasProject/TippingContract#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^3.3.0",
-    "@openzeppelin/test-helpers": "^0.5.15",
-    "@truffle/hdwallet-provider": "^1.2.1",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "chai-bignumber": "^3.0.0",
-    "dotenv": "^8.2.0",
-    "ethers": "^5.4.7",
-    "node-ipc": "^10.1.0",
-    "solidity-coverage": "^0.7.17",
-    "truffle-plugin-verify": "^0.5.4",
-    "web3-utils": "^1.6.0"
+    "@openzeppelin/contracts": "4.7.3",
+    "chai": "4.3.6",
+    "delay": "5.0.0",
+    "dotenv": "16.0.1",
+    "hardhat-gas-reporter": "1.0.8",
+    "slither": "0.2.2"
   }
 }
