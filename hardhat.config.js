@@ -14,7 +14,7 @@ const { POLYGONSCAN_API_KEY, ACC_PRIVATE_KEY } = process.env;
 
 module.exports = {
   solidity: {
-    version: "0.8.17",
+    version: "0.8.18",
     settings: {
       optimizer: {
         enabled: true,
