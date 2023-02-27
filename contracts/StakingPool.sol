@@ -34,39 +34,31 @@ contract StakingPool is AccessControl {
     function deposit(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         if (user.amount >= 0 && amount > 0) {
-            uint256 pending = user
-                .amount
-                .mul(accLibertasPerShare)
-                .div(PRECISION)
-                .sub(user.rewardDebt);
+            uint256 pending = user.amount * accLibertasPerShare / PRECISION - user.rewardDebt;
             if (pending > 0) {
                 safeLIBERTASTransfer(msg.sender, pending);
             }
             _LIBERTAS.safeTransferFrom(msg.sender, address(this), amount);
-            user.amount = user.amount.add(amount);
-            totalDeposits = totalDeposits.add(amount);
+            user.amount = user.amount + amount;
+            totalDeposits = totalDeposits + amount;
         }
-        user.rewardDebt = user.amount.mul(accLibertasPerShare).div(PRECISION);
+        user.rewardDebt = user.amount * accLibertasPerShare / PRECISION;
         emit Deposit(msg.sender, amount);
     }
 
     function withdraw(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= amount, "withdrawTooMuch");
-        uint256 pending = user
-            .amount
-            .mul(accLibertasPerShare)
-            .div(PRECISION)
-            .sub(user.rewardDebt);
+        uint256 pending = user.amount * accLibertasPerShare / PRECISION - user.rewardDebt;
         if (pending > 0) {
             safeLIBERTASTransfer(msg.sender, pending);
         }
         if (amount > 0) {
-            user.amount = user.amount.sub(amount);
-            totalDeposits = totalDeposits.sub(amount);
+            user.amount = user.amount - amount;
+            totalDeposits = totalDeposits - amount;
             _LIBERTAS.safeTransfer(msg.sender, amount);
         }
-        user.rewardDebt = user.amount.mul(accLibertasPerShare).div(PRECISION);
+        user.rewardDebt = user.amount * accLibertasPerShare / PRECISION;
         emit Withdraw(msg.sender, amount);
     }
 
@@ -74,9 +66,7 @@ contract StakingPool is AccessControl {
         UserInfo storage user
     ) internal view returns (uint256) {
         return
-            user.amount.mul(accLibertasPerShare).div(PRECISION).sub(
-                user.rewardDebt
-            );
+            user.amount * accLibertasPerShare / PRECISION - user.rewardDebt;
     }
 
     function claim() external {
@@ -86,7 +76,7 @@ contract StakingPool is AccessControl {
         if (pending > 0) {
             safeLIBERTASTransfer(msg.sender, pending);
         }
-        user.rewardDebt = user.amount.mul(accLibertasPerShare).div(PRECISION);
+        user.rewardDebt = user.amount * accLibertasPerShare / PRECISION;
     }
 
     function availableReward() external view returns (uint256) {
@@ -109,9 +99,7 @@ contract StakingPool is AccessControl {
         if (totalDeposits == 0) {
             return;
         }
-        accLibertasPerShare = accLibertasPerShare.add(
-            reward.mul(PRECISION).div(totalDeposits)
-        );
+        accLibertasPerShare = accLibertasPerShare + reward * PRECISION / totalDeposits;
     }
 
     function safeLIBERTASTransfer(address _to, uint256 _amount) internal {

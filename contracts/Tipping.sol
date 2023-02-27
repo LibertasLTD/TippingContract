@@ -101,10 +101,10 @@ contract Tipping is Ownable {
     function _getValues(
         uint256 tAmount
     ) private view returns (uint256, uint256, uint256, uint256) {
-        uint256 burnAmt = tAmount.mul(_burnRate).div(MAX_BP);
-        uint256 fundAmt = tAmount.mul(_fundRate).div(MAX_BP);
-        uint256 rewardAmt = tAmount.mul(_rewardRate).div(MAX_BP);
-        uint256 transAmt = tAmount.sub(rewardAmt).sub(fundAmt).sub(burnAmt);
+        uint256 burnAmt = tAmount * _burnRate / MAX_BP;
+        uint256 fundAmt = tAmount * _fundRate / MAX_BP;
+        uint256 rewardAmt = tAmount * _rewardRate / MAX_BP;
+        uint256 transAmt = tAmount - rewardAmt - fundAmt - burnAmt;
         return (transAmt, burnAmt, fundAmt, rewardAmt);
     }
 }
