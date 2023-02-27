@@ -3,12 +3,12 @@
 pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/proxy/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract LibertasToken is ERC20, Initializable {
     constructor() ERC20("LIBERTAS", "LIBS") {}
 
-    uint256 public constant INITIAL_CAP = 10000000000;
+    uint256 public constant INITIAL_CAP = 100_000_000;
 
     function configure(address _owner) external initializer {
         _mint(_owner, INITIAL_CAP);
