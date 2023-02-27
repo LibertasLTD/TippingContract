@@ -1,5 +1,16 @@
-node_modules/
-build/
-bin/
-.vscode/
+node_modules
 .env
+coverage
+coverage.json
+typechain
+typechain-types
+
+#Hardhat files
+cache
+artifacts
+
+*.env
+
+.openzeppelin/
+
+package-lock.json
