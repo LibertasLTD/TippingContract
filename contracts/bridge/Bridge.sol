@@ -9,7 +9,6 @@ import "../interfaces/IBridge.sol";
 import "../interfaces/IBridgedStandardERC20.sol";
 
 contract Bridge is AccessControl, IBridge {
-
     using Clones for address;
     using SafeERC20 for IERC20;
 
@@ -18,7 +17,8 @@ contract Bridge is AccessControl, IBridge {
         address tokenAtEnd;
     }
 
-    bytes32 public constant BOT_MESSANGER_ROLE = keccak256("BOT_MESSANGER_ROLE");
+    bytes32 public constant BOT_MESSANGER_ROLE =
+        keccak256("BOT_MESSANGER_ROLE");
 
     bool public direction; // true - on eth, false - on fantom
     IBridgedStandardERC20 public bridgedStandardERC20;
@@ -28,22 +28,22 @@ contract Bridge is AccessControl, IBridge {
     // token => is allowed to bridge
     mapping(address => bool) public allowedTokens;
 
-    modifier onlyAtStart {
+    modifier onlyAtStart() {
         require(direction, "onlyAtStart");
         _;
     }
 
-    modifier onlyAtEnd {
+    modifier onlyAtEnd() {
         require(!direction, "onlyAtEnd");
         _;
     }
 
-    modifier onlyMessangerBot {
+    modifier onlyMessangerBot() {
         require(hasRole(BOT_MESSANGER_ROLE, _msgSender()), "onlyMessangerBot");
         _;
     }
 
-    modifier onlyAdmin {
+    modifier onlyAdmin() {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "onlyAdmin");
         _;
     }
@@ -72,15 +72,25 @@ contract Bridge is AccessControl, IBridge {
         if (_direction) {
             allowedTokens[_allowedToken] = true;
         } else {
-            _cloneAndInitializeTokenAtEndForTokenAtStart(_allowedToken, _name, _symbol);
+            _cloneAndInitializeTokenAtEndForTokenAtStart(
+                _allowedToken,
+                _name,
+                _symbol
+            );
         }
     }
 
-    function setBridgedStandardERC20(IBridgedStandardERC20 _bridgedStandardERC20) external onlyAdmin {
+    function setBridgedStandardERC20(
+        IBridgedStandardERC20 _bridgedStandardERC20
+    ) external onlyAdmin {
         bridgedStandardERC20 = _bridgedStandardERC20;
     }
 
-    function evacuateTokens(address _token, uint256 _amount, address _to) external onlyAdmin {
+    function evacuateTokens(
+        address _token,
+        uint256 _amount,
+        address _to
+    ) external onlyAdmin {
         require(!allowedTokens[_token], "cannotEvacuateAllowedToken");
         IERC20(_token).safeTransfer(_to, _amount);
     }
@@ -111,7 +121,13 @@ contract Bridge is AccessControl, IBridge {
     ) external override onlyAtEnd tokenIsAllowed(_tokenAtEnd) {
         address sender = _msgSender();
         IBridgedStandardERC20(_tokenAtEnd).burn(sender, _amount);
-        emit RequestBridgingToStart(_tokenAtStart, _tokenAtEnd, sender, _to, _amount);
+        emit RequestBridgingToStart(
+            _tokenAtStart,
+            _tokenAtEnd,
+            sender,
+            _to,
+            _amount
+        );
     }
 
     function performBridgingToEnd(
@@ -120,12 +136,7 @@ contract Bridge is AccessControl, IBridge {
         uint256 _amount,
         string memory _name,
         string memory _symbol
-    )
-        external
-        override
-        onlyAtEnd
-        onlyMessangerBot
-    {
+    ) external override onlyAtEnd onlyMessangerBot {
         address tokenAtEnd = getEndTokenByStartToken(_tokenAtStart);
         if (tokenAtEnd == address(0)) {
             tokenAtEnd = _cloneAndInitializeTokenAtEndForTokenAtStart(
@@ -143,12 +154,7 @@ contract Bridge is AccessControl, IBridge {
         address _tokenAtEnd,
         address _to,
         uint256 _amount
-    )
-        external
-        override
-        onlyAtStart
-        onlyMessangerBot
-    {
+    ) external override onlyAtStart onlyMessangerBot {
         IERC20(_tokenAtStart).safeTransfer(_to, _amount);
         emit BridgingToStartPerformed(_tokenAtEnd, _tokenAtStart, _to, _amount);
     }
@@ -157,15 +163,11 @@ contract Bridge is AccessControl, IBridge {
         address _tokenAtStart,
         string memory _name,
         string memory _symbol
-    )
-        internal
-        returns(address tokenAtEnd)
-    {
+    ) internal returns (address tokenAtEnd) {
         tokenAtEnd = address(bridgedStandardERC20).clone();
-        tokenPairs.push(Pair({
-          tokenAtStart: _tokenAtStart,
-          tokenAtEnd: tokenAtEnd
-        }));
+        tokenPairs.push(
+            Pair({tokenAtStart: _tokenAtStart, tokenAtEnd: tokenAtEnd})
+        );
         allowedTokens[tokenAtEnd] = true;
         IBridgedStandardERC20(tokenAtEnd).configure(
             address(this),
@@ -175,7 +177,9 @@ contract Bridge is AccessControl, IBridge {
         );
     }
 
-    function getEndTokenByStartToken(address _startToken) public view returns(address) {
+    function getEndTokenByStartToken(
+        address _startToken
+    ) public view returns (address) {
         for (uint i = 0; i < tokenPairs.length; i++) {
             if (tokenPairs[i].tokenAtStart == _startToken) {
                 return tokenPairs[i].tokenAtEnd;
@@ -184,13 +188,14 @@ contract Bridge is AccessControl, IBridge {
         return address(0);
     }
 
-    function getStartTokenByEndToken(address _endToken) external view returns(address) {
+    function getStartTokenByEndToken(
+        address _endToken
+    ) external view returns (address) {
         for (uint i = 0; i < tokenPairs.length; i++) {
             if (tokenPairs[i].tokenAtEnd == _endToken) {
                 return tokenPairs[i].tokenAtStart;
             }
         }
-        revert('noStartTokenFound');
+        revert("noStartTokenFound");
     }
-
 }

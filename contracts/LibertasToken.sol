@@ -3,9 +3,7 @@ pragma solidity ^0.7.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/proxy/Initializable.sol";
 
-
 contract LibertasToken is ERC20, Initializable {
-
     constructor() ERC20("LIBERTAS", "LIBS") {}
 
     uint256 public constant INITIAL_CAP = 10000000000;
@@ -14,14 +12,36 @@ contract LibertasToken is ERC20, Initializable {
         _mint(_owner, INITIAL_CAP);
     }
 
-    function approveAndCall(address _spender, uint256 _value, bytes memory _extraData) public returns(bool) {
+    function approveAndCall(
+        address _spender,
+        uint256 _value,
+        bytes memory _extraData
+    ) public returns (bool) {
         _approve(msg.sender, _spender, _value);
-        (bool success, ) = _spender.call(abi.encode(bytes4(bytes32(keccak256("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, address(this), _extraData));
+        (bool success, ) = _spender.call(
+            abi.encode(
+                bytes4(
+                    bytes32(
+                        keccak256(
+                            "receiveApproval(address,uint256,address,bytes)"
+                        )
+                    )
+                ),
+                msg.sender,
+                _value,
+                address(this),
+                _extraData
+            )
+        );
         require(success, "receiveApprovalFailed");
         return true;
     }
 
-    function _transfer(address sender, address recipient, uint256 amount) internal override {
+    function _transfer(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) internal override {
         if (recipient == address(0)) {
             _burn(sender, amount);
         } else {
@@ -29,7 +49,7 @@ contract LibertasToken is ERC20, Initializable {
         }
     }
 
-    function decimals() public view override returns(uint8) {
+    function decimals() public view override returns (uint8) {
         return 2;
     }
 }
