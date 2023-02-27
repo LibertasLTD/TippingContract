@@ -41,11 +41,10 @@ contract MockToken is ERC20 {
         }
     }
 
-    function transfer(address recipient, uint256 amount)
-        public
-        override
-        returns (bool)
-    {
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) public override returns (bool) {
         if (blockTransfers) {
             if (transfersAllowed[msg.sender][recipient]) {
                 super._transfer(msg.sender, recipient, amount);

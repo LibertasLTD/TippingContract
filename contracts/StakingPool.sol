@@ -5,9 +5,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-
 contract StakingPool is AccessControl {
-
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -23,7 +21,7 @@ contract StakingPool is AccessControl {
         uint256 rewardDebt;
     }
 
-    modifier onlyAdmin {
+    modifier onlyAdmin() {
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "onlyAdmin");
         _;
     }
@@ -36,7 +34,11 @@ contract StakingPool is AccessControl {
     function deposit(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         if (user.amount >= 0 && amount > 0) {
-            uint256 pending = user.amount.mul(accLibertasPerShare).div(PRECISION).sub(user.rewardDebt);
+            uint256 pending = user
+                .amount
+                .mul(accLibertasPerShare)
+                .div(PRECISION)
+                .sub(user.rewardDebt);
             if (pending > 0) {
                 safeLIBERTASTransfer(msg.sender, pending);
             }
@@ -51,7 +53,11 @@ contract StakingPool is AccessControl {
     function withdraw(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= amount, "withdrawTooMuch");
-        uint256 pending = user.amount.mul(accLibertasPerShare).div(PRECISION).sub(user.rewardDebt);
+        uint256 pending = user
+            .amount
+            .mul(accLibertasPerShare)
+            .div(PRECISION)
+            .sub(user.rewardDebt);
         if (pending > 0) {
             safeLIBERTASTransfer(msg.sender, pending);
         }
@@ -64,8 +70,13 @@ contract StakingPool is AccessControl {
         emit Withdraw(msg.sender, amount);
     }
 
-    function getPendingReward(UserInfo storage user) internal view returns(uint256) {
-        return user.amount.mul(accLibertasPerShare).div(PRECISION).sub(user.rewardDebt);
+    function getPendingReward(
+        UserInfo storage user
+    ) internal view returns (uint256) {
+        return
+            user.amount.mul(accLibertasPerShare).div(PRECISION).sub(
+                user.rewardDebt
+            );
     }
 
     function claim() external {
@@ -98,7 +109,9 @@ contract StakingPool is AccessControl {
         if (totalDeposits == 0) {
             return;
         }
-        accLibertasPerShare = accLibertasPerShare.add(reward.mul(PRECISION).div(totalDeposits));
+        accLibertasPerShare = accLibertasPerShare.add(
+            reward.mul(PRECISION).div(totalDeposits)
+        );
     }
 
     function safeLIBERTASTransfer(address _to, uint256 _amount) internal {
