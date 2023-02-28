@@ -2,15 +2,20 @@
 
 pragma solidity ^0.8.18;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "./interfaces/IOdeum.sol";
 
-contract LibertasToken is ERC20, Initializable {
-    constructor() ERC20("LIBERTAS", "LIBS") {}
+contract Odeum is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable, IOdeum {
 
     uint256 public constant INITIAL_CAP = 100_000_000;
 
     function configure(address _owner) external initializer {
+        __ERC20_init("ODEUM", "ODEUM");
+        __Ownable_init();
+        __UUPSUpgradeable_init();
         _mint(_owner, INITIAL_CAP);
     }
 
@@ -18,7 +23,7 @@ contract LibertasToken is ERC20, Initializable {
         address _spender,
         uint256 _value,
         bytes memory _extraData
-    ) public returns (bool) {
+    ) external returns (bool) {
         _approve(msg.sender, _spender, _value);
         (bool success, ) = _spender.call(
             abi.encode(
@@ -39,6 +44,10 @@ contract LibertasToken is ERC20, Initializable {
         return true;
     }
 
+    function decimals() public pure override returns (uint8) {
+        return 18;
+    }
+
     function _transfer(
         address sender,
         address recipient,
@@ -51,7 +60,9 @@ contract LibertasToken is ERC20, Initializable {
         }
     }
 
-    function decimals() public pure override returns (uint8) {
-        return 2;
-    }
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        onlyOwner
+        override
+    {}
 }
