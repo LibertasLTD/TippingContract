@@ -1,28 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.18;
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
-interface ILibertasToken {
-    function transfer(
-        address _to,
-        uint256 _value
-    ) external returns (bool success);
+/// @title An interface for a custom ERC20 contract used in the bridge
+interface ILibertasToken is IERC20Upgradeable {
 
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _value
-    ) external returns (bool success);
-
-    function balanceOf(address _owner) external returns (uint256 balance);
-
-    function approve(
+    function approveAndCall(
         address _spender,
-        uint256 _value
-    ) external returns (bool success);
+        uint256 _value,
+        bytes memory _extraData
+    ) external returns (bool);
 
-    function allowance(
-        address _owner,
-        address _spender
-    ) external returns (uint256 remaining);
 }
