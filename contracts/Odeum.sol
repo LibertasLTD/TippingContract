@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: UNLICENSED
 
 pragma solidity ^0.8.18;
 
@@ -16,7 +15,8 @@ contract Odeum is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
         __ERC20_init("ODEUM", "ODEUM");
         __Ownable_init();
         __UUPSUpgradeable_init();
-        _mint(_owner, INITIAL_CAP);
+        // TODO do I need decimals here?
+        _mint(_owner, INITIAL_CAP * (10**decimals()));
     }
 
     function approveAndCall(
