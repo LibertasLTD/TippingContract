@@ -12,7 +12,7 @@ contract Tipping is Ownable, ITipping {
     using SafeERC20 for IERC20;
 
     address public _STAKING_VAULT;
-    address public _LIBERTAS;
+    address public _ODEUM;
     address public _FUND_VAULT;
     address public _VAULT_TO_BURN;
 
@@ -22,7 +22,7 @@ contract Tipping is Ownable, ITipping {
 
     constructor(
         address STAKING_VAULT,
-        address LIBERTAS,
+        address ODEUM,
         address FUND_VAULT,
         address VAULT_TO_BURN,
         uint256 burnRate,
@@ -31,7 +31,7 @@ contract Tipping is Ownable, ITipping {
     ) {
         _VAULT_TO_BURN = VAULT_TO_BURN;
         _STAKING_VAULT = STAKING_VAULT;
-        _LIBERTAS = LIBERTAS;
+        _ODEUM = ODEUM;
         _FUND_VAULT = FUND_VAULT;
         _burnRate = burnRate;
         _fundRate = fundRate;
@@ -49,8 +49,8 @@ contract Tipping is Ownable, ITipping {
         _STAKING_VAULT = STAKING_VAULT;
     }
 
-    function setLibertasAddress(address LIBERTAS) external onlyOwner {
-        _LIBERTAS = LIBERTAS;
+    function setOdeumAddress(address ODEUM) external onlyOwner {
+        _ODEUM = ODEUM;
     }
 
     function setVaultToBurnAddress(address VAULT_TO_BURN) external onlyOwner {
@@ -83,18 +83,18 @@ contract Tipping is Ownable, ITipping {
     }
 
     function transfer(address to, uint256 amount) external returns (bool) {
-        IERC20 _libertas = IERC20(_LIBERTAS);
-        _libertas.safeTransferFrom(msg.sender, address(this), amount);
+        IERC20 _odeum = IERC20(_ODEUM);
+        _odeum.safeTransferFrom(msg.sender, address(this), amount);
         (
             uint256 transAmt,
             uint256 burnAmt,
             uint256 fundAmt,
             uint256 rewardAmt
         ) = _getValues(amount);
-        _libertas.safeTransfer(to, transAmt);
-        _libertas.safeTransfer(_VAULT_TO_BURN, burnAmt);
-        _libertas.safeTransfer(_FUND_VAULT, fundAmt);
-        _libertas.safeTransfer(_STAKING_VAULT, rewardAmt);
+        _odeum.safeTransfer(to, transAmt);
+        _odeum.safeTransfer(_VAULT_TO_BURN, burnAmt);
+        _odeum.safeTransfer(_FUND_VAULT, fundAmt);
+        _odeum.safeTransfer(_STAKING_VAULT, rewardAmt);
         IStakingPool(_STAKING_VAULT).supplyReward(rewardAmt);
         return true;
     }
