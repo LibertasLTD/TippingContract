@@ -6,8 +6,9 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "./interfaces/ILibertasToken.sol";
 
-contract LibertasToken is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable {
+contract LibertasToken is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable, ILibertasToken{
 
     uint256 public constant INITIAL_CAP = 100_000_000;
 
