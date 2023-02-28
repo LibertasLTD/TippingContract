@@ -1,15 +1,14 @@
-pragma solidity ^0.7.0;
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./IStakingPool.sol";
+import "./interfaces/IStakingPool.sol";
 
 contract Tipping is Ownable {
-
     using SafeERC20 for IERC20;
-    using SafeMath for uint256;
 
     address public _STAKING_VAULT;
     address public _LIBERTAS;
@@ -61,17 +60,23 @@ contract Tipping is Ownable {
         _FUND_VAULT = FUND_VAULT;
     }
 
-    function setBurnRate(uint256 burnRate) external validRate(burnRate) onlyOwner returns (bool) {
+    function setBurnRate(
+        uint256 burnRate
+    ) external validRate(burnRate) onlyOwner returns (bool) {
         _burnRate = burnRate;
         return true;
     }
 
-    function setFundRate(uint256 fundRate) external validRate(fundRate) onlyOwner returns (bool) {
+    function setFundRate(
+        uint256 fundRate
+    ) external validRate(fundRate) onlyOwner returns (bool) {
         _fundRate = fundRate;
         return true;
     }
 
-    function setRewardRate(uint256 rewardRate) external validRate(rewardRate) onlyOwner returns (bool) {
+    function setRewardRate(
+        uint256 rewardRate
+    ) external validRate(rewardRate) onlyOwner returns (bool) {
         _rewardRate = rewardRate;
         return true;
     }
@@ -79,7 +84,12 @@ contract Tipping is Ownable {
     function transfer(address to, uint256 amount) external returns (bool) {
         IERC20 _libertas = IERC20(_LIBERTAS);
         _libertas.safeTransferFrom(msg.sender, address(this), amount);
-        (uint256 transAmt, uint256 burnAmt, uint256 fundAmt, uint256 rewardAmt) = _getValues(amount);
+        (
+            uint256 transAmt,
+            uint256 burnAmt,
+            uint256 fundAmt,
+            uint256 rewardAmt
+        ) = _getValues(amount);
         _libertas.safeTransfer(to, transAmt);
         _libertas.safeTransfer(_VAULT_TO_BURN, burnAmt);
         _libertas.safeTransfer(_FUND_VAULT, fundAmt);
@@ -88,11 +98,13 @@ contract Tipping is Ownable {
         return true;
     }
 
-    function _getValues(uint256 tAmount) private view returns(uint256, uint256, uint256, uint256) {
-        uint256 burnAmt = tAmount.mul(_burnRate).div(MAX_BP);
-        uint256 fundAmt = tAmount.mul(_fundRate).div(MAX_BP);
-        uint256 rewardAmt = tAmount.mul(_rewardRate).div(MAX_BP);
-        uint256 transAmt = tAmount.sub(rewardAmt).sub(fundAmt).sub(burnAmt);
+    function _getValues(
+        uint256 tAmount
+    ) private view returns (uint256, uint256, uint256, uint256) {
+        uint256 burnAmt = tAmount * _burnRate / MAX_BP;
+        uint256 fundAmt = tAmount * _fundRate / MAX_BP;
+        uint256 rewardAmt = tAmount * _rewardRate / MAX_BP;
+        uint256 transAmt = tAmount - rewardAmt - fundAmt - burnAmt;
         return (transAmt, burnAmt, fundAmt, rewardAmt);
     }
 }

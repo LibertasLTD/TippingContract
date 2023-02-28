@@ -1,4 +1,6 @@
-pragma solidity ^0.7.0;
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -12,7 +14,7 @@ contract MockToken is ERC20 {
         string memory name,
         string memory symbol,
         uint256 initialSupply
-    ) public ERC20(name, symbol) {
+    )  ERC20(name, symbol) {
         _mint(msg.sender, initialSupply);
     }
 
@@ -41,11 +43,10 @@ contract MockToken is ERC20 {
         }
     }
 
-    function transfer(address recipient, uint256 amount)
-        public
-        override
-        returns (bool)
-    {
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) public override returns (bool) {
         if (blockTransfers) {
             if (transfersAllowed[msg.sender][recipient]) {
                 super._transfer(msg.sender, recipient, amount);
