@@ -8,7 +8,6 @@ require("hardhat-tracer");
 require("hardhat-contract-sizer");
 require("solidity-coverage");
 require("hardhat-gas-reporter");
-require("@primitivefi/hardhat-dodoc");
 
 const { FTMSCAN_API_KEY, ACC_PRIVATE_KEY } = process.env;
 
@@ -56,12 +55,6 @@ module.exports = {
   gasReporter: {
     enabled: true,
     url: "http://localhost:8545",
-  },
-  dodoc: {
-    exclude: ["mocks", "lin", "errors"],
-    runOnCompile: false,
-    freshOutput: true,
-    outputDir: "./docs/contracts",
   },
   contractSizer: {
     alphaSort: true,
