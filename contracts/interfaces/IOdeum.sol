@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 /// @title An interface for a custom ERC20 contract used in the bridge
-interface ILibertasToken is IERC20Upgradeable {
+interface IOdeum is IERC20Upgradeable {
 
     function approveAndCall(
         address _spender,

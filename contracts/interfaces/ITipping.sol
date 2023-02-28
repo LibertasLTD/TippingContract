@@ -6,7 +6,7 @@ interface ITipping {
 
     function setStakingVaultAddress(address STAKING_VAULT) external;
 
-    function setLibertasAddress(address LIBERTAS) external;
+    function setOdeumAddress(address ODEUM) external;
 
     function setVaultToBurnAddress(address VAULT_TO_BURN) external;
 
