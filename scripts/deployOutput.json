@@ -1,0 +1,53 @@
+{
+  "polygon_testnet": {
+    "Bridge": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "LibertasToken": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "StakingPool": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "Tipping": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    }
+  },
+  "polygon_mainnet": {
+    "Bridge": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "LibertasToken": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "StakingPool": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "Tipping": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    }
+}
