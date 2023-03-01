@@ -156,48 +156,117 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
         // #5
         it("Users should be able to send a tip and have it split", async () => {
-            // TODO finish it
             let { odeum, staking, tipping } = await loadFixture(
                 deploys
             );
 
-            let startBalance1 = await odeum.balanceOf(clientAcc1.address);
-            let startBalance2 = await odeum.balanceOf(clientAcc2.address);
-            let startBalance3 = await odeum.balanceOf(clientAcc3.address);
+            let senderBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let receiverBalance1 = await odeum.balanceOf(clientAcc2.address);
+            let teamBalance1 = await odeum.balanceOf(ownerAcc.address);
+            let stakingBalance1 = await odeum.balanceOf(staking.address);
+            let zeroAddressBalance1 = await odeum.balanceOf(zeroAddress);
 
-            let stake1 = parseEther("10000");
-            let stake2 = parseEther("25000");
-            let stake3 = parseEther("50000");
+            let tip = parseEther("10000");
 
-            await odeum.connect(clientAcc1).approve(staking.address, stake1);
-            await odeum.connect(clientAcc2).approve(staking.address, stake2);
-            await odeum.connect(clientAcc3).approve(staking.address, stake3);
+            await odeum.connect(clientAcc1).approve(tipping.address, tip);
 
-            await staking.connect(clientAcc1).deposit(stake1);
-            await staking.connect(clientAcc2).deposit(stake2);
-            await staking.connect(clientAcc3).deposit(stake3);
+            await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip);
 
-            await staking.connect(clientAcc1).withdraw(stake1);
-            await staking.connect(clientAcc2).withdraw(stake2);
-            await staking.connect(clientAcc3).withdraw(stake3);
+            let senderBalance2 = await odeum.balanceOf(clientAcc1.address);
+            let receiverBalance2 = await odeum.balanceOf(clientAcc2.address);
+            let teamBalance2 = await odeum.balanceOf(ownerAcc.address);
+            let stakingBalance2 = await odeum.balanceOf(staking.address);
+            let zeroAddressBalance2 = await odeum.balanceOf(zeroAddress);
 
-            let amount1 = (await staking.userInfo(clientAcc1.address)).amount;
-            let amount2 = (await staking.userInfo(clientAcc2.address)).amount;
-            let amount3 = (await staking.userInfo(clientAcc3.address)).amount;
-            expect(amount1).to.equal(0);
-            expect(amount2).to.equal(0);
-            expect(amount3).to.equal(0);
-
-            let endBalance1 = await odeum.balanceOf(clientAcc1.address);
-            let endBalance2 = await odeum.balanceOf(clientAcc2.address);
-            let endBalance3 = await odeum.balanceOf(clientAcc3.address);
-
-            expect(startBalance1).to.equal(endBalance1);
-            expect(startBalance2).to.equal(endBalance2);
-            expect(startBalance3).to.equal(endBalance3);
+            expect(senderBalance1).sub(senderBalance2).to.equal(tip);
+            expect(receiverBalance2).sub(receiverBalance1).to.equal(tip.mul(0.9));
+            expect(teamBalance2).sub(teamBalance1).to.equal(tip.mul(0.045));
+            expect(stakingBalance2).sub(stakingBalance1).to.equal(tip.mul(0.045));
+            expect(zeroAddressBalance2).sub(zeroAddressBalance1).to.equal(tip.mul(0.01));
 
         });
 
+        // #6
+        it("Users should be able to see how many tokens the have received as rewards from staking and tipping", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
+
+            let stake = parseEther("10000");
+
+            await odeum.connect(clientAcc1).approve(staking.address, stake);
+
+            await staking.connect(clientAcc1).deposit(stake);
+
+            expect(await staking.connect(clientAcc1).availableReward()).to.equal(0);
+
+            // TODO what does `reward` mean in Tipping?
+
+        });
+
+
+        // TODO add #7 here
+
+        // #8
+        it("Tips should be split proportionally to stakes", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
+
+            let stake1 = parseEther("1000");
+            let stake2 = parseEther("2000");
+
+            await odeum.connect(clientAcc1).approve(staking.address, stake1);
+            await odeum.connect(clientAcc2).approve(staking.address, stake2);
+
+            await staking.connect(clientAcc1).deposit(stake1);
+            await staking.connect(clientAcc2).deposit(stake2);
+
+            let startBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let startBalance2 = await odeum.balanceOf(clientAcc2.address);
+
+            let tip = parseEther("10000");
+
+            await odeum.connect(clientAcc3).approve(tipping.address, tip);
+            await tipping.connect(clientAcc3).transfer(clientAcc4.address, tip);
+
+            let endBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let endBalance2 = await odeum.balanceOf(clientAcc2.address);
+
+            expect(endBalance1.sub(startBalance1)).to.equal(parseEther("150"));
+            expect(endBalance2.sub(startBalance2)).to.equal(parseEther("300"));
+        });
+
+
+        // TODO add #9 here
+
+        it("Percentages should be adjustable", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
+
+            expect(await tipping._burnRate()).to.equal(10);
+            expect(await tipping._fundRate()).to.equal(45);
+            expect(await tipping._rewardRate()).to.equal(45);
+
+            await tipping.connect(ownerAcc).setBurnRate(15);
+            await tipping.connect(ownerAcc).setFundRate(10);
+            await tipping.connect(ownerAcc).setRewardRate(10);
+
+            expect(await tipping._burnRate()).to.equal(15);
+            expect(await tipping._fundRate()).to.equal(10);
+            expect(await tipping._rewardRate()).to.equal(10);
+
+            let stakingBalance1 = await odeum.balanceOf(staking.address);
+
+            let tip = parseEther("10000");
+
+            await odeum.connect(clientAcc1).approve(tipping.address, tip);
+            await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip);
+
+            let stakingBalance2 = await odeum.balanceOf(staking.address);
+            expect(stakingBalance2.sub(stakingBalance1)).to.equal(parseEther("1000"));
+        });
 
     });
 
