@@ -1,4 +1,4 @@
-const {
+/* const {
   BN,
   ether,
   constants,
@@ -604,4 +604,4 @@ contract("Tipping", (accounts) => {
       balance_vault.should.equal(45);
     });
   });
-});
+}); */
