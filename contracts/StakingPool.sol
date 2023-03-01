@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.18;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IStakingPool.sol";
 
-contract StakingPool is AccessControl, IStakingPool {
+contract StakingPool is Ownable, IStakingPool {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     IERC20Upgradeable public ODEUM;
@@ -22,15 +22,8 @@ contract StakingPool is AccessControl, IStakingPool {
         uint256 rewardDebt;
     }
 
-
-    modifier onlyAdmin() {
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "onlyAdmin");
-        _;
-    }
-
     constructor(address ODEUM_) {
         ODEUM = IERC20Upgradeable(ODEUM_);
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function deposit(uint256 amount) external {
@@ -97,7 +90,7 @@ contract StakingPool is AccessControl, IStakingPool {
         emit EmergencyWithdraw(msg.sender, amount);
     }
 
-    function supplyReward(uint256 reward) external onlyAdmin {
+    function supplyReward(uint256 reward) external onlyOwner {
         if (totalDeposits == 0) {
             return;
         }
