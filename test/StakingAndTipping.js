@@ -186,8 +186,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
         });
 
+        // TODO finish it. get amount of received rewards - not available
         // #6
-        it("Users should be able to see how many tokens the have received as rewards from staking and tipping", async () => {
+        it("Users should be able to see how many tokens the have received as rewards from staking", async () => {
             let { odeum, staking, tipping } = await loadFixture(
                 deploys
             );
@@ -199,8 +200,6 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc1).deposit(stake);
 
             expect(await staking.connect(clientAcc1).availableReward()).to.equal(0);
-
-            // TODO what does `reward` mean in Tipping?
 
         });
 
