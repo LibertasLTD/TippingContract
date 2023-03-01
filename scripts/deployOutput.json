@@ -1,37 +1,21 @@
 {
-  "polygon_testnet": {
-    "Bridge": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
-    },
+  "fantom_testnet": {
     "Odeum": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
+      "proxyAddress": "0x452cbeEFeD67722aeA5662F64c385381948bA246",
+      "implementationAddress": "0x6867Fe07073ad2f7972cc24731CD9CC49f07ed81",
+      "proxyVerification": "https://testnet.ftmscan.com/address/0x452cbeEFeD67722aeA5662F64c385381948bA246#code",
+      "implementationVerification": "https://testnet.ftmscan.com/address/0x6867Fe07073ad2f7972cc24731CD9CC49f07ed81#code"
     },
     "StakingPool": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
+      "address": "0xdf91A854d3D5F18d99A2950CD16068DD2bB1b0FD",
+      "verification": "https://testnet.ftmscan.com/address/0xdf91A854d3D5F18d99A2950CD16068DD2bB1b0FD#code"
     },
     "Tipping": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
+      "address": "0x9bB898987cF86Fc1Bb4500dC2B9f1aA1EcF55Bb4",
+      "verification": "https://testnet.ftmscan.com/address/0xdf91A854d3D5F18d99A2950CD16068DD2bB1b0FD#code"
     }
   },
-  "polygon_mainnet": {
-    "Bridge": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
-    },
+  "fantom_mainnet": {
     "Odeum": {
       "proxyAddress": "",
       "implementationAddress": "",
@@ -39,15 +23,12 @@
       "implementationVerification": ""
     },
     "StakingPool": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
+      "address": "",
+      "verification": ""
     },
     "Tipping": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
+      "address": "",
+      "verification": ""
     }
+  }
 }
