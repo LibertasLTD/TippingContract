@@ -4,47 +4,136 @@ const path = require("path");
 const delay = require("delay");
 require("dotenv").config();
 
+const zeroAddress = ethers.constants.AddressZero;
+
 // JSON file to keep information about previous deployments
 const fileName = "./deployOutput.json";
 const OUTPUT_DEPLOY = require(fileName);
 
 let contractName;
-let token;
-let tokenUpgradeable;
+let odeum;
+let stakingPool;
+let tipping;
+
 
 async function main() {
     console.log(`[NOTICE!] Chain of deployment: ${network.name}`);
 
+    let [owner] = await ethers.getSigners();
+
     // ====================================================
 
-    // Contract #1: CRSTL
+    // Contract #1: Odeum
 
-    contractName = "CRSTL";
+    // Deploy proxy and implementation
+    contractName = "Odeum";
     console.log(`[${contractName}]: Start of Deployment...`);
     _contractProto = await ethers.getContractFactory(contractName);
-    contractDeployTx = await _contractProto.deploy("CREESTL", "CRSTL", 18);
-    token = await contractDeployTx.deployed();
+    odeum = await upgrades.deployProxy(
+        _contractProto,
+        // TODO change it to real team's wallet afterwards
+        [owner.address],
+        {
+            initializer: "configure",
+            kind: "uups",
+        }
+    );
+    await odeum.deployed();
     console.log(`[${contractName}]: Deployment Finished!`);
-    OUTPUT_DEPLOY[network.name][contractName].address = token.address;
+    OUTPUT_DEPLOY[network.name][contractName].proxyAddress =
+        odeum.address;
+
+    await delay(90000);
+
+    // Verify implementation
+    console.log(`[${contractName}][Implementation]: Start of Verification...`);
+
+    let odeumImplAddress =
+        await upgrades.erc1967.getImplementationAddress(
+            odeum.address
+        );
+    OUTPUT_DEPLOY[network.name][contractName].implementationAddress =
+        odeumImplAddress;
+    if (network.name === "fantom_mainnet") {
+        url =
+            "https://ftmscan.com/address/" +
+            odeumImplAddress +
+            "#code";
+    } else if (network.name === "fantom_testnet") {
+        url =
+            "https://testnet.ftmscan.com/address/" +
+            odeumImplAddress +
+            "#code";
+    }
+    OUTPUT_DEPLOY[network.name][contractName].implementationVerification = url;
+    try {
+        await hre.run("verify:verify", {
+            address: odeumImplAddress,
+        });
+    } catch (error) {}
+
+    // Initialize implementation if it has not been initialized yet
+    let odeumImpl = await ethers.getContractAt(
+        "Odeum",
+        odeumImplAddress
+    );
+    try {
+        await odeumImpl.initialize(owner.address);
+    } catch (error) {}
+    console.log(`[${contractName}][Implementation]: Verification Finished!`);
+
+    // Verify proxy
+    console.log(`[${contractName}][Proxy]: Start of Verification...`);
+    if (network.name === "fantom_mainnet") {
+        url =
+            "https://ftmscan.com/address/" +
+            odeum.address +
+            "#code";
+    } else if (network.name === "fantom_testnet") {
+        url =
+            "https://testnet.ftmscan.com/address/" +
+            odeum.address +
+            "#code";
+    }
+    OUTPUT_DEPLOY[network.name][contractName].proxyVerification = url;
+
+    try {
+        await hre.run("verify:verify", {
+            address: odeum.address,
+        });
+    } catch (error) {}
+    console.log(`[${contractName}][Proxy]: Verification Finished!`);
+
+    // ====================================================
+
+    // Contract #2: StakingPool
+
+    contractName = "StakingPool";
+    console.log(`[${contractName}]: Start of Deployment...`);
+    _contractProto = await ethers.getContractFactory(contractName);
+    contractDeployTx = await _contractProto.deploy(odeum.address);
+    stakingPool = await contractDeployTx.deployed();
+    console.log(`[${contractName}]: Deployment Finished!`);
+    OUTPUT_DEPLOY[network.name][contractName].address = stakingPool.address;
 
     // Verify
     console.log(`[${contractName}]: Start of Verification...`);
 
     await delay(90000);
 
-    if (network.name === "polygon_mainnet") {
-        url = "https://polygonscan.com/address/" + token.address + "#code";
-    } else if (network.name === "polygon_testnet") {
+    if (network.name === "fantom_mainnet") {
+        url = "https://ftmscan.com/address/" + stakingPool.address + "#code";
+    } else if (network.name === "fantom_testnet") {
         url =
-            "https://mumbai.polygonscan.com/address/" + token.address + "#code";
+            "https://testnet.ftmscan.com/address/" + stakingPool.address + "#code";
     }
 
     OUTPUT_DEPLOY[network.name][contractName].verification = url;
 
     try {
         await hre.run("verify:verify", {
-            address: token.address,
-            constructorArguments: ["CREESTL", "CRSTL", 18],
+            address: stakingPool.address,
+            constructorArguments: [odeum.address],
         });
     } catch (error) {
         console.error(error);
@@ -53,88 +142,59 @@ async function main() {
 
     // ====================================================
 
-    // Contract #2: CRSTLUpgradeable
+    // Contract #3: Tipping
 
-    // Deploy proxy and implementation
-    contractName = "CRSTLUpgradeable";
+    contractName = "Tipping";
     console.log(`[${contractName}]: Start of Deployment...`);
     _contractProto = await ethers.getContractFactory(contractName);
-    tokenUpgradeable = await upgrades.deployProxy(
-        _contractProto,
-        ["CREESTLUpgradeable", "CRSTLU", 18],
-        {
-            initializer: "initialize",
-            kind: "uups",
-        }
+    contractDeployTx = await _contractProto.deploy(
+        stakingPool.address,
+        odeum.address,
+        // TODO change it to team wallet
+        owner.address,
+        zeroAddress,
+        10,
+        45,
+        45
     );
-    await tokenUpgradeable.deployed();
+    tipping = await contractDeployTx.deployed();
     console.log(`[${contractName}]: Deployment Finished!`);
-    OUTPUT_DEPLOY[network.name][contractName].proxyAddress =
-        tokenUpgradeable.address;
+    OUTPUT_DEPLOY[network.name][contractName].address = tipping.address;
+
+    // Verify
+    console.log(`[${contractName}]: Start of Verification...`);
 
     await delay(90000);
 
-    // Verify implementation
-    console.log(`[${contractName}][Implementation]: Start of Verification...`);
-
-    let tokenUpgradeableImplAddress =
-        await upgrades.erc1967.getImplementationAddress(
-            tokenUpgradeable.address
-        );
-    OUTPUT_DEPLOY[network.name][contractName].implementationAddress =
-        tokenUpgradeableImplAddress;
-    if (network.name === "polygon_mainnet") {
+    if (network.name === "fantom_mainnet") {
+        url = "https://ftmscan.com/address/" + tipping.address + "#code";
+    } else if (network.name === "fantom_testnet") {
         url =
-            "https://polygonscan.com/address/" +
-            tokenUpgradeableImplAddress +
-            "#code";
-    } else if (network.name === "polygon_testnet") {
-        url =
-            "https://mumbai.polygonscan.com/address/" +
-            tokenUpgradeableImplAddress +
-            "#code";
+            "https://testnet.ftmscan.com/address/" + stakingPool.address + "#code";
     }
-    OUTPUT_DEPLOY[network.name][contractName].implementationVerification = url;
-    try {
-        await hre.run("verify:verify", {
-            address: tokenUpgradeableImplAddress,
-        });
-    } catch (error) {}
 
-    // Initialize implementation if it has not been initialized yet
-    let tokenUpgradeableImpl = await ethers.getContractAt(
-        "CRSTLUpgradeable",
-        tokenUpgradeableImplAddress
-    );
-    try {
-        await tokenUpgradeableImpl.initialize("CRSTLUpgradeable", "CRSTLU", 18);
-    } catch (error) {}
-    console.log(`[${contractName}][Implementation]: Verification Finished!`);
-
-    // Verify proxy
-    console.log(`[${contractName}][Proxy]: Start of Verification...`);
-    if (network.name === "polygon_mainnet") {
-        url =
-            "https://polygonscan.com/address/" +
-            tokenUpgradeable.address +
-            "#code";
-    } else if (network.name === "polygon_testnet") {
-        url =
-            "https://mumbai.polygonscan.com/address/" +
-            tokenUpgradeable.address +
-            "#code";
-    }
-    OUTPUT_DEPLOY[network.name][contractName].proxyVerification = url;
+    OUTPUT_DEPLOY[network.name][contractName].verification = url;
 
     try {
         await hre.run("verify:verify", {
-            address: tokenUpgradeable.address,
+            address: tipping.address,
+            constructorArguments: [
+                stakingPool.address,
+                odeum.address,
+                // TODO change it to team wallet
+                owner.address,
+                zeroAddress,
+                10,
+                45,
+                45
+            ],
         });
-    } catch (error) {}
-    console.log(`[${contractName}][Proxy]: Verification Finished!`);
+    } catch (error) {
+        console.error(error);
+    }
+    console.log(`[${contractName}]: Verification Finished!`);
 
     // ====================================================
-
     fs.writeFileSync(
         path.resolve(__dirname, fileName),
         JSON.stringify(OUTPUT_DEPLOY, null, "  ")

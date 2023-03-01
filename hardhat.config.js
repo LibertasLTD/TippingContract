@@ -33,7 +33,7 @@ module.exports = {
       accounts: [ACC_PRIVATE_KEY],
     },
     fantom_testnet: {
-      url: `https://rpc.testnet.fantom.network/`,
+      url: `https://fantom-testnet.public.blastapi.io	`,
       accounts: [ACC_PRIVATE_KEY],
     },
   },
