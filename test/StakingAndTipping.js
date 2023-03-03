@@ -91,12 +91,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).deposit(stake2);
             await staking.connect(clientAcc3).deposit(stake3);
 
-            let amount1 = (await staking.userInfo(clientAcc1.address)).amount;
-            let amount2 = (await staking.userInfo(clientAcc2.address)).amount;
-            let amount3 = (await staking.userInfo(clientAcc3.address)).amount;
-            expect(amount1).to.equal(stake1);
-            expect(amount2).to.equal(stake2);
-            expect(amount3).to.equal(stake3);
+            expect(await staking.connect(clientAcc1).getMyStake()).to.equal(stake1);
+            expect(await staking.connect(clientAcc2).getMyStake()).to.equal(stake2);
+            expect(await staking.connect(clientAcc3).getMyStake()).to.equal(stake3);
 
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
@@ -134,12 +131,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).withdraw(stake2);
             await staking.connect(clientAcc3).withdraw(stake3);
 
-            let amount1 = (await staking.userInfo(clientAcc1.address)).amount;
-            let amount2 = (await staking.userInfo(clientAcc2.address)).amount;
-            let amount3 = (await staking.userInfo(clientAcc3.address)).amount;
-            expect(amount1).to.equal(0);
-            expect(amount2).to.equal(0);
-            expect(amount3).to.equal(0);
+            expect(await staking.connect(clientAcc1).getMyStake()).to.equal(0);
+            expect(await staking.connect(clientAcc2).getMyStake()).to.equal(0);
+            expect(await staking.connect(clientAcc3).getMyStake()).to.equal(0);
 
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
@@ -173,7 +167,35 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).deposit(stake2);
             await staking.connect(clientAcc3).deposit(stake3);
 
-            expect(await staking.totalStake()).to.equal(parseEther("85000"));
+            expect(await staking.totalStake()).to.equal(stake1.add(stake2).add(stake3));
+
+        });
+
+        // #4
+        it("There should be a method to expose each user's stake amount", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
+
+            let startBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let startBalance2 = await odeum.balanceOf(clientAcc2.address);
+            let startBalance3 = await odeum.balanceOf(clientAcc3.address);
+
+            let stake1 = parseEther("10000");
+            let stake2 = parseEther("25000");
+            let stake3 = parseEther("50000");
+
+            await odeum.connect(clientAcc1).approve(staking.address, stake1);
+            await odeum.connect(clientAcc2).approve(staking.address, stake2);
+            await odeum.connect(clientAcc3).approve(staking.address, stake3);
+
+            await staking.connect(clientAcc1).deposit(stake1);
+            await staking.connect(clientAcc2).deposit(stake2);
+            await staking.connect(clientAcc3).deposit(stake3);
+
+            expect(await staking.connect(clientAcc1).getMyStake()).to.equal(stake1);
+            expect(await staking.connect(clientAcc2).getMyStake()).to.equal(stake2);
+            expect(await staking.connect(clientAcc3).getMyStake()).to.equal(stake3);
 
         });
 
