@@ -3,7 +3,6 @@
 pragma solidity ^0.8.18;
 
 interface IStakingPool {
-
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 amount);
@@ -21,5 +20,4 @@ interface IStakingPool {
     function emergencyWithdraw() external;
 
     function supplyReward(uint256 reward) external;
-
 }
