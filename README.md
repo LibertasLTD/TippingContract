@@ -1,121 +1,236 @@
-# README
+## ODEUM
 
-## Description
+#### Table on contents
 
-All the smart-contracts are compiled using solidity version 0.7.0:
+[Prereqiusites](#preqs)
+[Build](#build)
+[Test](#tests)
+[Run Scripts](#run)
+[Deploy](#deploy)
+[Networks](#networks)
+[Wallets](#wallets)
+[Smart Contracts Upgradeability](#proxy)
+[Structure of Deploy Output File](#output)
+[Logic](#logic)
+[[Known Issues]](#issues)
 
-LibertasToken - ERC20 token in Ethereum (name: "LIBERTAS", symbol: "LIBS").
+<a name="preqs">
 
-BridgedStandardERC20 - ERC20 token in Fantom.
+#### Prerequisites
 
-Bridge - the bridge contract, which allows transferring tokens between Ethereum and Fantom.
+- Install [Git](https://git-scm.com/)
+- Install [Node.js](https://nodejs.org/en/download/)
+- Clone this repository with `git clone <repo URL>`
+- Navigate to the directory with the cloned code
+- Install Hardhat with `npm install --save-dev hardhat`
+- Install all required dependencies with `npm install`
+- Create a file called `.env` in the root of the project with the same contents as `.env.template`
+- Place your secret API keys, private keys, etc. to the `.env` file
 
-StakingPool - allows staking Libertas tokens for reward.
+  :warning:**DO NOT SHARE YOUR .env FILE IN ANY WAY OR YOU RISK TO LOSE ALL YOUR FUNDS**:warning:
 
-Tipping - with this contract, users can send tips to content creators, with each transaction:
+<a name="build"/>
 
-- 4.5% distributed among contributors
-- 4.5% are sent to the customer's wallet (there is no one on Fantom yet)
-- 1% - burned
-- 90% - are sent to the wallet of the content creator
-
-All available configuration parameters are in the `.env` file.
-
-## INSTALL
-
-### Truffle and other tools
-
-Install truffle: **npm install -g truffle**
-
-Install truffle: **npm install -g ganache-cli**
-
-Install truffle-plugin-verify: **npm -D truffle-plugin-verify**
-
-Install dependencies: **cd `<path to the cloned repo>` && yarn**
-
-## RUN
-
-Create the .env file in the project's root directory,
-paste following variables into the .env file, specify correct API keys and mnemonics:
+### Build
 
 ```
-ALCHEMY_RINKEBY_KEY=
-ALCHEMY_MAINNET_KEY=
-MNEMONIC=
-MNEMONIC_FANTOM=
-ETHERSCAN_API_KEY=
-FTMSCAN_API_KEY=
-BRIDGE_ON_ETHEREUM_ADDRESS=
-BRIDGE_ON_FANTOM_ADDRESS=
+npx hardhat compile
 ```
 
-Open a terminal window, cd to project's root and run the following commands:
+<a name="tests"/>
 
-**truffle compile**
+### Test
 
-**ganache-cli -e 1000**
+```
+npx hardhat test --network hardhat
+```
 
-## RUN UNIT TESTS
+<a name="run"/>
 
-Open a new terminal window, run: **truffle test**
+### Run Scripts
 
-## VERIFY
+```
+npx hardhat run <script file name here> --network <network name here>
+```
 
-Fantom: **yarn verify_fantom --network** `<network>`
+<a name="deploy"/>
 
-Ethereum: **yarn verify_ethereum --network** `<network>`
+### Deploy
 
-P.S. Verification doesn't work for the Fantom testnet
+```
+npx hardhat run scripts/deploy.js --network <network name here>
+```
 
-## TEST BRIDGE (LOCAL FORK)
+Deployment script takes about 5 minutes to complete. Please, be patient!
+After the contracts get deployed you can find their _addresses_ and code verification _URLs_ in the `scripts/deployOutput.json` file (see [Structure of Deploy Output File](#output)).
+Note that this file only refreshes the addresses of contracts that have been successfully deployed (or redeployed). If you deploy only a single contract then its address would get updated and all other addresses would remain untouched and would link to _old_ contracts.
+Please, **do not** write anything to `deployOutput.json` file yourself! It is a read-only file.
+All deployed contracts _are verified_ on [Ftmscan](https://ftmscan.com/).
 
-// run ganache fork of fantom testnet
+<a name="networks"/>
 
-**yarn fork_fantom_testnet**
+### Networks
 
-// deploy smart-contracts into the fork
+а) **Test** network
+Make sure you have _enough test tokens_ for testnet.
 
-**truffle migrate --network fantom_ganache_fork**
+```
+npx hardhat run <script name here> --network fantom_testnet
+```
 
-### RUN TEST
+b) **Main** network
+Make sure you have _enough real tokens_ in your wallet. Deployment to the mainnet costs money!
 
-**yarn test**
+```
+npx hardhat run <script name here> --network fantom_mainnet
+```
 
-## DEPLOYED SMART CONTRACTS ADDRESSES
+c) **Local** network
 
-## ETHEREUM
+- Run Hardhat node locally:
 
-MAINNET
+```
+npx hardhat node
+```
 
-- Bridge: https://etherscan.io/address/0x035D4fd4460AD42F62090A09b9948C6D73C1c393#code
-- Tipping: To be specified later
-- StakingPool: To be specified later.
-- LibertasUpgradeableProxy:
-- LibertasToken: https://etherscan.io/address/0x49184E6dAe8C8ecD89d8Bdc1B950c597b8167c90
-- LibertasProxyAdmin:
+- Run sripts on the node
 
-RINKEBY
+```
+npx hardhat run <script name here> --network localhost
+```
 
-- Bridge: https://rinkeby.etherscan.io/address/0x19f3d469CDd58B183F1BeE060ae1eAc09aC77666#code
-- Tipping: https://rinkeby.etherscan.io/address/0xaf95972f59A003d5f4058B95139F703aB8856292#code
-- StakingPool: https://rinkeby.etherscan.io/address/0xb167F4bd8c279428E19272B32e23f91671D212df#code
-- LibertasUpgradeableProxy: https://rinkeby.etherscan.io/address/0x006024948d6dD73c47Ce4203659beCC10c8CAe8C#code
-- LibertasToken: https://rinkeby.etherscan.io/address/0x9ff0537bb8461e6f9e66680aa83780940ba45253#code
-- LibertasProxyAdmin: https://rinkeby.etherscan.io/address/0x75c9969BbbA173Cc24E1f2f3D0832c325d6Cca38#code
+<a name="wallets"/>
 
-## FANTOM
+### Wallets
 
-MAINNET
+For deployment you will need to use either _your existing wallet_ or _a generated one_.
 
-- Bridge: https://ftmscan.com/address/0x45ae8f499234a1fb584de918d91897d7eafb0beb#readContract
-- BridgedStandardERC20: https://ftmscan.com/address/0x43f3f217a892de90f8f43035c57872ff260cc9f7
-- BridgedStandardERC20 token: https://ftmscan.com/token/0x9122f3f35aa2324463b637ec94780bbcab1c5a8c#readContract
-- Tipping: https://ftmscan.com/address/0x752534A8C3059d13d16Ac2cAa85508D2E86Cb3E1#code
-- StakingPool:https://ftmscan.com/address/0xC238729a386FC776E605Fa53EDd3a31450F949f1#code
+#### Using an existing wallet
 
-TESTNET
+If you choose to use your existing wallet, then you will need to be able to export (copy/paste) its private key. For example, you can export private key from your MetaMask wallet.
+Wallet's address and private key should be pasted into the `.env` file (see [Prerequisites](#preqs)).
 
-- Bridge: https://testnet.ftmscan.com/address/0x4862425a8b4450D5a761D966fEd03beb05DCcB7c#code
-- BridgedStandardERC20: https://testnet.ftmscan.com/address/0xC46bD9Dd919D314e8A5Fe83DAA7B0Ed397E408d5#code
-- Tipping: https://testnet.ftmscan.com/address/0xb13131df76ec4809C3733FD30Ed946f69A32C764
-- StakingPool: https://testnet.ftmscan.com/address/0xB831930dc0Db7F236a1F32f5a26F82be0328E1FF
+#### Creating a new wallet
+
+If you choose to create a fresh wallet for this project, you should use `createWallet` script from `scripts/` directory.
+
+```
+node scripts/createWallet.js
+```
+
+This will generate a single new wallet and show its address and private key. **Save** them somewhere else!
+A new wallet _does not_ hold any tokens. You have to provide it with tokens of your choice.
+Wallet's address and private key should be pasted into the `.env` file (see [Prerequisites](#preqs)).
+
+<a name="proxy"/>
+
+### Smart Contracts Upgradeability
+
+The source code of upgradeable contracts can be updated _without_ the need to redeploy the contracts afterwards. The state of contracts (values in storage) remains the same. This allows to add new features to the contracts and fix existing bugs/vulnerabilities.
+
+It's _highly recommended_ to study the following materials for detailed explanation of contracts upgradeability:
+
+1. [What is Proxy](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies)
+2. [Difference Between Transparent and UUPS Proxy](https://docs.openzeppelin.com/contracts/4.x/api/proxy#transparent-vs-uups)
+3. [How to Write Upgradeable Contracts](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable)
+4. [How to Deploy and Upgrade Contracts Using Hardhat](https://docs.openzeppelin.com/upgrades-plugins/1.x/hardhat-upgrades)
+5. [Constuctor Allowing to Create Upgradeable Contracts](https://wizard.openzeppelin.com/#custom)
+
+#### Using Scripts with Upgradeable Contracts
+
+**Deploy**
+In order to deploy contracts follow instructions in [Deploy](#deploy) section. The `scripts/deploy.js` script supports upgradeable contracts.
+
+**Upgrade**
+In order to upgrade contracts follow the steps:
+
+1. Create new versions of your contracts. Add `V2`, `V3`, etc. to the end of each new version of each contract. You might have several versions of the same contract in one directory at the same time or you can store them in separate directories
+2. Open `scripts/upgrade.js` file
+3. Change the `oldContractNames` list if you need. This list represents contracts that you _wish to upgrade_
+   Example:
+
+   ```
+   let oldContractNames = [
+     "OdeumV1"
+   ];
+   ```
+
+4. Change the `newContractNames` list if you need. This list represents new implementations of upgraded contracts. "New implementation" is any contract that _is upgrade-compatible_ with the previous implementation and _has a different bytecode_.
+   Example:
+
+   ```
+   let newContractNames = [
+     "OdeumV2",
+   ];
+   ```
+
+   _NOTE_:
+
+   - Each of the contracts from both lists must be present in the project directory
+   - Length of both lists must be the same
+   - Each contract from `oldContractNames` must have already been deployed in mainnet/testnet
+   - Order of contracts in the lists must be the same
+
+5. Run the upgrade script
+
+```
+npx hardhat run scripts/upgrade.js --network <network name here>
+```
+
+When running, this script will output logs into the console. If you see any error messages in the logs with the script _still running_ - ignore them. They might later be used for debug purposes.
+If Hardhat Upgrades plugin finds your contracts _upgrade-incompatible_ it will generate an error that will stop script execution. Is this case you have to follow the [How to Write Upgradeable Contracts](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable) guide.
+After this script completes, the `implementationAddress` and `implementationVerification` fields of contracts from the `oldContractNames` will be changed inside the `scripts/deployOutput.json` file. This will indicate that contracts upgrade was finished successfully.
+Even after the upgrade, you should _use only `proxyAddress` or `proxyVerification` fields of the deploy output file to interact with contracts_.
+
+Following contracts are upgradeable:
+- Odeum.sol
+- StakingPool.sol
+- Tipping.sol
+
+Following contracts are _not_ upgradeable:
+- Bridge.sol
+- BridgeStandardERC20.sol
+- MockContract.sol
+- MockToken.sol
+
+<a name="output"/>
+
+### Structure of Deploy Output File
+
+This file contains the result of contracts deployment.
+
+It is separated in 2 parts. Each of them represents deployment to testnet or mainnet.
+Each part contains information about all deployed contracts:
+
+- The address of the proxy contract (`proxyAddress`) (see [Smart Contracts Upgradeability](#proxy))
+- The address of the implementation contract that is under control of the proxy contract (`implementationAddress`)
+- The URL for Polygonscan page with verified code of the proxy contract (`proxyVerification`)
+- The URL for Polygonscan page with verified code of the implementation contract (`implementationVerification`)
+
+**Use only `proxyAddress` or `proxyVerification` fields to interact with contracts**.
+
+<a name="logic"/>
+
+### Logic
+
+#### Odeum
+A simple ERC20 token
+
+####StakingPool
+Allows staking Libertas tokens for reward.
+
+####Tipping
+With this contract users can send tips to content creators.
+With each transaction:
+- 4.5% of tokens is distributed among contributors
+- 4.5% of tokens is sent to the "fund" wallet
+- 1% of tokens is burned
+- 90% of tokens is sent to the wallet of the content creator
+
+---
+
+<a name="issues"/>
+
+###[Known Issues]
+
+Currently all files related to the bridge functionality have been commented out. They are still in the repo, but *should not be used*.
