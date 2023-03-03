@@ -33,6 +33,10 @@ contract StakingPool is Ownable, IStakingPool {
         return getPendingReward(userInfo[msg.sender]);
     }
 
+    function getMyStake() external view returns (uint256) {
+        return userInfo[msg.sender].amount;
+    }
+
     function deposit(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         if (user.amount >= 0 && amount > 0) {
