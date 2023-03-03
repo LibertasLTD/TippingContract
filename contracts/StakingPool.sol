@@ -7,7 +7,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IStakingPool.sol";
 import "./interfaces/ITipping.sol";
-import "hardhat/console.sol";
 
 contract StakingPool is Ownable, IStakingPool {
     using SafeERC20Upgradeable for IERC20Upgradeable;
