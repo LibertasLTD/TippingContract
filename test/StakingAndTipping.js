@@ -91,9 +91,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).deposit(stake2);
             await staking.connect(clientAcc3).deposit(stake3);
 
-            expect(await staking.connect(clientAcc1).getMyStake()).to.equal(stake1);
-            expect(await staking.connect(clientAcc2).getMyStake()).to.equal(stake2);
-            expect(await staking.connect(clientAcc3).getMyStake()).to.equal(stake3);
+            expect(await staking.getStake(clientAcc1.address)).to.equal(stake1);
+            expect(await staking.getStake(clientAcc2.address)).to.equal(stake2);
+            expect(await staking.getStake(clientAcc3.address)).to.equal(stake3);
 
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
@@ -131,9 +131,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).withdraw(stake2);
             await staking.connect(clientAcc3).withdraw(stake3);
 
-            expect(await staking.connect(clientAcc1).getMyStake()).to.equal(0);
-            expect(await staking.connect(clientAcc2).getMyStake()).to.equal(0);
-            expect(await staking.connect(clientAcc3).getMyStake()).to.equal(0);
+            expect(await staking.getStake(clientAcc1.address)).to.equal(0);
+            expect(await staking.getStake(clientAcc2.address)).to.equal(0);
+            expect(await staking.getStake(clientAcc3.address)).to.equal(0);
 
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
@@ -193,9 +193,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).deposit(stake2);
             await staking.connect(clientAcc3).deposit(stake3);
 
-            expect(await staking.connect(clientAcc1).getMyStake()).to.equal(stake1);
-            expect(await staking.connect(clientAcc2).getMyStake()).to.equal(stake2);
-            expect(await staking.connect(clientAcc3).getMyStake()).to.equal(stake3);
+            expect(await staking.getStake(clientAcc1.address)).to.equal(stake1);
+            expect(await staking.getStake(clientAcc2.address)).to.equal(stake2);
+            expect(await staking.getStake(clientAcc3.address)).to.equal(stake3);
 
         });
 
@@ -231,26 +231,67 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
         });
 
-        // #6
-        it("Users should be able to see how many tokens the have received as rewards from staking and tipping", async () => {
+        // #6.1
+        it("Users should be able to see their available reward for staking", async () => {
             let { odeum, staking, tipping } = await loadFixture(
                 deploys
             );
 
             let stake = parseEther("10000");
-
             await odeum.connect(clientAcc1).approve(staking.address, stake);
-
             await staking.connect(clientAcc1).deposit(stake);
 
-            expect(await staking.connect(clientAcc1).availableReward()).to.equal(0);
+            await staking.connect(ownerAcc).supplyReward(parseEther("55000"));
 
-            // TODO what does `reward` mean in Tipping?
+            expect(await staking.getAvailableReward(clientAcc1.address)).not.to.equal(0);
 
         });
 
+        // #6.2
+        it("Users should be able to see their claimed rewards for staking", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
 
-        // TODO add #7 here
+            let stake = parseEther("10000");
+            await odeum.connect(clientAcc1).approve(staking.address, stake);
+            await staking.connect(clientAcc1).deposit(stake);
+
+            // Send some tokens into the staking pool to be able to pay the reward
+            await odeum.connect(ownerAcc).transfer(staking.address, parseEther("1000000"));
+            // Set some reward (just random)
+            await staking.connect(ownerAcc).supplyReward(parseEther("50000"));
+
+            expect(await staking.claimedRewards(clientAcc1.address)).to.equal(0);
+
+            await staking.connect(clientAcc1).withdraw(stake);
+
+            expect(await staking.claimedRewards(clientAcc1.address)).not.to.equal(0);
+
+        });
+
+        // #7
+        it("Should be possible to see total claimed rewards for staking", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
+
+            let stake = parseEther("10000");
+            await odeum.connect(clientAcc1).approve(staking.address, stake);
+            await staking.connect(clientAcc1).deposit(stake);
+
+            // Send some tokens into the staking pool to be able to pay the reward
+            await odeum.connect(ownerAcc).transfer(staking.address, parseEther("1000000"));
+            // Set some reward (just random)
+            await staking.connect(ownerAcc).supplyReward(parseEther("50000"));
+
+            expect(await staking.totalClaimed()).to.equal(0);
+
+            await staking.connect(clientAcc1).withdraw(stake);
+
+            expect(await staking.totalClaimed()).not.to.equal(0);
+
+        });
 
         // #8
         it("Tips should be split proportionally to stakes", async () => {
