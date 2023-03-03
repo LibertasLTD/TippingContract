@@ -151,8 +151,31 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
         });
 
+        // #3
+        it("There should be a method to expose the total stake amount", async () => {
+            let { odeum, staking, tipping } = await loadFixture(
+                deploys
+            );
 
-        // TODO add #3 and #4 here
+            let startBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let startBalance2 = await odeum.balanceOf(clientAcc2.address);
+            let startBalance3 = await odeum.balanceOf(clientAcc3.address);
+
+            let stake1 = parseEther("10000");
+            let stake2 = parseEther("25000");
+            let stake3 = parseEther("50000");
+
+            await odeum.connect(clientAcc1).approve(staking.address, stake1);
+            await odeum.connect(clientAcc2).approve(staking.address, stake2);
+            await odeum.connect(clientAcc3).approve(staking.address, stake3);
+
+            await staking.connect(clientAcc1).deposit(stake1);
+            await staking.connect(clientAcc2).deposit(stake2);
+            await staking.connect(clientAcc3).deposit(stake3);
+
+            expect(await staking.totalStake()).to.equal(parseEther("85000"));
+
+        });
 
         // #5
         it("Users should be able to send a tip and have it split", async () => {
