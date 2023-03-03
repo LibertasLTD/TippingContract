@@ -8,8 +8,13 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./interfaces/IOdeum.sol";
 
-contract Odeum is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgradeable, IOdeum {
-
+contract Odeum is
+    Initializable,
+    ERC20Upgradeable,
+    OwnableUpgradeable,
+    UUPSUpgradeable,
+    IOdeum
+{
     uint256 public constant INITIAL_CAP = 100_000_000;
 
     function configure(address _owner) external initializer {
@@ -17,7 +22,7 @@ contract Odeum is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
         __Ownable_init();
         __UUPSUpgradeable_init();
         // TODO do I need decimals here?
-        _mint(_owner, INITIAL_CAP * (10**decimals()));
+        _mint(_owner, INITIAL_CAP * (10 ** decimals()));
     }
 
     function approveAndCall(
@@ -61,9 +66,7 @@ contract Odeum is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUpgra
         }
     }
 
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        onlyOwner
-        override
-    {}
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal override onlyOwner {}
 }
