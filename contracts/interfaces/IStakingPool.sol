@@ -14,7 +14,9 @@ interface IStakingPool {
 
     function claim() external;
 
-    function availableReward() external view returns (uint256);
+    function getAvailableReward(address user) external view returns (uint256);
+
+    function getStake(address user) external view returns (uint256);
 
     function emergencyWithdraw() external;
 

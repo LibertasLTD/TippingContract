@@ -14,6 +14,8 @@ contract StakingPool is Ownable, IStakingPool {
     mapping(address => UserInfo) public userInfo;
     uint256 public accOdeumPerShare;
     uint256 public totalStake;
+    mapping(address => uint256) public claimedRewards;
+    uint256 public totalClaimed;
 
     uint256 public constant PRECISION = 1e12;
 
@@ -26,22 +28,21 @@ contract StakingPool is Ownable, IStakingPool {
         ODEUM = IERC20Upgradeable(ODEUM_);
     }
 
-    function availableReward() external view returns (uint256) {
-        if (userInfo[msg.sender].amount == 0) {
-            return 0;
-        }
-        return getPendingReward(userInfo[msg.sender]);
+    function getAvailableReward(address user) external view returns (uint256) {
+        return _getPendingReward(userInfo[user]);
     }
 
-    function getMyStake() external view returns (uint256) {
-        return userInfo[msg.sender].amount;
+    function getStake(address user) external view returns (uint256) {
+        return userInfo[user].amount;
     }
 
     function deposit(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         if (user.amount >= 0 && amount > 0) {
-            uint256 pending = user.amount * accOdeumPerShare / PRECISION - user.rewardDebt;
+            uint256 pending = _getPendingReward(user);
             if (pending > 0) {
+                claimedRewards[msg.sender] += pending;
+                totalClaimed += pending;
                 safeOdeumTransfer(msg.sender, pending);
             }
             ODEUM.safeTransferFrom(msg.sender, address(this), amount);
@@ -55,8 +56,12 @@ contract StakingPool is Ownable, IStakingPool {
     function withdraw(uint256 amount) external {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= amount, "withdrawTooMuch");
-        uint256 pending = user.amount * accOdeumPerShare / PRECISION - user.rewardDebt;
+        uint256 pending = _getPendingReward(
+            user
+        );
         if (pending > 0) {
+            claimedRewards[msg.sender] += pending;
+            totalClaimed += pending;
             safeOdeumTransfer(msg.sender, pending);
         }
         if (amount > 0) {
@@ -72,8 +77,10 @@ contract StakingPool is Ownable, IStakingPool {
     function claim() external {
         require(userInfo[msg.sender].amount > 0, "nothingToClaim");
         UserInfo storage user = userInfo[msg.sender];
-        uint256 pending = getPendingReward(user);
+        uint256 pending = _getPendingReward(user);
         if (pending > 0) {
+            claimedRewards[msg.sender] += pending;
+            totalClaimed += pending;
             safeOdeumTransfer(msg.sender, pending);
         }
         user.rewardDebt = user.amount * accOdeumPerShare / PRECISION;
@@ -89,6 +96,7 @@ contract StakingPool is Ownable, IStakingPool {
         emit EmergencyWithdraw(msg.sender, amount);
     }
 
+    // TODO why doesnt it really transfer token?
     function supplyReward(uint256 reward) external onlyOwner {
         if (totalStake == 0) {
             return;
@@ -96,7 +104,7 @@ contract StakingPool is Ownable, IStakingPool {
         accOdeumPerShare = accOdeumPerShare + reward * PRECISION / totalStake;
     }
 
-    function getPendingReward(
+    function _getPendingReward(
         UserInfo storage user
     ) internal view returns (uint256) {
         return
