@@ -183,11 +183,13 @@ After this script completes, the `implementationAddress` and `implementationVeri
 Even after the upgrade, you should _use only `proxyAddress` or `proxyVerification` fields of the deploy output file to interact with contracts_.
 
 Following contracts are upgradeable:
+
 - Odeum.sol
 - StakingPool.sol
 - Tipping.sol
 
 Following contracts are _not_ upgradeable:
+
 - Bridge.sol
 - BridgeStandardERC20.sol
 - MockContract.sol
@@ -214,6 +216,7 @@ Each part contains information about all deployed contracts:
 ### Logic
 
 #### Odeum
+
 A simple ERC20 token
 
 ####StakingPool
@@ -222,6 +225,7 @@ Allows staking Libertas tokens for reward.
 ####Tipping
 With this contract users can send tips to content creators.
 With each transaction:
+
 - 4.5% of tokens is distributed among contributors
 - 4.5% of tokens is sent to the "fund" wallet
 - 1% of tokens is burned
@@ -233,4 +237,4 @@ With each transaction:
 
 ###[Known Issues]
 
-Currently all files related to the bridge functionality have been commented out. They are still in the repo, but *should not be used*.
+Currently all files related to the bridge functionality have been commented out. They are still in the repo, but _should not be used_.
