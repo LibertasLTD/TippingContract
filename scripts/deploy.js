@@ -15,7 +15,6 @@ let odeum;
 let stakingPool;
 let tipping;
 
-
 async function main() {
     console.log(`[NOTICE!] Chain of deployment: ${network.name}`);
 
@@ -40,30 +39,23 @@ async function main() {
     );
     await odeum.deployed();
     console.log(`[${contractName}]: Deployment Finished!`);
-    OUTPUT_DEPLOY[network.name][contractName].proxyAddress =
-        odeum.address;
+    OUTPUT_DEPLOY[network.name][contractName].proxyAddress = odeum.address;
 
     await delay(90000);
 
     // Verify implementation
     console.log(`[${contractName}][Implementation]: Start of Verification...`);
 
-    let odeumImplAddress =
-        await upgrades.erc1967.getImplementationAddress(
-            odeum.address
-        );
+    let odeumImplAddress = await upgrades.erc1967.getImplementationAddress(
+        odeum.address
+    );
     OUTPUT_DEPLOY[network.name][contractName].implementationAddress =
         odeumImplAddress;
     if (network.name === "fantom_mainnet") {
-        url =
-            "https://ftmscan.com/address/" +
-            odeumImplAddress +
-            "#code";
+        url = "https://ftmscan.com/address/" + odeumImplAddress + "#code";
     } else if (network.name === "fantom_testnet") {
         url =
-            "https://testnet.ftmscan.com/address/" +
-            odeumImplAddress +
-            "#code";
+            "https://testnet.ftmscan.com/address/" + odeumImplAddress + "#code";
     }
     OUTPUT_DEPLOY[network.name][contractName].implementationVerification = url;
     try {
@@ -73,10 +65,7 @@ async function main() {
     } catch (error) {}
 
     // Initialize implementation if it has not been initialized yet
-    let odeumImpl = await ethers.getContractAt(
-        "Odeum",
-        odeumImplAddress
-    );
+    let odeumImpl = await ethers.getContractAt("Odeum", odeumImplAddress);
     try {
         await odeumImpl.initialize(owner.address);
     } catch (error) {}
@@ -85,15 +74,9 @@ async function main() {
     // Verify proxy
     console.log(`[${contractName}][Proxy]: Start of Verification...`);
     if (network.name === "fantom_mainnet") {
-        url =
-            "https://ftmscan.com/address/" +
-            odeum.address +
-            "#code";
+        url = "https://ftmscan.com/address/" + odeum.address + "#code";
     } else if (network.name === "fantom_testnet") {
-        url =
-            "https://testnet.ftmscan.com/address/" +
-            odeum.address +
-            "#code";
+        url = "https://testnet.ftmscan.com/address/" + odeum.address + "#code";
     }
     OUTPUT_DEPLOY[network.name][contractName].proxyVerification = url;
 
@@ -125,7 +108,9 @@ async function main() {
         url = "https://ftmscan.com/address/" + stakingPool.address + "#code";
     } else if (network.name === "fantom_testnet") {
         url =
-            "https://testnet.ftmscan.com/address/" + stakingPool.address + "#code";
+            "https://testnet.ftmscan.com/address/" +
+            stakingPool.address +
+            "#code";
     }
 
     OUTPUT_DEPLOY[network.name][contractName].verification = url;
@@ -158,6 +143,8 @@ async function main() {
         45
     );
     tipping = await contractDeployTx.deployed();
+    // Set tipping address
+    await staking.connect(owner).setTipping(tipping.address);
     console.log(`[${contractName}]: Deployment Finished!`);
     OUTPUT_DEPLOY[network.name][contractName].address = tipping.address;
 
@@ -170,7 +157,9 @@ async function main() {
         url = "https://ftmscan.com/address/" + tipping.address + "#code";
     } else if (network.name === "fantom_testnet") {
         url =
-            "https://testnet.ftmscan.com/address/" + stakingPool.address + "#code";
+            "https://testnet.ftmscan.com/address/" +
+            stakingPool.address +
+            "#code";
     }
 
     OUTPUT_DEPLOY[network.name][contractName].verification = url;
@@ -186,7 +175,7 @@ async function main() {
                 zeroAddress,
                 10,
                 45,
-                45
+                45,
             ],
         });
     } catch (error) {

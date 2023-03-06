@@ -20,6 +20,8 @@ contract Tipping is Ownable, ITipping {
     uint256 public _fundRate;
     uint256 public _rewardRate;
 
+    mapping(address => uint256) public userTips;
+
     constructor(
         address STAKING_VAULT,
         address ODEUM,
@@ -92,6 +94,7 @@ contract Tipping is Ownable, ITipping {
             uint256 rewardAmt
         ) = _getValues(amount);
         _odeum.safeTransfer(to, transAmt);
+        userTips[to] += transAmt;
         _odeum.safeTransfer(_VAULT_TO_BURN, burnAmt);
         _odeum.safeTransfer(_FUND_VAULT, fundAmt);
         _odeum.safeTransfer(_STAKING_VAULT, rewardAmt);
@@ -103,9 +106,9 @@ contract Tipping is Ownable, ITipping {
     function _getValues(
         uint256 tAmount
     ) private view returns (uint256, uint256, uint256, uint256) {
-        uint256 burnAmt = tAmount * _burnRate / MAX_BP;
-        uint256 fundAmt = tAmount * _fundRate / MAX_BP;
-        uint256 rewardAmt = tAmount * _rewardRate / MAX_BP;
+        uint256 burnAmt = (tAmount * _burnRate) / MAX_BP;
+        uint256 fundAmt = (tAmount * _fundRate) / MAX_BP;
+        uint256 rewardAmt = (tAmount * _rewardRate) / MAX_BP;
         uint256 transAmt = tAmount - rewardAmt - fundAmt - burnAmt;
         return (transAmt, burnAmt, fundAmt, rewardAmt);
     }
