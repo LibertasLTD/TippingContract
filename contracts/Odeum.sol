@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "./interfaces/IOdeum.sol";
 
+/// @title A custom ERC20 token
 contract Odeum is
     Initializable,
     ERC20Upgradeable,
@@ -15,6 +16,7 @@ contract Odeum is
     UUPSUpgradeable,
     IOdeum
 {
+    /// @notice The maximum possible amount of minted tokens
     uint256 public constant INITIAL_CAP = 100_000_000;
 
     function configure(address teamWallet) external initializer {
@@ -24,6 +26,7 @@ contract Odeum is
         _mint(teamWallet, INITIAL_CAP * (10 ** decimals()));
     }
 
+    /// @notice See {IOdeum-approveAndCall}
     function approveAndCall(
         address _spender,
         uint256 _value,
@@ -46,13 +49,19 @@ contract Odeum is
             )
         );
         require(success, "receiveApprovalFailed");
+        emit ApproveAndCall(_spender, _value);
         return true;
     }
 
+    /// @notice Returns the number of decimals used to get its user representation.
     function decimals() public pure override returns (uint8) {
         return 18;
     }
 
+    /// @dev Transfers tokens to the receiver and burns them if sent to zero address
+    /// @param sender The address sending tokens
+    /// @param recipient The address receiving the tokens
+    /// @param amount The amount of tokens to transfer
     function _transfer(
         address sender,
         address recipient,
