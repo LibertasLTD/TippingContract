@@ -21,7 +21,6 @@ contract Odeum is
         __ERC20_init("ODEUM", "ODEUM");
         __Ownable_init();
         __UUPSUpgradeable_init();
-        // TODO do I need decimals here?
         _mint(_owner, INITIAL_CAP * (10 ** decimals()));
     }
 

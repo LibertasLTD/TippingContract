@@ -98,7 +98,6 @@ contract Tipping is Ownable, ITipping {
         _odeum.safeTransfer(_VAULT_TO_BURN, burnAmt);
         _odeum.safeTransfer(_FUND_VAULT, fundAmt);
         _odeum.safeTransfer(_STAKING_VAULT, rewardAmt);
-        // TODO only the one who deployed staking pool can call transfer???
         IStakingPool(_STAKING_VAULT).supplyReward(rewardAmt);
         return true;
     }

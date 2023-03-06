@@ -105,7 +105,6 @@ contract StakingPool is Ownable, IStakingPool {
         emit EmergencyWithdraw(msg.sender, amount);
     }
 
-    // TODO why doesnt it really transfer token?
     function supplyReward(uint256 reward) external onlyTipping {
         if (totalStake == 0) {
             return;
