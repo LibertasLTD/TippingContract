@@ -8,19 +8,32 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IStakingPool.sol";
 import "./interfaces/ITipping.sol";
 
+/// Allows users to transfer tokens and have the transferred amount split
+/// among several destinations
 contract Tipping is Ownable, ITipping {
     using SafeERC20 for IERC20;
 
+    /// @notice The address of the {StakingPool} contract
     address public _STAKING_VAULT;
+    /// @notice The address of the {Odeum} contract
     address public _ODEUM;
+    /// @notice The address of the team wallet
     address public _FUND_VAULT;
+    /// @notice The address to send burnt tokens to
     address public _VAULT_TO_BURN;
 
+    /// @notice The percentage of tokens to be burnt (in basis points)
     uint256 public _burnRate;
+    /// @notice The percentage of tokens to be sent to the team wallet (in basis points)
     uint256 public _fundRate;
+    /// @notice The percentage of tokens to be sent to the {StakingPool} and distributed as rewards
     uint256 public _rewardRate;
 
+    /// @notice The amount of tips received by each user
     mapping(address => uint256) public userTips;
+
+    /// @notice The maximum possible percentage
+    uint256 public constant MAX_RATE_BP = 1000;
 
     constructor(
         address STAKING_VAULT,
@@ -40,75 +53,98 @@ contract Tipping is Ownable, ITipping {
         _rewardRate = rewardRate;
     }
 
-    uint256 public constant MAX_BP = 1000;
-
+    /// @dev Forbids to set too high percentage
     modifier validRate(uint256 rate) {
-        require(rate > 0 && rate <= MAX_BP, "Out of range");
+        require(rate > 0 && rate <= MAX_RATE_BP, "Out of range");
         _;
     }
 
+    /// @notice See {ITipping-setStakingVaultAddress}
+    /// @dev Emits the {StakingAddressChanged} event
     function setStakingVaultAddress(address STAKING_VAULT) external onlyOwner {
         _STAKING_VAULT = STAKING_VAULT;
+        emit StakingAddressChanged(STAKING_VAULT);
     }
 
+    /// @notice See {ITipping-setOdeumAddress}
+    /// @dev Emits the {OdeumAddressChanged} event
     function setOdeumAddress(address ODEUM) external onlyOwner {
         _ODEUM = ODEUM;
+        emit OdeumAddressChanged(ODEUM);
     }
 
+    /// @notice See {ITipping-setVaultToBurnAddress}
+    /// @dev Emits the {BurnAddressChanged} event
     function setVaultToBurnAddress(address VAULT_TO_BURN) external onlyOwner {
         _VAULT_TO_BURN = VAULT_TO_BURN;
+        emit BurnAddressChanged(VAULT_TO_BURN);
     }
 
+    /// @notice See {ITipping-setFundVaultAddress}
+    /// @dev Emits the {FundAddressChanged} event
     function setFundVaultAddress(address FUND_VAULT) external onlyOwner {
         _FUND_VAULT = FUND_VAULT;
+        emit FundAddressChanged(FUND_VAULT);
     }
 
+    /// @notice See {ITipping-setBurnRate}
+    /// @dev Emits the {FundAddressChanged} event
     function setBurnRate(
         uint256 burnRate
     ) external validRate(burnRate) onlyOwner returns (bool) {
         _burnRate = burnRate;
+        emit BurnRateChanged(burnRate);
         return true;
     }
 
+    /// @notice See {ITipping-setFundRate}
     function setFundRate(
         uint256 fundRate
     ) external validRate(fundRate) onlyOwner returns (bool) {
         _fundRate = fundRate;
+        emit FundRateChanged(fundRate);
         return true;
     }
 
+    /// @notice See {ITipping-setRewardRate}
     function setRewardRate(
         uint256 rewardRate
     ) external validRate(rewardRate) onlyOwner returns (bool) {
         _rewardRate = rewardRate;
+        emit RewardRateChanged(rewardRate);
         return true;
     }
 
+    /// @notice See {ITipping-transfer}
     function transfer(address to, uint256 amount) external returns (bool) {
         IERC20 _odeum = IERC20(_ODEUM);
         _odeum.safeTransferFrom(msg.sender, address(this), amount);
         (
-            uint256 transAmt,
-            uint256 burnAmt,
-            uint256 fundAmt,
-            uint256 rewardAmt
+            uint256 transAmount,
+            uint256 burnAmount,
+            uint256 fundAmount,
+            uint256 rewardAmount
         ) = _getValues(amount);
-        _odeum.safeTransfer(to, transAmt);
-        userTips[to] += transAmt;
-        _odeum.safeTransfer(_VAULT_TO_BURN, burnAmt);
-        _odeum.safeTransfer(_FUND_VAULT, fundAmt);
-        _odeum.safeTransfer(_STAKING_VAULT, rewardAmt);
-        IStakingPool(_STAKING_VAULT).supplyReward(rewardAmt);
+        _odeum.safeTransfer(to, transAmount);
+        userTips[to] += transAmount;
+        _odeum.safeTransfer(_VAULT_TO_BURN, burnAmount);
+        _odeum.safeTransfer(_FUND_VAULT, fundAmount);
+        _odeum.safeTransfer(_STAKING_VAULT, rewardAmount);
+        IStakingPool(_STAKING_VAULT).supplyReward(rewardAmount);
+        emit SplitTransfer(to, amount);
         return true;
     }
 
+    /// @dev Calculates portions of the transferred amount to be
+    ///      split among several destinations
+    /// @param amount The amount of transferred tokens
     function _getValues(
-        uint256 tAmount
+        uint256 amount
     ) private view returns (uint256, uint256, uint256, uint256) {
-        uint256 burnAmt = (tAmount * _burnRate) / MAX_BP;
-        uint256 fundAmt = (tAmount * _fundRate) / MAX_BP;
-        uint256 rewardAmt = (tAmount * _rewardRate) / MAX_BP;
-        uint256 transAmt = tAmount - rewardAmt - fundAmt - burnAmt;
-        return (transAmt, burnAmt, fundAmt, rewardAmt);
+        uint256 burnAmount = (amount * _burnRate) / MAX_RATE_BP;
+        uint256 fundAmount = (amount * _fundRate) / MAX_RATE_BP;
+        uint256 rewardAmount = (amount * _rewardRate) / MAX_RATE_BP;
+        uint256 transAmount = amount - rewardAmount - fundAmount - burnAmount;
+        return (transAmount, burnAmount, fundAmount, rewardAmount);
     }
 }
