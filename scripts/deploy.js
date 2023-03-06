@@ -4,6 +4,8 @@ const path = require("path");
 const delay = require("delay");
 require("dotenv").config();
 
+const TEAM_WALLET_ADDRESS = process.env.TEAM_WALLET_ADDRESS;
+
 const zeroAddress = ethers.constants.AddressZero;
 
 // JSON file to keep information about previous deployments
@@ -28,15 +30,10 @@ async function main() {
     contractName = "Odeum";
     console.log(`[${contractName}]: Start of Deployment...`);
     _contractProto = await ethers.getContractFactory(contractName);
-    odeum = await upgrades.deployProxy(
-        _contractProto,
-        // TODO change it to real team's wallet afterwards
-        [owner.address],
-        {
-            initializer: "configure",
-            kind: "uups",
-        }
-    );
+    odeum = await upgrades.deployProxy(_contractProto, [TEAM_WALLET_ADDRESS], {
+        initializer: "configure",
+        kind: "uups",
+    });
     await odeum.deployed();
     console.log(`[${contractName}]: Deployment Finished!`);
     OUTPUT_DEPLOY[network.name][contractName].proxyAddress = odeum.address;
@@ -67,7 +64,7 @@ async function main() {
     // Initialize implementation if it has not been initialized yet
     let odeumImpl = await ethers.getContractAt("Odeum", odeumImplAddress);
     try {
-        await odeumImpl.initialize(owner.address);
+        await odeumImpl.configure(TEAM_WALLET_ADDRESS);
     } catch (error) {}
     console.log(`[${contractName}][Implementation]: Verification Finished!`);
 
@@ -135,8 +132,7 @@ async function main() {
     contractDeployTx = await _contractProto.deploy(
         stakingPool.address,
         odeum.address,
-        // TODO change it to team wallet
-        owner.address,
+        TEAM_WALLET_ADDRESS,
         zeroAddress,
         10,
         45,
@@ -144,7 +140,7 @@ async function main() {
     );
     tipping = await contractDeployTx.deployed();
     // Set tipping address
-    await staking.connect(owner).setTipping(tipping.address);
+    await stakingPool.connect(owner).setTipping(tipping.address);
     console.log(`[${contractName}]: Deployment Finished!`);
     OUTPUT_DEPLOY[network.name][contractName].address = tipping.address;
 
@@ -170,8 +166,7 @@ async function main() {
             constructorArguments: [
                 stakingPool.address,
                 odeum.address,
-                // TODO change it to team wallet
-                owner.address,
+                TEAM_WALLET_ADDRESS,
                 zeroAddress,
                 10,
                 45,
@@ -182,6 +177,13 @@ async function main() {
         console.error(error);
     }
     console.log(`[${contractName}]: Verification Finished!`);
+
+    // Transfer ownership of all contracts to the client
+    console.log(`\nTranferring Ownership of all Contracts...`);
+    await odeum.connect(owner).transferOwnership(TEAM_WALLET_ADDRESS);
+    await stakingPool.connect(owner).transferOwnership(TEAM_WALLET_ADDRESS);
+    await tipping.connect(owner).transferOwnership(TEAM_WALLET_ADDRESS);
+    console.log(`Ownership transferred!`);
 
     // ====================================================
     fs.writeFileSync(

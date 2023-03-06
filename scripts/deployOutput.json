@@ -1,18 +1,18 @@
 {
   "fantom_testnet": {
     "Odeum": {
-      "proxyAddress": "0x452cbeEFeD67722aeA5662F64c385381948bA246",
+      "proxyAddress": "0x8573887800D68D6946a5bd7f4b520739b4e0D2d7",
       "implementationAddress": "0x6867Fe07073ad2f7972cc24731CD9CC49f07ed81",
-      "proxyVerification": "https://testnet.ftmscan.com/address/0x452cbeEFeD67722aeA5662F64c385381948bA246#code",
+      "proxyVerification": "https://testnet.ftmscan.com/address/0x8573887800D68D6946a5bd7f4b520739b4e0D2d7#code",
       "implementationVerification": "https://testnet.ftmscan.com/address/0x6867Fe07073ad2f7972cc24731CD9CC49f07ed81#code"
     },
     "StakingPool": {
-      "address": "0xdf91A854d3D5F18d99A2950CD16068DD2bB1b0FD",
-      "verification": "https://testnet.ftmscan.com/address/0xdf91A854d3D5F18d99A2950CD16068DD2bB1b0FD#code"
+      "address": "0x4cc13255189a63C04642981E41164bA5390338EC",
+      "verification": "https://testnet.ftmscan.com/address/0x4cc13255189a63C04642981E41164bA5390338EC#code"
     },
     "Tipping": {
-      "address": "0x9bB898987cF86Fc1Bb4500dC2B9f1aA1EcF55Bb4",
-      "verification": "https://testnet.ftmscan.com/address/0xdf91A854d3D5F18d99A2950CD16068DD2bB1b0FD#code"
+      "address": "0x2544604B85b802b771751D96b8082bADD3D94Dfe",
+      "verification": "https://testnet.ftmscan.com/address/0x4cc13255189a63C04642981E41164bA5390338EC#code"
     }
   },
   "fantom_mainnet": {
