@@ -17,11 +17,11 @@ contract Odeum is
 {
     uint256 public constant INITIAL_CAP = 100_000_000;
 
-    function configure(address _owner) external initializer {
+    function configure(address teamWallet) external initializer {
         __ERC20_init("ODEUM", "ODEUM");
         __Ownable_init();
         __UUPSUpgradeable_init();
-        _mint(_owner, INITIAL_CAP * (10 ** decimals()));
+        _mint(teamWallet, INITIAL_CAP * (10 ** decimals()));
     }
 
     function approveAndCall(

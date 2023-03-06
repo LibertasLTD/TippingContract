@@ -115,7 +115,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             expect(startBalance1.sub(endBalance1)).to.equal(stake1);
             expect(startBalance2.sub(endBalance2)).to.equal(stake2);
             expect(startBalance3.sub(endBalance3)).to.equal(stake3);
-            expect(stakingEndBalance.sub(stakingStartBalance)).to.equal(stake1.add(stake2).add(stake3));
+            expect(stakingEndBalance.sub(stakingStartBalance)).to.equal(
+                stake1.add(stake2).add(stake3)
+            );
         });
 
         // #2
