@@ -34,7 +34,6 @@ describe("Odeum interacting with Staking and Tipping", () => {
             staking.address,
             odeum.address,
             ownerAcc.address,
-            // TODO should it be any other address???
             zeroAddress,
             10,
             45,
@@ -94,6 +93,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let startBalance1 = await odeum.balanceOf(clientAcc1.address);
             let startBalance2 = await odeum.balanceOf(clientAcc2.address);
             let startBalance3 = await odeum.balanceOf(clientAcc3.address);
+            let stakingStartBalance = await odeum.balanceOf(staking.address);
 
             await odeum.connect(clientAcc1).approve(staking.address, stake1);
             await odeum.connect(clientAcc2).approve(staking.address, stake2);
@@ -110,10 +110,12 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
             let endBalance3 = await odeum.balanceOf(clientAcc3.address);
+            let stakingEndBalance = await odeum.balanceOf(staking.address);
 
             expect(startBalance1.sub(endBalance1)).to.equal(stake1);
             expect(startBalance2.sub(endBalance2)).to.equal(stake2);
             expect(startBalance3.sub(endBalance3)).to.equal(stake3);
+            expect(stakingEndBalance.sub(stakingStartBalance)).to.equal(stake1.add(stake2).add(stake3));
         });
 
         // #2
@@ -123,6 +125,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let startBalance1 = await odeum.balanceOf(clientAcc1.address);
             let startBalance2 = await odeum.balanceOf(clientAcc2.address);
             let startBalance3 = await odeum.balanceOf(clientAcc3.address);
+            let stakingStartBalance = await odeum.balanceOf(staking.address);
 
             let stake1 = parseEther("10000");
             let stake2 = parseEther("25000");
@@ -147,10 +150,12 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
             let endBalance3 = await odeum.balanceOf(clientAcc3.address);
+            let stakingEndBalance = await odeum.balanceOf(staking.address);
 
             expect(startBalance1).to.equal(endBalance1);
             expect(startBalance2).to.equal(endBalance2);
             expect(startBalance3).to.equal(endBalance3);
+            expect(stakingStartBalance).to.equal(stakingEndBalance);
         });
 
         // #3
@@ -237,7 +242,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
         });
 
         // #6.1
-        it("Users should be able to see their available reward for staking", async () => {
+        it("Users should be able to see their available rewards for staking", async () => {
             let { odeum, staking, tipping } = await loadFixture(deploys);
 
             let stake = parseEther("10000");
