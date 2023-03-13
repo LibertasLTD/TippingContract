@@ -5,12 +5,14 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./interfaces/IStakingPool.sol";
 import "./interfaces/ITipping.sol";
 
 /// @title A pool allowing users to earn rewards for staking
 contract StakingPool is Ownable, IStakingPool {
     using SafeERC20Upgradeable for IERC20Upgradeable;
+    using EnumerableSet for EnumerableSet.AddressSet;
 
     /// @notice Stores user's lock amount and reward debt
     struct UserInfo {
@@ -31,6 +33,8 @@ contract StakingPool is Ownable, IStakingPool {
     uint256 public accOdeumPerShare;
     /// @notice The total amount of tokens locked in the pool
     uint256 public totalStake;
+    /// @notice The list of stakers
+    EnumerableSet.AddressSet private _stakers;
     /// @notice The amount of rewards claimed by each user
     mapping(address => uint256) public claimedRewards;
     /// @notice The total amount of rewards claimed by all users
@@ -57,6 +61,11 @@ contract StakingPool is Ownable, IStakingPool {
         return userInfo[user].amount;
     }
 
+    /// @notice See {IStakingPool-getStakers}
+    function getStakers() external view returns (uint256) {
+        return _stakers.length();
+    }
+
     /// @notice See {IStakingPool-setTipping}
     function setTipping(address tipping_) external onlyOwner {
         tipping = ITipping(tipping_);
@@ -75,6 +84,7 @@ contract StakingPool is Ownable, IStakingPool {
             odeum.safeTransferFrom(msg.sender, address(this), amount);
             user.amount = user.amount + amount;
             totalStake = totalStake + amount;
+            _stakers.add(msg.sender);
         }
         user.rewardDebt = (user.amount * accOdeumPerShare) / PRECISION;
         emit Deposit(msg.sender, amount);
@@ -92,6 +102,9 @@ contract StakingPool is Ownable, IStakingPool {
         }
         if (amount > 0) {
             user.amount = user.amount - amount;
+            if (user.amount == 0) {
+                _stakers.remove(msg.sender);
+            }
             totalStake = totalStake - amount;
             odeum.safeTransfer(msg.sender, amount);
         }
@@ -118,6 +131,7 @@ contract StakingPool is Ownable, IStakingPool {
         UserInfo storage user = userInfo[msg.sender];
         uint256 amount = user.amount;
         user.amount = 0;
+        _stakers.remove(msg.sender);
         user.rewardDebt = 0;
         safeOdeumTransfer(msg.sender, amount);
         emit EmergencyWithdraw(msg.sender, amount);
