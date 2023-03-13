@@ -19,6 +19,9 @@ contract Odeum is
     /// @notice The maximum possible amount of minted tokens
     uint256 public constant INITIAL_CAP = 100_000_000;
 
+    /// @notice The amount of burnt tokens
+    uint256 public totalBurnt;
+
     function configure(address teamWallet) external initializer {
         __ERC20_init("ODEUM", "ODEUM");
         __Ownable_init();
@@ -72,6 +75,14 @@ contract Odeum is
         } else {
             super._transfer(sender, recipient, amount);
         }
+    }
+
+    /// @dev Burns tokens of the user. Increases the total amount of burnt tokens
+    /// @param from The address to burn tokens from
+    /// @param amount The amount of tokens to burn
+    function _burn(address from, uint256 amount) internal override {
+        totalBurnt += amount;
+        super._burn(from, amount);
     }
 
     function _authorizeUpgrade(
