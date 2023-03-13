@@ -14,6 +14,20 @@ interface IStakingPool {
     /// @notice Indicates that `user` claimed his pending reward
     event Claim(address indexed user, uint256 amount);
 
+    /// @notice Allows to see the pending reward of the user
+    /// @param user The user to check the pending reward of
+    /// @return The pending reward of the user
+    function getAvailableReward(address user) external view returns (uint256);
+
+    /// @notice Allows to see the current stake of the user
+    /// @param user The user to check the current lock of
+    /// @return The current lock of the user
+    function getStake(address user) external view returns (uint256);
+
+    /// @notice Allows to see the current amount of users who staked tokens in the pool
+    /// @return The amount of users who staked tokens in the pool
+    function getStakers() external view returns (uint256);
+
     /// @notice Allows users to lock their tokens inside the pool
     ///         or increase the current locked amount. All pending rewards
     ///         are claimed when making a new deposit
@@ -38,16 +52,6 @@ interface IStakingPool {
     /// @notice Sets the address of the {Tipping} contract to call its methods
     /// @notice param tipping_ The address of the {Tipping} contract
     function setTipping(address tipping_) external;
-
-    /// @notice Allows to see the pending reward of the user
-    /// @param user The user to check the pending reward of
-    /// @return The pending reward of the user
-    function getAvailableReward(address user) external view returns (uint256);
-
-    /// @notice Allows to see the current stake of the user
-    /// @param user The user to check the current lock of
-    /// @return The current lock of the user
-    function getStake(address user) external view returns (uint256);
 
     /// @notice Gives a signal that some tokens have been received from the
     ///         {Tipping} contract. That leads to each user's reward share
