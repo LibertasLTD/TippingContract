@@ -1,11 +1,13 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
+const { parseUnits, parseEther } = ethers.utils;
+const zeroAddress = ethers.constants.AddressZero;
 
 describe("Odeum token", () => {
     // Deploy all contracts before each test suite
     async function deploys() {
-        [ownerAcc] = await ethers.getSigners();
+        [ownerAcc, clientAcc1, clientAcc2] = await ethers.getSigners();
 
         let odeumTx = await ethers.getContractFactory("Odeum");
         let odeum = await upgrades.deployProxy(odeumTx, [ownerAcc.address], {
@@ -43,6 +45,21 @@ describe("Odeum token", () => {
                     ethers.BigNumber.from("1000000000000000000")
                 )
             );
+        });
+    });
+
+    describe("Burn", () => {
+        it("Should increase burnt tokens counter", async () => {
+            let { odeum } = await loadFixture(deploys);
+            let startBurnt = await odeum.totalBurnt();
+            let startSupply = await odeum.totalSupply();
+            let burnAmount = parseEther("10");
+            await odeum.connect(ownerAcc).transfer(zeroAddress, burnAmount);
+            let endBurnt = await odeum.totalBurnt();
+            let endSupply = await odeum.totalSupply();
+            expect(endBurnt).to.equal(burnAmount);
+            expect(endBurnt.sub(startBurnt)).to.equal(burnAmount);
+            expect(startSupply.sub(endSupply)).to.equal(burnAmount);
         });
     });
 });
