@@ -26,7 +26,7 @@ interface IStakingPool {
 
     /// @notice Allows to see the current amount of users who staked tokens in the pool
     /// @return The amount of users who staked tokens in the pool
-    function getStakers() external view returns (uint256);
+    function getStakersCount() external view returns (uint256);
 
     /// @notice Allows users to lock their tokens inside the pool
     ///         or increase the current locked amount. All pending rewards
