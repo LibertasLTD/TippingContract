@@ -47,6 +47,19 @@ contract StakingPool is Ownable, IStakingPool {
         _;
     }
 
+    /// @dev Transfers all pending rewards to the caller
+    modifier claimPending() {
+        // Calculate the pending reward
+        uint256 pending = _getPendingReward(userInfo[msg.sender]);
+        // If any reward is pending, transfer it to the user
+        if (pending > 0) {
+            claimedRewards[msg.sender] += pending;
+            totalClaimed += pending;
+            safeOdeumTransfer(msg.sender, pending);
+        }
+        _;
+    }
+
     constructor(address odeum_) {
         odeum = IERC20Upgradeable(odeum_);
     }
@@ -62,7 +75,7 @@ contract StakingPool is Ownable, IStakingPool {
     }
 
     /// @notice See {IStakingPool-getStakers}
-    function getStakers() external view returns (uint256) {
+    function getStakersCount() external view returns (uint256) {
         return _stakers.length();
     }
 
@@ -72,18 +85,12 @@ contract StakingPool is Ownable, IStakingPool {
     }
 
     /// @notice See {IStakingPool-deposit}
-    function deposit(uint256 amount) external {
+    function deposit(uint256 amount) external claimPending {
         UserInfo storage user = userInfo[msg.sender];
         if (user.amount >= 0 && amount > 0) {
-            uint256 pending = _getPendingReward(user);
-            if (pending > 0) {
-                claimedRewards[msg.sender] += pending;
-                totalClaimed += pending;
-                safeOdeumTransfer(msg.sender, pending);
-            }
             odeum.safeTransferFrom(msg.sender, address(this), amount);
-            user.amount = user.amount + amount;
-            totalStake = totalStake + amount;
+            user.amount += amount;
+            totalStake += amount;
             _stakers.add(msg.sender);
         }
         user.rewardDebt = (user.amount * accOdeumPerShare) / PRECISION;
@@ -91,21 +98,15 @@ contract StakingPool is Ownable, IStakingPool {
     }
 
     /// @notice See {IStakingPool-withdraw}
-    function withdraw(uint256 amount) external {
+    function withdraw(uint256 amount) external claimPending {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= amount, "withdrawTooMuch");
-        uint256 pending = _getPendingReward(user);
-        if (pending > 0) {
-            claimedRewards[msg.sender] += pending;
-            totalClaimed += pending;
-            safeOdeumTransfer(msg.sender, pending);
-        }
         if (amount > 0) {
-            user.amount = user.amount - amount;
+            user.amount -= amount;
             if (user.amount == 0) {
                 _stakers.remove(msg.sender);
             }
-            totalStake = totalStake - amount;
+            totalStake -= totalStake;
             odeum.safeTransfer(msg.sender, amount);
         }
         user.rewardDebt = (user.amount * accOdeumPerShare) / PRECISION;
@@ -113,15 +114,10 @@ contract StakingPool is Ownable, IStakingPool {
     }
 
     /// @notice See {IStakingPool-claim}
-    function claim() external {
+    function claim() external claimPending {
         require(userInfo[msg.sender].amount > 0, "nothingToClaim");
         UserInfo storage user = userInfo[msg.sender];
         uint256 pending = _getPendingReward(user);
-        if (pending > 0) {
-            claimedRewards[msg.sender] += pending;
-            totalClaimed += pending;
-            safeOdeumTransfer(msg.sender, pending);
-        }
         user.rewardDebt = (user.amount * accOdeumPerShare) / PRECISION;
         emit Claim(msg.sender, pending);
     }
@@ -133,6 +129,7 @@ contract StakingPool is Ownable, IStakingPool {
         user.amount = 0;
         _stakers.remove(msg.sender);
         user.rewardDebt = 0;
+        totalStake -= amount;
         safeOdeumTransfer(msg.sender, amount);
         emit EmergencyWithdraw(msg.sender, amount);
     }
