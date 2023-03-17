@@ -75,7 +75,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let stake2 = parseEther("25000");
             let stake3 = parseEther("50000");
 
-            let startStakers = await staking.getStakers();
+            let startStakers = await staking.getStakersCount();
 
             await odeum.connect(clientAcc1).approve(staking.address, stake1);
             await odeum.connect(clientAcc2).approve(staking.address, stake2);
@@ -85,17 +85,17 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await staking.connect(clientAcc2).deposit(stake2);
             await staking.connect(clientAcc3).deposit(stake3);
 
-            let endStakers = await staking.getStakers();
+            let endStakers = await staking.getStakersCount();
 
             expect(endStakers.sub(startStakers)).to.equal(3);
             expect(endStakers).to.equal(3);
 
-            startStakers = await staking.getStakers();
+            startStakers = await staking.getStakersCount();
 
             await staking.connect(clientAcc1).emergencyWithdraw();
             await staking.connect(clientAcc2).emergencyWithdraw();
 
-            endStakers = await staking.getStakers();
+            endStakers = await staking.getStakersCount();
 
             expect(startStakers.sub(endStakers)).to.equal(2);
             expect(endStakers).to.equal(1);
