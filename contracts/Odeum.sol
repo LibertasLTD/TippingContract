@@ -29,33 +29,6 @@ contract Odeum is
         _mint(teamWallet, INITIAL_CAP * (10 ** decimals()));
     }
 
-    /// @notice See {IOdeum-approveAndCall}
-    function approveAndCall(
-        address _spender,
-        uint256 _value,
-        bytes memory _extraData
-    ) external returns (bool) {
-        _approve(msg.sender, _spender, _value);
-        (bool success, ) = _spender.call(
-            abi.encode(
-                bytes4(
-                    bytes32(
-                        keccak256(
-                            "receiveApproval(address,uint256,address,bytes)"
-                        )
-                    )
-                ),
-                msg.sender,
-                _value,
-                address(this),
-                _extraData
-            )
-        );
-        require(success, "receiveApprovalFailed");
-        emit ApproveAndCall(_spender, _value);
-        return true;
-    }
-
     /// @notice Returns the number of decimals used to get its user representation.
     function decimals() public pure override returns (uint8) {
         return 18;

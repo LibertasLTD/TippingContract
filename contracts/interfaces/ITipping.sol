@@ -48,25 +48,22 @@ interface ITipping {
     ///         transfer (in basis points)
     /// @param burnRate The new percentage of tokens to be burnt on each
     ///        transfer (in basis points)
-    /// @return True if a new percentage has been set successfully. Otherwise - false.
     /// @dev Emits the {BurnRateChanged} event
-    function setBurnRate(uint256 burnRate) external returns (bool);
+    function setBurnRate(uint256 burnRate) external;
 
     /// @notice Sets the new percentage of tokens to be sent to the team wallet on each
     ///         transfer (in basis points)
     /// @param fundRate The new percentage of tokens to be sent to the team wallet on each
     ///        transfer (in basis points)
-    /// @return True if a new percentage has been set successfully. Otherwise - false.
     /// @dev Emits the {FundRateChanged} event
-    function setFundRate(uint256 fundRate) external returns (bool);
+    function setFundRate(uint256 fundRate) external;
 
     /// @notice Sets the new percentage of tokens to be sent to the staking pool on each
     ///         transfer (in basis points)
     /// @param rewardRate The new percentage of tokens to be sent to the staking pool on each
     ///        transfer (in basis points)
-    /// @return True if a new percentage has been set successfully. Otherwise - false.
     /// @dev Emits the {RewardRateChanged} event
-    function setRewardRate(uint256 rewardRate) external returns (bool);
+    function setRewardRate(uint256 rewardRate) external;
 
     /// @notice Transfers the `amount` tokens and splits it among several addresses
     /// @param to The main destination address to transfer tokens to

@@ -55,13 +55,14 @@ contract Tipping is Ownable, ITipping {
 
     /// @dev Forbids to set too high percentage
     modifier validRate(uint256 rate) {
-        require(rate > 0 && rate <= MAX_RATE_BP, "Out of range");
+        require(rate > 0 && rate <= MAX_RATE_BP, "Tipping: Rate too high!");
         _;
     }
 
     /// @notice See {ITipping-setStakingVaultAddress}
     /// @dev Emits the {StakingAddressChanged} event
     function setStakingVaultAddress(address STAKING_VAULT) external onlyOwner {
+        require(STAKING_VAULT != address(0), "Tipping: Invalid staking address!");
         _STAKING_VAULT = STAKING_VAULT;
         emit StakingAddressChanged(STAKING_VAULT);
     }
@@ -69,6 +70,7 @@ contract Tipping is Ownable, ITipping {
     /// @notice See {ITipping-setOdeumAddress}
     /// @dev Emits the {OdeumAddressChanged} event
     function setOdeumAddress(address ODEUM) external onlyOwner {
+        require(ODEUM != address(0), "Tipping: Invalid odeum address!");
         _ODEUM = ODEUM;
         emit OdeumAddressChanged(ODEUM);
     }
@@ -76,6 +78,7 @@ contract Tipping is Ownable, ITipping {
     /// @notice See {ITipping-setVaultToBurnAddress}
     /// @dev Emits the {BurnAddressChanged} event
     function setVaultToBurnAddress(address VAULT_TO_BURN) external onlyOwner {
+        // Zero address allowed here
         _VAULT_TO_BURN = VAULT_TO_BURN;
         emit BurnAddressChanged(VAULT_TO_BURN);
     }
@@ -83,6 +86,7 @@ contract Tipping is Ownable, ITipping {
     /// @notice See {ITipping-setFundVaultAddress}
     /// @dev Emits the {FundAddressChanged} event
     function setFundVaultAddress(address FUND_VAULT) external onlyOwner {
+        require(FUND_VAULT != address(0), "Tipping: Invalid fund vault address!");
         _FUND_VAULT = FUND_VAULT;
         emit FundAddressChanged(FUND_VAULT);
     }
@@ -91,30 +95,31 @@ contract Tipping is Ownable, ITipping {
     /// @dev Emits the {FundAddressChanged} event
     function setBurnRate(
         uint256 burnRate
-    ) external validRate(burnRate) onlyOwner returns (bool) {
+    ) external validRate(burnRate) onlyOwner {
+        // Any burn rate allowed here
         _burnRate = burnRate;
         emit BurnRateChanged(burnRate);
-        return true;
     }
 
     /// @notice See {ITipping-setFundRate}
     function setFundRate(
         uint256 fundRate
-    ) external validRate(fundRate) onlyOwner returns (bool) {
+    ) external validRate(fundRate) onlyOwner {
+        // Any fund rate allowed here
         _fundRate = fundRate;
         emit FundRateChanged(fundRate);
-        return true;
     }
 
     /// @notice See {ITipping-setRewardRate}
     function setRewardRate(
         uint256 rewardRate
-    ) external validRate(rewardRate) onlyOwner returns (bool) {
+    ) external validRate(rewardRate) onlyOwner {
+        // Any reward rate allowed here
         _rewardRate = rewardRate;
         emit RewardRateChanged(rewardRate);
-        return true;
     }
 
+    // TODO remove return from here???
     /// @notice See {ITipping-transfer}
     function transfer(address to, uint256 amount) external returns (bool) {
         IERC20 _odeum = IERC20(_ODEUM);
