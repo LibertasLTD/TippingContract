@@ -188,13 +188,6 @@ Following contracts are upgradeable:
 - StakingPool.sol
 - Tipping.sol
 
-Following contracts are _not_ upgradeable:
-
-- Bridge.sol
-- BridgeStandardERC20.sol
-- MockContract.sol
-- MockToken.sol
-
 <a name="output"/>
 
 ### Structure of Deploy Output File
