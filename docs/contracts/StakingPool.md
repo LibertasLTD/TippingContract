@@ -27,23 +27,6 @@ function PRECISION() external view returns (uint256)
 |---|---|---|
 | _0 | uint256 | undefined |
 
-### accOdeumPerShare
-
-```solidity
-function accOdeumPerShare() external view returns (uint256)
-```
-
-The amount of tokens paid to each user for his share of locked tokens
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
-
 ### claim
 
 ```solidity
@@ -148,6 +131,23 @@ See {IStakingPool-getStake}
 |---|---|---|
 | _0 | uint256 | undefined |
 
+### getStakersCount
+
+```solidity
+function getStakersCount() external view returns (uint256)
+```
+
+See {IStakingPool-getStakers}
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
 ### odeum
 
 ```solidity
@@ -164,6 +164,23 @@ The {Odeum} token
 | Name | Type | Description |
 |---|---|---|
 | _0 | contract IERC20Upgradeable | undefined |
+
+### odeumPerShare
+
+```solidity
+function odeumPerShare() external view returns (uint256)
+```
+
+The amount of tokens paid to each user for his share of locked tokens
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
 
 ### owner
 
@@ -295,7 +312,7 @@ function transferOwnership(address newOwner) external nonpayable
 ### userInfo
 
 ```solidity
-function userInfo(address) external view returns (uint256 amount, uint256 rewardDebt)
+function userInfo(address) external view returns (uint256 amount, uint256 lastReward)
 ```
 
 Stores information about all user&#39;s locks and rewards
@@ -313,7 +330,7 @@ Stores information about all user&#39;s locks and rewards
 | Name | Type | Description |
 |---|---|---|
 | amount | uint256 | undefined |
-| rewardDebt | uint256 | undefined |
+| lastReward | uint256 | undefined |
 
 ### withdraw
 
@@ -402,6 +419,22 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
 |---|---|---|
 | previousOwner `indexed` | address | undefined |
 | newOwner `indexed` | address | undefined |
+
+### TippingAddressChanged
+
+```solidity
+event TippingAddressChanged(address indexed tipping)
+```
+
+Indicates that new address of `Tipping` contract was set
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| tipping `indexed` | address | undefined |
 
 ### Withdraw
 
