@@ -212,22 +212,22 @@ Each part contains information about all deployed contracts:
 
 A simple ERC20 token
 
-####StakingPool
+#### StakingPool
 Allows staking Libertas tokens for reward.
 
-####Tipping
+#### Tipping
 With this contract users can send tips to content creators.
 With each transaction:
 
-- 4.5% of tokens is distributed among contributors
-- 4.5% of tokens is sent to the "fund" wallet
+- 9% of tokens is distributed among contributors
+- 10% of tokens is sent to the "fund" wallet
 - 1% of tokens is burned
-- 90% of tokens is sent to the wallet of the content creator
+- 80% of tokens is sent to the wallet of the content creator
 
 ---
 
 <a name="issues"/>
 
-###[Known Issues]
+### [Known Issues]
 
 Currently all files related to the bridge functionality have been commented out. They are still in the repo, but _should not be used_.

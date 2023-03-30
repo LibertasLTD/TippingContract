@@ -134,9 +134,9 @@ async function main() {
         odeum.address,
         TEAM_WALLET_ADDRESS,
         zeroAddress,
-        10,
-        45,
-        45
+        10, // 1% burnt
+        100, // 10% to team
+        90  // 9% to community (reward)
     );
     tipping = await contractDeployTx.deployed();
     // Set tipping address
