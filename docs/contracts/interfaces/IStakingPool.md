@@ -92,6 +92,23 @@ Allows to see the current stake of the user
 |---|---|---|
 | _0 | uint256 | The current lock of the user |
 
+### getStakersCount
+
+```solidity
+function getStakersCount() external view returns (uint256)
+```
+
+Allows to see the current amount of users who staked tokens in the pool
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | The amount of users who staked tokens in the pool |
+
 ### setTipping
 
 ```solidity
@@ -194,6 +211,22 @@ Indicates that `user` withdraw `amount` of tokens from the pool      without cla
 |---|---|---|
 | user `indexed` | address | undefined |
 | amount  | uint256 | undefined |
+
+### TippingAddressChanged
+
+```solidity
+event TippingAddressChanged(address indexed tipping)
+```
+
+Indicates that new address of `Tipping` contract was set
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| tipping `indexed` | address | undefined |
 
 ### Withdraw
 

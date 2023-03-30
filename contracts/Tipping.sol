@@ -62,7 +62,10 @@ contract Tipping is Ownable, ITipping {
     /// @notice See {ITipping-setStakingVaultAddress}
     /// @dev Emits the {StakingAddressChanged} event
     function setStakingVaultAddress(address STAKING_VAULT) external onlyOwner {
-        require(STAKING_VAULT != address(0), "Tipping: Invalid staking address!");
+        require(
+            STAKING_VAULT != address(0),
+            "Tipping: Invalid staking address!"
+        );
         _STAKING_VAULT = STAKING_VAULT;
         emit StakingAddressChanged(STAKING_VAULT);
     }
@@ -86,7 +89,10 @@ contract Tipping is Ownable, ITipping {
     /// @notice See {ITipping-setFundVaultAddress}
     /// @dev Emits the {FundAddressChanged} event
     function setFundVaultAddress(address FUND_VAULT) external onlyOwner {
-        require(FUND_VAULT != address(0), "Tipping: Invalid fund vault address!");
+        require(
+            FUND_VAULT != address(0),
+            "Tipping: Invalid fund vault address!"
+        );
         _FUND_VAULT = FUND_VAULT;
         emit FundAddressChanged(FUND_VAULT);
     }

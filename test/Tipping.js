@@ -5,14 +5,11 @@ const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { parseUnits, parseEther } = ethers.utils;
 const zeroAddress = ethers.constants.AddressZero;
 
-
 /* NOTICE:
-* Complicated scenarions of work of Tipping contract are tested
-* in `StakingAndTipping.js` file
-* The puprose of this file is to increase test coverage of `Tipping.sol` contract
-*/
-
-
+ * Complicated scenarions of work of Tipping contract are tested
+ * in `StakingAndTipping.js` file
+ * The puprose of this file is to increase test coverage of `Tipping.sol` contract
+ */
 
 describe("Tipping contract", () => {
     // Deploy all contracts before each test suite
@@ -101,7 +98,6 @@ describe("Tipping contract", () => {
             expect(await tipping._ODEUM()).to.equal(odeum.address);
             expect(await tipping._FUND_VAULT()).to.equal(ownerAcc.address);
             expect(await tipping._VAULT_TO_BURN()).to.equal(zeroAddress);
-
         });
     });
 
@@ -112,36 +108,36 @@ describe("Tipping contract", () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
                 expect(await tipping.setStakingVaultAddress(clientAcc1.address))
-                .to.emit(tipping, "StakingAddressChanged")
-                .withArgs(clientAcc1.address);
+                    .to.emit(tipping, "StakingAddressChanged")
+                    .withArgs(clientAcc1.address);
 
-                expect(await tipping._STAKING_VAULT()).to.equal(clientAcc1.address);
-
+                expect(await tipping._STAKING_VAULT()).to.equal(
+                    clientAcc1.address
+                );
             });
             it("Should fail to change staking vault address", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
-                await expect(tipping.setStakingVaultAddress(zeroAddress))
-                    .to.be.revertedWith("Tipping: Invalid staking address!");
-
+                await expect(
+                    tipping.setStakingVaultAddress(zeroAddress)
+                ).to.be.revertedWith("Tipping: Invalid staking address!");
             });
             // Odeum
             it("Should change odeum address", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
                 expect(await tipping.setOdeumAddress(clientAcc1.address))
-                .to.emit(tipping, "OdeumAddressChanged")
-                .withArgs(clientAcc1.address);
+                    .to.emit(tipping, "OdeumAddressChanged")
+                    .withArgs(clientAcc1.address);
 
                 expect(await tipping._ODEUM()).to.equal(clientAcc1.address);
-
             });
             it("Should fail to change odeum address", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
-                await expect(tipping.setOdeumAddress(zeroAddress))
-                    .to.be.revertedWith("Tipping: Invalid odeum address!");
-
+                await expect(
+                    tipping.setOdeumAddress(zeroAddress)
+                ).to.be.revertedWith("Tipping: Invalid odeum address!");
             });
             // Burn
             it("Should change burn address", async () => {
@@ -151,26 +147,28 @@ describe("Tipping contract", () => {
                     .to.emit(tipping, "BurnAddressChanged")
                     .withArgs(clientAcc1.address);
 
-                expect(await tipping._VAULT_TO_BURN()).to.equal(clientAcc1.address);
-
+                expect(await tipping._VAULT_TO_BURN()).to.equal(
+                    clientAcc1.address
+                );
             });
             // Team wallet
             it("Should change team wallet address", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
                 expect(await tipping.setFundVaultAddress(clientAcc1.address))
-                .to.emit(tipping, "FundAddressChanged")
-                .withArgs(clientAcc1.address);
+                    .to.emit(tipping, "FundAddressChanged")
+                    .withArgs(clientAcc1.address);
 
-                expect(await tipping._FUND_VAULT()).to.equal(clientAcc1.address);
-
+                expect(await tipping._FUND_VAULT()).to.equal(
+                    clientAcc1.address
+                );
             });
             it("Should fail to change team wallet address", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
-                await expect(tipping.setFundVaultAddress(zeroAddress))
-                    .to.be.revertedWith("Tipping: Invalid fund vault address!");
-
+                await expect(
+                    tipping.setFundVaultAddress(zeroAddress)
+                ).to.be.revertedWith("Tipping: Invalid fund vault address!");
             });
         });
         describe("Rates", () => {
@@ -179,44 +177,41 @@ describe("Tipping contract", () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
                 expect(await tipping.setBurnRate(777))
-                .to.emit(tipping, "BurnRateChanged")
-                .withArgs(777);
+                    .to.emit(tipping, "BurnRateChanged")
+                    .withArgs(777);
 
                 expect(await tipping._burnRate()).to.equal(777);
-
             });
             // Fund rate
             it("Should change fund rate", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
                 expect(await tipping.setFundRate(777))
-                .to.emit(tipping, "FundRateChanged")
-                .withArgs(777);
+                    .to.emit(tipping, "FundRateChanged")
+                    .withArgs(777);
 
                 expect(await tipping._fundRate()).to.equal(777);
-
             });
             // Reward rate
             it("Should change reward rate", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
                 expect(await tipping.setRewardRate(777))
-                .to.emit(tipping, "RewardRateChanged")
-                .withArgs(777);
+                    .to.emit(tipping, "RewardRateChanged")
+                    .withArgs(777);
 
                 expect(await tipping._rewardRate()).to.equal(777);
-
             });
             // Invalid rate
             it("Should fail to set invalid rate", async () => {
                 let { odeum, staking, tipping } = await loadFixture(deploys);
 
-                await expect(tipping.setRewardRate((await tipping.MAX_RATE_BP()) + 1))
-                .to.be.revertedWith("Tipping: Rate too high!");
+                await expect(
+                    tipping.setRewardRate((await tipping.MAX_RATE_BP()) + 1)
+                ).to.be.revertedWith("Tipping: Rate too high!");
             });
-        })
+        });
     });
-
 
     describe("Transfer", () => {
         it("Users should be able to send a tip and have it split", async () => {
@@ -232,7 +227,11 @@ describe("Tipping contract", () => {
 
             await odeum.connect(clientAcc1).approve(tipping.address, tip);
 
-            expect(await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip))
+            expect(
+                await tipping
+                    .connect(clientAcc1)
+                    .transfer(clientAcc2.address, tip)
+            )
                 .to.emit(tipping, "SplitTransfer")
                 .withArgs(clientAcc2.address, tip);
 

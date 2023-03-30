@@ -13,7 +13,7 @@
 ### setBurnRate
 
 ```solidity
-function setBurnRate(uint256 burnRate) external nonpayable returns (bool)
+function setBurnRate(uint256 burnRate) external nonpayable
 ```
 
 Sets the new percentage of tokens to be burnt on each         transfer (in basis points)
@@ -26,16 +26,10 @@ Sets the new percentage of tokens to be burnt on each         transfer (in basis
 |---|---|---|
 | burnRate | uint256 | The new percentage of tokens to be burnt on each        transfer (in basis points) |
 
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | True if a new percentage has been set successfully. Otherwise - false. |
-
 ### setFundRate
 
 ```solidity
-function setFundRate(uint256 fundRate) external nonpayable returns (bool)
+function setFundRate(uint256 fundRate) external nonpayable
 ```
 
 Sets the new percentage of tokens to be sent to the team wallet on each         transfer (in basis points)
@@ -47,12 +41,6 @@ Sets the new percentage of tokens to be sent to the team wallet on each         
 | Name | Type | Description |
 |---|---|---|
 | fundRate | uint256 | The new percentage of tokens to be sent to the team wallet on each        transfer (in basis points) |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | True if a new percentage has been set successfully. Otherwise - false. |
 
 ### setFundVaultAddress
 
@@ -89,7 +77,7 @@ Sets the address of the {Odeum} contract
 ### setRewardRate
 
 ```solidity
-function setRewardRate(uint256 rewardRate) external nonpayable returns (bool)
+function setRewardRate(uint256 rewardRate) external nonpayable
 ```
 
 Sets the new percentage of tokens to be sent to the staking pool on each         transfer (in basis points)
@@ -101,12 +89,6 @@ Sets the new percentage of tokens to be sent to the staking pool on each        
 | Name | Type | Description |
 |---|---|---|
 | rewardRate | uint256 | The new percentage of tokens to be sent to the staking pool on each        transfer (in basis points) |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | True if a new percentage has been set successfully. Otherwise - false. |
 
 ### setStakingVaultAddress
 
