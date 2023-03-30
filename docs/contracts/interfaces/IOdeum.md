@@ -56,30 +56,6 @@ function approve(address spender, uint256 amount) external nonpayable returns (b
 |---|---|---|
 | _0 | bool | undefined |
 
-### approveAndCall
-
-```solidity
-function approveAndCall(address _spender, uint256 _value, bytes _extraData) external nonpayable returns (bool)
-```
-
-Increases the allowance for a spender and calls `receiveApproval`         method of a spender
-
-*This function call fails if `_spender` does not have `receiveApproval` method*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _spender | address | The address received and spending tokens |
-| _value | uint256 | The amount of tokens given to the `spender` |
-| _extraData | bytes | Bytes of data forwarded while calling spender&#39;s method |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### balanceOf
 
 ```solidity
@@ -187,23 +163,6 @@ event Approval(address indexed owner, address indexed spender, uint256 value)
 | owner `indexed` | address | undefined |
 | spender `indexed` | address | undefined |
 | value  | uint256 | undefined |
-
-### ApproveAndCall
-
-```solidity
-event ApproveAndCall(address indexed spender, uint256 indexed value)
-```
-
-Indicates that {approveAndCall} method was called
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| spender `indexed` | address | undefined |
-| value `indexed` | uint256 | undefined |
 
 ### Transfer
 

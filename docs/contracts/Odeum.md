@@ -73,30 +73,6 @@ function approve(address spender, uint256 amount) external nonpayable returns (b
 |---|---|---|
 | _0 | bool | undefined |
 
-### approveAndCall
-
-```solidity
-function approveAndCall(address _spender, uint256 _value, bytes _extraData) external nonpayable returns (bool)
-```
-
-See {IOdeum-approveAndCall}
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _spender | address | undefined |
-| _value | uint256 | undefined |
-| _extraData | bytes | undefined |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### balanceOf
 
 ```solidity
@@ -277,6 +253,23 @@ function symbol() external view returns (string)
 |---|---|---|
 | _0 | string | undefined |
 
+### totalBurnt
+
+```solidity
+function totalBurnt() external view returns (uint256)
+```
+
+The amount of burnt tokens
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined |
+
 ### totalSupply
 
 ```solidity
@@ -428,23 +421,6 @@ event Approval(address indexed owner, address indexed spender, uint256 value)
 | owner `indexed` | address | undefined |
 | spender `indexed` | address | undefined |
 | value  | uint256 | undefined |
-
-### ApproveAndCall
-
-```solidity
-event ApproveAndCall(address indexed spender, uint256 indexed value)
-```
-
-Indicates that {approveAndCall} method was called
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| spender `indexed` | address | undefined |
-| value `indexed` | uint256 | undefined |
 
 ### BeaconUpgraded
 

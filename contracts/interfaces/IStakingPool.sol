@@ -13,6 +13,8 @@ interface IStakingPool {
     event EmergencyWithdraw(address indexed user, uint256 amount);
     /// @notice Indicates that `user` claimed his pending reward
     event Claim(address indexed user, uint256 amount);
+    /// @notice Indicates that new address of `Tipping` contract was set
+    event TippingAddressChanged(address indexed tipping);
 
     /// @notice Allows to see the pending reward of the user
     /// @param user The user to check the pending reward of

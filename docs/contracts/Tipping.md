@@ -177,7 +177,7 @@ function renounceOwnership() external nonpayable
 ### setBurnRate
 
 ```solidity
-function setBurnRate(uint256 burnRate) external nonpayable returns (bool)
+function setBurnRate(uint256 burnRate) external nonpayable
 ```
 
 See {ITipping-setBurnRate}
@@ -190,16 +190,10 @@ See {ITipping-setBurnRate}
 |---|---|---|
 | burnRate | uint256 | undefined |
 
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### setFundRate
 
 ```solidity
-function setFundRate(uint256 fundRate) external nonpayable returns (bool)
+function setFundRate(uint256 fundRate) external nonpayable
 ```
 
 See {ITipping-setFundRate}
@@ -211,12 +205,6 @@ See {ITipping-setFundRate}
 | Name | Type | Description |
 |---|---|---|
 | fundRate | uint256 | undefined |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
 
 ### setFundVaultAddress
 
@@ -253,7 +241,7 @@ See {ITipping-setOdeumAddress}
 ### setRewardRate
 
 ```solidity
-function setRewardRate(uint256 rewardRate) external nonpayable returns (bool)
+function setRewardRate(uint256 rewardRate) external nonpayable
 ```
 
 See {ITipping-setRewardRate}
@@ -265,12 +253,6 @@ See {ITipping-setRewardRate}
 | Name | Type | Description |
 |---|---|---|
 | rewardRate | uint256 | undefined |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
 
 ### setStakingVaultAddress
 
