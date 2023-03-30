@@ -1,4 +1,4 @@
-/* const { ethers } = require("hardhat");
+const { ethers } = require("hardhat");
 const { expect } = require("chai");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
@@ -35,9 +35,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             odeum.address,
             ownerAcc.address,
             zeroAddress,
-            10,
-            45,
-            45
+            10, // 1% burnt
+            100, // 10% to team
+            90  // 9% community (staking)
         );
         let tipping = await tippingProto.deployed();
 
@@ -234,11 +234,11 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
             expect(senderBalance1.sub(senderBalance2)).to.equal(tip);
             expect(receiverBalance2.sub(receiverBalance1)).to.equal(
-                parseEther("9000")
+                parseEther("8000")
             );
-            expect(teamBalance2.sub(teamBalance1)).to.equal(parseEther("450"));
+            expect(teamBalance2.sub(teamBalance1)).to.equal(parseEther("1000"));
             expect(stakingBalance2.sub(stakingBalance1)).to.equal(
-                parseEther("450")
+                parseEther("900")
             );
             expect(totalSupply1.sub(totalSupply2)).to.equal(parseEther("100"));
         });
@@ -329,8 +329,9 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let endBalance1 = await odeum.balanceOf(clientAcc1.address);
             let endBalance2 = await odeum.balanceOf(clientAcc2.address);
 
-            expect(endBalance1.sub(startBalance1)).to.equal(parseEther("150"));
-            expect(endBalance2.sub(startBalance2)).to.equal(parseEther("300"));
+            // 9% of tip get split
+            expect(endBalance1.sub(startBalance1)).to.equal(parseEther("300"));
+            expect(endBalance2.sub(startBalance2)).to.equal(parseEther("600"));
         });
 
         // #9
@@ -342,7 +343,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip);
 
             expect(await tipping.userTips(clientAcc2.address)).to.equal(
-                parseEther("9000")
+                parseEther("8000")
             );
         });
 
@@ -351,8 +352,8 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let { odeum, staking, tipping } = await loadFixture(deploys);
 
             expect(await tipping._burnRate()).to.equal(10);
-            expect(await tipping._fundRate()).to.equal(45);
-            expect(await tipping._rewardRate()).to.equal(45);
+            expect(await tipping._fundRate()).to.equal(100);
+            expect(await tipping._rewardRate()).to.equal(90);
 
             await tipping.connect(ownerAcc).setBurnRate(15);
             await tipping.connect(ownerAcc).setFundRate(10);
@@ -375,4 +376,4 @@ describe("Odeum interacting with Staking and Tipping", () => {
             );
         });
     });
-}); */
+});
