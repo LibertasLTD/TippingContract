@@ -69,5 +69,5 @@ interface ITipping {
     /// @param to The main destination address to transfer tokens to
     /// @param amount The amount of tokens to transfer
     /// @dev Emits the {SplitTransfer} event
-    function transfer(address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external;
 }
