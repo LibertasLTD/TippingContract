@@ -125,9 +125,8 @@ contract Tipping is Ownable, ITipping {
         emit RewardRateChanged(rewardRate);
     }
 
-    // TODO remove return from here???
     /// @notice See {ITipping-transfer}
-    function transfer(address to, uint256 amount) external returns (bool) {
+    function transfer(address to, uint256 amount) external {
         IERC20 _odeum = IERC20(_ODEUM);
         _odeum.safeTransferFrom(msg.sender, address(this), amount);
         (
@@ -143,7 +142,6 @@ contract Tipping is Ownable, ITipping {
         _odeum.safeTransfer(_STAKING_VAULT, rewardAmount);
         IStakingPool(_STAKING_VAULT).supplyReward(rewardAmount);
         emit SplitTransfer(to, amount);
-        return true;
     }
 
     /// @dev Calculates portions of the transferred amount to be
