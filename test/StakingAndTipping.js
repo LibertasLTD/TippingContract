@@ -37,7 +37,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             zeroAddress,
             10, // 1% burnt
             100, // 10% to team
-            90  // 9% community (staking)
+            90 // 9% community (staking)
         );
         let tipping = await tippingProto.deployed();
 

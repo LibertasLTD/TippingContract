@@ -125,7 +125,7 @@ Sets the address to send burnt tokens to
 ### transfer
 
 ```solidity
-function transfer(address to, uint256 amount) external nonpayable returns (bool)
+function transfer(address to, uint256 amount) external nonpayable
 ```
 
 Transfers the `amount` tokens and splits it among several addresses
@@ -138,12 +138,6 @@ Transfers the `amount` tokens and splits it among several addresses
 |---|---|---|
 | to | address | The main destination address to transfer tokens to |
 | amount | uint256 | The amount of tokens to transfer |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
 
 
 
