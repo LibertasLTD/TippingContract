@@ -136,7 +136,7 @@ async function main() {
         zeroAddress,
         10, // 1% burnt
         100, // 10% to team
-        90  // 9% to community (reward)
+        90 // 9% to community (reward)
     );
     tipping = await contractDeployTx.deployed();
     // Set tipping address
@@ -177,13 +177,6 @@ async function main() {
         console.error(error);
     }
     console.log(`[${contractName}]: Verification Finished!`);
-
-    // Transfer ownership of all contracts to the client
-    console.log(`\nTranferring Ownership of all Contracts...`);
-    await odeum.connect(owner).transferOwnership(TEAM_WALLET_ADDRESS);
-    await stakingPool.connect(owner).transferOwnership(TEAM_WALLET_ADDRESS);
-    await tipping.connect(owner).transferOwnership(TEAM_WALLET_ADDRESS);
-    console.log(`Ownership transferred!`);
 
     // ====================================================
     fs.writeFileSync(
