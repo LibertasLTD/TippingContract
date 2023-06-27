@@ -154,7 +154,7 @@ async function main() {
     } else if (network.name === "fantom_testnet") {
         url =
             "https://testnet.ftmscan.com/address/" +
-            stakingPool.address +
+            tipping.address +
             "#code";
     }
 
@@ -169,8 +169,8 @@ async function main() {
                 TEAM_WALLET_ADDRESS,
                 zeroAddress,
                 10,
-                45,
-                45,
+                100,
+                90
             ],
         });
     } catch (error) {

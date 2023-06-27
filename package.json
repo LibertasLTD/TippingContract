@@ -1,13 +1,12 @@
 {
-  "name": "Tipping Contract",
+  "name": "Odeum Token",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "1.0.3",
-    "@nomicfoundation/hardhat-toolbox": "1.0.2",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nomiclabs/hardhat-ethers": "2.2.0",
-    "@openzeppelin/contracts-upgradeable": "^4.8.1",
-    "@openzeppelin/hardhat-upgrades": "^1.22.1",
-    "@openzeppelin/test-helpers": "^0.5.16",
-    "@primitivefi/hardhat-dodoc": "^0.2.3",
+    "@openzeppelin/contracts-upgradeable": "^4.7.0",
+    "@openzeppelin/hardhat-upgrades": "^1.19.0",
+    "@primitivefi/hardhat-dodoc": "0.2.3",
     "ethers": "5.7.1",
     "hardhat": "^2.12.7",
     "hardhat-contract-sizer": "^2.8.0",
@@ -15,14 +14,13 @@
     "hardhat-tracer": "^2.0.0",
     "prettier": "2.8.1",
     "prettier-plugin-solidity": "1.1.0",
-    "solidity-coverage": "^0.7.21"
+    "solidity-coverage": "^0.8.2"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/contracts": "^4.8.0",
     "chai": "4.3.6",
     "delay": "5.0.0",
     "dotenv": "16.0.1",
-    "hardhat-gas-reporter": "1.0.8",
-    "slither": "0.2.2"
+    "hardhat-gas-reporter": "1.0.8"
   }
 }
