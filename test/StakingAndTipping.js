@@ -375,5 +375,47 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 parseEther("100")
             );
         });
+
+        // #11
+        it("Rewards that have been sent to the pool should be stored if there are no stakers", async () => {
+            let { odeum, staking, tipping } = await loadFixture(deploys);
+
+            let stake1 = parseEther("1000");
+            let stake2 = parseEther("2000");
+
+            await odeum.connect(clientAcc1).approve(staking.address, stake1);
+            await odeum.connect(clientAcc2).approve(staking.address, stake2);
+
+            let tip = parseEther("10000");
+
+            await odeum.connect(clientAcc3).approve(tipping.address, tip);
+            await tipping.connect(clientAcc3).transfer(clientAcc4.address, tip);
+          
+            await staking.connect(clientAcc1).deposit(stake1);
+            await staking.connect(clientAcc2).deposit(stake2);
+
+            let startBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let startBalance2 = await odeum.balanceOf(clientAcc2.address);
+            
+            let rewardAcc = await staking.rewardAcc(); 
+            expect(rewardAcc*1).to.be.equal(tip * 0.09)
+
+            await odeum.connect(clientAcc3).approve(tipping.address, tip);
+            await tipping.connect(clientAcc3).transfer(clientAcc4.address, tip);
+
+            await staking.connect(clientAcc1).claim();
+            await staking.connect(clientAcc2).claim();
+
+            let endBalance1 = await odeum.balanceOf(clientAcc1.address);
+            let endBalance2 = await odeum.balanceOf(clientAcc2.address);
+
+            // 9% of tip get split
+            // (10000 + 10000) * 0.09 
+            expect(endBalance1.sub(startBalance1)).to.equal(parseEther("600"));
+            expect(endBalance2.sub(startBalance2)).to.equal(parseEther("1200"));
+
+            rewardAcc = await staking.rewardAcc(); 
+            expect(rewardAcc).to.be.equal(0);
+        });
     });
 });

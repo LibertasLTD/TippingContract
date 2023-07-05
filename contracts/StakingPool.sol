@@ -39,6 +39,9 @@ contract StakingPool is Ownable, IStakingPool {
     mapping(address => uint256) public claimedRewards;
     /// @notice The total amount of rewards claimed by all users
     uint256 public totalClaimed;
+    /// @notice Reward that were sent when there were no stakers in the contract
+    /// waiting to be distributed
+    uint256 public rewardAcc;
 
     /// @dev Only allows the {Tipping} contract to call the function
     modifier onlyTipping() {
@@ -155,10 +158,13 @@ contract StakingPool is Ownable, IStakingPool {
     /// @notice See {IStakingPool-supplyReward}
     function supplyReward(uint256 reward) external onlyTipping {
         // Reward per share is only updated if there is at least one staker
+        // save reward for a further use
         if (totalStake == 0) {
+            rewardAcc += reward;
             return;
         }
-        odeumPerShare = odeumPerShare + (reward * PRECISION) / totalStake;
+        odeumPerShare = odeumPerShare + ((reward + rewardAcc) * PRECISION) / totalStake;
+        delete rewardAcc;
     }
 
     /// @dev Returns the pending reward of the user
