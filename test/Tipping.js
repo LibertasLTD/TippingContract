@@ -230,7 +230,7 @@ describe("Tipping contract", () => {
             expect(
                 await tipping
                     .connect(clientAcc1)
-                    .transfer(clientAcc2.address, tip)
+                    .tip(clientAcc2.address, tip)
             )
                 .to.emit(tipping, "SplitTransfer")
                 .withArgs(clientAcc2.address, tip);

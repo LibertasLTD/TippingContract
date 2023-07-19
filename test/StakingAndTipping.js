@@ -224,7 +224,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
             await odeum.connect(clientAcc1).approve(tipping.address, tip);
 
-            await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip);
+            await tipping.connect(clientAcc1).tip(clientAcc2.address, tip);
 
             let senderBalance2 = await odeum.balanceOf(clientAcc1.address);
             let receiverBalance2 = await odeum.balanceOf(clientAcc2.address);
@@ -253,7 +253,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await odeum.connect(ownerAcc).approve(tipping.address, tip);
 
             await staking.connect(clientAcc1).deposit(stake);
-            await tipping.connect(ownerAcc).transfer(clientAcc2.address, tip);
+            await tipping.connect(ownerAcc).tip(clientAcc2.address, tip);
 
             expect(
                 await staking.getAvailableReward(clientAcc1.address)
@@ -270,7 +270,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await odeum.connect(ownerAcc).approve(tipping.address, tip);
 
             await staking.connect(clientAcc1).deposit(stake);
-            await tipping.connect(ownerAcc).transfer(clientAcc2.address, tip);
+            await tipping.connect(ownerAcc).tip(clientAcc2.address, tip);
 
             expect(await staking.claimedRewards(clientAcc1.address)).to.equal(
                 0
@@ -293,7 +293,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await odeum.connect(ownerAcc).approve(tipping.address, tip);
 
             await staking.connect(clientAcc1).deposit(stake);
-            await tipping.connect(ownerAcc).transfer(clientAcc2.address, tip);
+            await tipping.connect(ownerAcc).tip(clientAcc2.address, tip);
 
             expect(await staking.totalClaimed()).to.equal(0);
 
@@ -321,7 +321,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let tip = parseEther("10000");
 
             await odeum.connect(clientAcc3).approve(tipping.address, tip);
-            await tipping.connect(clientAcc3).transfer(clientAcc4.address, tip);
+            await tipping.connect(clientAcc3).tip(clientAcc4.address, tip);
 
             await staking.connect(clientAcc1).claim();
             await staking.connect(clientAcc2).claim();
@@ -340,7 +340,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
 
             let tip = parseEther("10000");
             await odeum.connect(clientAcc1).approve(tipping.address, tip);
-            await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip);
+            await tipping.connect(clientAcc1).tip(clientAcc2.address, tip);
 
             expect(await tipping.userTips(clientAcc2.address)).to.equal(
                 parseEther("8000")
@@ -368,7 +368,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let tip = parseEther("10000");
 
             await odeum.connect(clientAcc1).approve(tipping.address, tip);
-            await tipping.connect(clientAcc1).transfer(clientAcc2.address, tip);
+            await tipping.connect(clientAcc1).tip(clientAcc2.address, tip);
 
             let stakingBalance2 = await odeum.balanceOf(staking.address);
             expect(stakingBalance2.sub(stakingBalance1)).to.equal(
@@ -389,7 +389,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             let tip = parseEther("10000");
 
             await odeum.connect(clientAcc3).approve(tipping.address, tip);
-            await tipping.connect(clientAcc3).transfer(clientAcc4.address, tip);
+            await tipping.connect(clientAcc3).tip(clientAcc4.address, tip);
           
             await staking.connect(clientAcc1).deposit(stake1);
             await staking.connect(clientAcc2).deposit(stake2);
@@ -401,7 +401,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             expect(rewardAcc*1).to.be.equal(tip * 0.09)
 
             await odeum.connect(clientAcc3).approve(tipping.address, tip);
-            await tipping.connect(clientAcc3).transfer(clientAcc4.address, tip);
+            await tipping.connect(clientAcc3).tip(clientAcc4.address, tip);
 
             await staking.connect(clientAcc1).claim();
             await staking.connect(clientAcc2).claim();

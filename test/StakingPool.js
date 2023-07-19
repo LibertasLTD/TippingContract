@@ -98,7 +98,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 await staking.connect(clientAcc1).deposit(stake);
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     await staking.getAvailableReward(clientAcc1.address)
@@ -183,7 +183,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 // `odeumPerShare` gets calculated on transfer
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     await staking.getAvailableReward(clientAcc1.address)
@@ -210,7 +210,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 // `odeumPerShare` gets calculated on transfer
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     await staking.getAvailableReward(clientAcc1.address)
@@ -237,7 +237,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 // `odeumPerShare` gets calculated on transfer
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     await staking.getAvailableReward(clientAcc1.address)
@@ -265,7 +265,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 // `odeumPerShare` gets calculated on transfer
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     (await staking.userInfo(clientAcc1.address)).lastReward
@@ -291,7 +291,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 // `odeumPerShare` gets calculated on transfer
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     (await staking.userInfo(clientAcc1.address)).lastReward
@@ -318,7 +318,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
                 // `odeumPerShare` gets calculated on transfer
                 await tipping
                     .connect(ownerAcc)
-                    .transfer(clientAcc2.address, tip);
+                    .tip(clientAcc2.address, tip);
 
                 expect(
                     (await staking.userInfo(clientAcc1.address)).lastReward
@@ -409,7 +409,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             await odeum.connect(ownerAcc).approve(tipping.address, tip);
 
             await staking.connect(clientAcc1).deposit(stake);
-            await tipping.connect(ownerAcc).transfer(clientAcc2.address, tip);
+            await tipping.connect(ownerAcc).tip(clientAcc2.address, tip);
 
             let middleStakingBalance = await odeum.balanceOf(staking.address);
             let middleClientBalance = await odeum.balanceOf(clientAcc1.address);
@@ -570,7 +570,7 @@ describe("Odeum interacting with Staking and Tipping", () => {
             // No reward for client yet. `odeumPerShare` not set yet
             await staking.connect(clientAcc1).deposit(stake);
             // `odeumPerShare` gets calculated on transfer
-            await tipping.connect(ownerAcc).transfer(clientAcc2.address, tip);
+            await tipping.connect(ownerAcc).tip(clientAcc2.address, tip);
 
             let initialStakingBalance = await odeum.balanceOf(staking.address);
             let initialClientBalance = await odeum.balanceOf(
