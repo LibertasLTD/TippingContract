@@ -126,7 +126,7 @@ contract Tipping is Ownable, ITipping {
     }
 
     /// @notice See {ITipping-transfer}
-    function transfer(address to, uint256 amount) external {
+    function tip(address to, uint256 amount) external {
         IERC20 _odeum = IERC20(_ODEUM);
         _odeum.safeTransferFrom(msg.sender, address(this), amount);
         (
