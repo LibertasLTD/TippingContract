@@ -18,15 +18,18 @@ contract Odeum is
 {
     /// @notice The maximum possible amount of minted tokens
     uint256 public constant INITIAL_CAP = 100_000_000;
+    uint256 public constant MAX_BP = 10000;
 
     /// @notice The amount of burnt tokens
     uint256 public totalBurnt;
 
-    function configure(address teamWallet) external initializer {
+    function configure(address teamWallet, address poolWallet) external initializer {
         __ERC20_init("ODEUM", "ODEUM");
         __Ownable_init();
         __UUPSUpgradeable_init();
-        _mint(teamWallet, INITIAL_CAP * (10 ** decimals()));
+        uint256 poolWalletAmount = INITIAL_CAP * 500 / MAX_BP;
+        _mint(teamWallet, (INITIAL_CAP - poolWalletAmount) * (10 ** decimals()));
+        _mint(poolWallet, poolWalletAmount * (10 ** decimals()));
     }
 
     /// @notice Returns the number of decimals used to get its user representation.
