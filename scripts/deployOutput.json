@@ -1,22 +1,22 @@
 {
   "fantom_testnet": {
-    "Odeum": {
-      "proxyAddress": "0x6A7B474C529c4676b611FA395b0d2e06B5e75390",
-      "implementationAddress": "0xadE7D0997c77C6f536b1742E70758e452C860B68",
-      "proxyVerification": "https://testnet.ftmscan.com/address/0x6A7B474C529c4676b611FA395b0d2e06B5e75390#code",
-      "implementationVerification": "https://testnet.ftmscan.com/address/0xadE7D0997c77C6f536b1742E70758e452C860B68#code"
+    "contracts/OdeumV2.sol:Odeum": {
+      "proxyAddress": "0x4bAD21512d31a62fE4Da7ca787cda0a91379fee0",
+      "implementationAddress": "0x652fd46c20c7A9d17dB89069AB5792c2D34eFE7C",
+      "proxyVerification": "https://testnet.ftmscan.com/address/0x4bAD21512d31a62fE4Da7ca787cda0a91379fee0#code",
+      "implementationVerification": "https://testnet.ftmscan.com/address/0x652fd46c20c7A9d17dB89069AB5792c2D34eFE7C#code"
     },
     "StakingPool": {
-      "address": "0xBAF170c5974b28a91323dFFcbead9e05D5d73D3f",
-      "verification": "https://testnet.ftmscan.com/address/0xBAF170c5974b28a91323dFFcbead9e05D5d73D3f#code"
+      "address": "0xA73420C4684b7067d3C63fd5BC7EF912D1766348",
+      "verification": "https://testnet.ftmscan.com/address/0xA73420C4684b7067d3C63fd5BC7EF912D1766348#code"
     },
     "Tipping": {
-      "address": "0x4812446023a4F69CE06eD80D3aFfea8D94c4d449",
-      "verification": "https://testnet.ftmscan.com/address/0x4812446023a4F69CE06eD80D3aFfea8D94c4d449#code"
+      "address": "0xe8059e99fC3021DC7C10df5f7b7c7E7cb012ACBa",
+      "verification": "https://testnet.ftmscan.com/address/0xe8059e99fC3021DC7C10df5f7b7c7E7cb012ACBa#code"
     }
   },
   "fantom_mainnet": {
-    "Odeum": {
+    "contracts/OdeumV2.sol:Odeum": {
       "proxyAddress": "",
       "implementationAddress": "",
       "proxyVerification": "",
@@ -29,6 +29,38 @@
     "Tipping": {
       "address": "",
       "verification": ""
+    }
+  },
+  "arbitrum_mainnet": {
+    "contracts/OdeumV3.sol:Odeum": {
+      "proxyAddress": "",
+      "implementationAddress": "",
+      "proxyVerification": "",
+      "implementationVerification": ""
+    },
+    "StakingPool": {
+      "address": "",
+      "verification": ""
+    },
+    "Tipping": {
+      "address": "",
+      "verification": ""
+    }
+  },
+  "arbitrum_testnet": {
+    "contracts/OdeumV3.sol:Odeum": {
+      "proxyAddress": "0x28F4592591ff44A7825fd42C18648Cd7FB6BC39B",
+      "implementationAddress": "0x652fd46c20c7A9d17dB89069AB5792c2D34eFE7C",
+      "proxyVerification": "https://goerli.arbiscan.io/address/0x28F4592591ff44A7825fd42C18648Cd7FB6BC39B#code",
+      "implementationVerification": "https://goerli.arbiscan.io/address/0x652fd46c20c7A9d17dB89069AB5792c2D34eFE7C#code"
+    },
+    "StakingPool": {
+      "address": "0x4bAD21512d31a62fE4Da7ca787cda0a91379fee0",
+      "verification": "https://goerli.arbiscan.io/address/0x4bAD21512d31a62fE4Da7ca787cda0a91379fee0#code"
+    },
+    "Tipping": {
+      "address": "0xaa9Ac8eEfC41986F81a1f24BBaF4427C05Bded6B",
+      "verification": "https://goerli.arbiscan.io/address/0xaa9Ac8eEfC41986F81a1f24BBaF4427C05Bded6B#code"
     }
   }
 }
