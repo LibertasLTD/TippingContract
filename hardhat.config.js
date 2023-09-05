@@ -9,7 +9,7 @@ require("solidity-coverage");
 require("hardhat-gas-reporter");
 require("@primitivefi/hardhat-dodoc");
 
-const { FTMSCAN_API_KEY, ACC_PRIVATE_KEY } = process.env;
+const { FTMSCAN_API_KEY, ACC_PRIVATE_KEY, ALCHEMY_ETHERIUM_API_KEY } = process.env;
 
 module.exports = {
     solidity: {
@@ -24,6 +24,10 @@ module.exports = {
     networks: {
         hardhat: {
             allowUnlimitedContractSize: true,
+            forking: {
+                url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_ETHERIUM_API_KEY}`,
+                blockNumber: 18061880
+            }
         },
         localhost: {
             url: "http://127.0.0.1:8545",

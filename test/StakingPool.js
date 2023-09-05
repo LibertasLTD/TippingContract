@@ -8,11 +8,11 @@ const zeroAddress = ethers.constants.AddressZero;
 describe("Odeum interacting with Staking and Tipping", () => {
     // Deploy all contracts before each test suite
     async function deploys() {
-        [ownerAcc, clientAcc1, clientAcc2, clientAcc3] =
+        [ownerAcc, poolAcc, dex, clientAcc1, clientAcc2, clientAcc3] =
             await ethers.getSigners();
 
-        let odeumTx = await ethers.getContractFactory("Odeum");
-        let odeum = await upgrades.deployProxy(odeumTx, [ownerAcc.address], {
+        let odeumTx = await ethers.getContractFactory("contracts/OdeumV2.sol:Odeum");
+        let odeum = await upgrades.deployProxy(odeumTx, [ownerAcc.address, poolAcc.address, dex.address], {
             initializer: "configure",
             kind: "uups",
         });
