@@ -72,7 +72,7 @@ abstract contract OdeumCore is
 
         uint256 taxTokenAmount;
         if (taxWithdrawToken == address(this)) {
-            transfer(msg.sender, amountToSwap);
+            _transfer(address(this), msg.sender, amountToSwap);
 
             taxTokenAmount = amountToSwap;
         } else {
@@ -110,7 +110,7 @@ abstract contract OdeumCore is
 
     function includeAccountInFee(address account) external onlyOwner {
         require(account != address(0), "Odeum: the address must not be null");
-        require(_isAccountExcludedFromFee[account] == false, "Odeum: account already included in fee");
+        require(_isAccountExcludedFromFee[account] == true, "Odeum: account already included in fee");
         _isAccountExcludedFromFee[account] = false;
 
         emit AccountIncludedInFee(account);
@@ -118,7 +118,7 @@ abstract contract OdeumCore is
 
     function excludeAccountFromFee(address account) external onlyOwner {
         require(account != address(0), "Odeum: the address must not be null");
-        require(_isAccountExcludedFromFee[account] == true, "Odeum: account already excluded from fee");
+        require(_isAccountExcludedFromFee[account] == false, "Odeum: account already excluded from fee");
         _isAccountExcludedFromFee[account] = true;
 
         emit AccountExcludedFromFee(account);
@@ -149,7 +149,7 @@ abstract contract OdeumCore is
 
             bool takeFee = true;
 
-            if (_isAccountExcludedFromFee[sender]) {
+            if (_isAccountExcludedFromFee[sender] || _isAccountExcludedFromFee[recipient]) {
                 takeFee = false;
             }
 

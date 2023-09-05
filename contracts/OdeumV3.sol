@@ -19,7 +19,9 @@ contract Odeum is OdeumCore {
     }
 
     function withdrawFee() public override onlyOwner {
-        require(taxWithdrawPoolFee != 0, "Odeum: taxWithdrawPoolFee not setted");
+        if (taxWithdrawToken != address(this)) {
+            require(taxWithdrawPoolFee != 0, "Odeum: taxWithdrawPoolFee not setted");
+        }
         
         super.withdrawFee();
     }
