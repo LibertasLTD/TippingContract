@@ -1,0 +1,26 @@
+{
+    "fantom_testnet": {
+        "Uniswap": {
+            "isV2": true,
+            "routerAddress": "0xa6AD18C2aC47803E193F75c3677b14BF19B94883"
+        }
+    },
+    "fantom_mainnet": {
+        "Uniswap": {
+            "isV2": true,
+            "routerAddress": "0xF491e7B69E4244ad4002BC14e878a34207E38c29"
+        }
+    },
+    "arbitrum_testnet": {
+        "Uniswap": {
+            "isV2": false,
+            "routerAddress": "0xab7664500b19a7a2362Ab26081e6DfB971B6F1B0"
+        }
+    },
+    "arbitrum_mainnet": {
+        "Uniswap": {
+            "isV2": false,
+            "routerAddress": "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+        }
+    }
+  }

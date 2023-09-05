@@ -5,12 +5,15 @@ const delay = require("delay");
 require("dotenv").config();
 
 const TEAM_WALLET_ADDRESS = process.env.TEAM_WALLET_ADDRESS;
+const POOL_WALLET_ADDRESS = process.env.POOL_WALLET_ADDRESS;
 
 const zeroAddress = ethers.constants.AddressZero;
 
+const INPUT = require("./deployInput.json");
+
 // JSON file to keep information about previous deployments
-const fileName = "./deployOutput.json";
-const OUTPUT_DEPLOY = require(fileName);
+const outputFileName = "./deployOutput.json";
+const OUTPUT_DEPLOY = require(outputFileName);
 
 let contractName;
 let odeum;
@@ -27,10 +30,18 @@ async function main() {
     // Contract #1: Odeum
 
     // Deploy proxy and implementation
-    contractName = "Odeum";
+    if (INPUT[network.name]["Uniswap"].isV2) {
+        contractName = "contracts/OdeumV2.sol:Odeum";
+    } else {
+        contractName = "contracts/OdeumV3.sol:Odeum";
+    }
     console.log(`[${contractName}]: Start of Deployment...`);
     _contractProto = await ethers.getContractFactory(contractName);
-    odeum = await upgrades.deployProxy(_contractProto, [TEAM_WALLET_ADDRESS], {
+    odeum = await upgrades.deployProxy(_contractProto, [
+        TEAM_WALLET_ADDRESS,
+        POOL_WALLET_ADDRESS,
+        INPUT[network.name]["Uniswap"].routerAddress
+    ], {
         initializer: "configure",
         kind: "uups",
     });
@@ -53,6 +64,10 @@ async function main() {
     } else if (network.name === "fantom_testnet") {
         url =
             "https://testnet.ftmscan.com/address/" + odeumImplAddress + "#code";
+    } else if (network.name === "arbitrum_mainnet") {
+        url = "https://arbiscan.io/address/" + odeumImplAddress + "#code";
+    } else if (network.name === "arbitrum_testnet") {
+        url = "https://goerli.arbiscan.io/address/" + odeumImplAddress + "#code";
     }
     OUTPUT_DEPLOY[network.name][contractName].implementationVerification = url;
     try {
@@ -62,9 +77,13 @@ async function main() {
     } catch (error) {}
 
     // Initialize implementation if it has not been initialized yet
-    let odeumImpl = await ethers.getContractAt("Odeum", odeumImplAddress);
+    let odeumImpl = await ethers.getContractAt(contractName, odeumImplAddress);
     try {
-        await odeumImpl.configure(TEAM_WALLET_ADDRESS);
+        await odeumImpl.configure(
+            TEAM_WALLET_ADDRESS,
+            POOL_WALLET_ADDRESS,
+            INPUT[network.name]["Uniswap"].routerAddress
+        );
     } catch (error) {}
     console.log(`[${contractName}][Implementation]: Verification Finished!`);
 
@@ -74,6 +93,10 @@ async function main() {
         url = "https://ftmscan.com/address/" + odeum.address + "#code";
     } else if (network.name === "fantom_testnet") {
         url = "https://testnet.ftmscan.com/address/" + odeum.address + "#code";
+    } else if (network.name === "arbitrum_mainnet") {
+        url = "https://arbiscan.io/address/" + odeum.address + "#code";
+    } else if (network.name === "arbitrum_testnet") {
+        url = "https://goerli.arbiscan.io/address/" + odeum.address + "#code";
     }
     OUTPUT_DEPLOY[network.name][contractName].proxyVerification = url;
 
@@ -108,6 +131,10 @@ async function main() {
             "https://testnet.ftmscan.com/address/" +
             stakingPool.address +
             "#code";
+    } else if (network.name === "arbitrum_mainnet") {
+        url = "https://arbiscan.io/address/" + stakingPool.address + "#code";
+    } else if (network.name === "arbitrum_testnet") {
+        url = "https://goerli.arbiscan.io/address/" + stakingPool.address + "#code";
     }
 
     OUTPUT_DEPLOY[network.name][contractName].verification = url;
@@ -156,6 +183,10 @@ async function main() {
             "https://testnet.ftmscan.com/address/" +
             tipping.address +
             "#code";
+    } else if (network.name === "arbitrum_mainnet") {
+        url = "https://arbiscan.io/address/" + tipping.address + "#code";
+    } else if (network.name === "arbitrum_testnet") {
+        url = "https://goerli.arbiscan.io/address/" + tipping.address + "#code";
     }
 
     OUTPUT_DEPLOY[network.name][contractName].verification = url;
@@ -180,13 +211,13 @@ async function main() {
 
     // ====================================================
     fs.writeFileSync(
-        path.resolve(__dirname, fileName),
+        path.resolve(__dirname, outputFileName),
         JSON.stringify(OUTPUT_DEPLOY, null, "  ")
     );
 
     console.log(
         `\n***Deployment and verification are completed!***\n***See Results in "${
-            __dirname + fileName
+            __dirname + outputFileName
         }" file***`
     );
 }

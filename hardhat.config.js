@@ -9,7 +9,14 @@ require("solidity-coverage");
 require("hardhat-gas-reporter");
 require("@primitivefi/hardhat-dodoc");
 
-const { FTMSCAN_API_KEY, ACC_PRIVATE_KEY, ALCHEMY_ETHERIUM_API_KEY } = process.env;
+const { 
+    FTMSCAN_API_KEY,
+    ACC_PRIVATE_KEY,
+    ALCHEMY_ETHERIUM_API_KEY,
+    ALCHEMY_ARB_GOERLI_API_KEY,
+    ALCHEMY_ARBITRUM_API_KEY,
+    ARBISCAN_API_KEY
+} = process.env;
 
 module.exports = {
     solidity: {
@@ -38,6 +45,14 @@ module.exports = {
         },
         fantom_testnet: {
             url: `https://fantom-testnet.public.blastapi.io	`,
+            accounts: [ACC_PRIVATE_KEY],
+        },
+        arbitrum_mainnet: {
+            url: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_ARBITRUM_API_KEY}`,
+            accounts: [ACC_PRIVATE_KEY],
+        },
+        arbitrum_testnet: {
+            url: `https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_ARB_GOERLI_API_KEY}`,
             accounts: [ACC_PRIVATE_KEY],
         },
     },
@@ -76,6 +91,8 @@ module.exports = {
         apiKey: {
             fantom: FTMSCAN_API_KEY,
             ftmTestnet: FTMSCAN_API_KEY,
+            arbitrumOne: ARBISCAN_API_KEY,
+            arbitrumGoerli: ARBISCAN_API_KEY
         },
     },
 };
