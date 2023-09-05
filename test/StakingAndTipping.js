@@ -10,6 +10,8 @@ describe("Odeum interacting with Staking and Tipping", () => {
     async function deploys() {
         [
             ownerAcc,
+            poolAcc,
+            dex,
             clientAcc1,
             clientAcc2,
             clientAcc3,
@@ -18,8 +20,8 @@ describe("Odeum interacting with Staking and Tipping", () => {
             teamAcc,
         ] = await ethers.getSigners();
 
-        let odeumTx = await ethers.getContractFactory("Odeum");
-        let odeum = await upgrades.deployProxy(odeumTx, [ownerAcc.address], {
+        let odeumTx = await ethers.getContractFactory("contracts/OdeumV2.sol:Odeum");
+        let odeum = await upgrades.deployProxy(odeumTx, [ownerAcc.address, poolAcc.address, dex.address], {
             initializer: "configure",
             kind: "uups",
         });
