@@ -66,12 +66,20 @@ abstract contract OdeumCore is
 
     function withdrawFee() public virtual onlyOwner {
         require(taxWithdrawToken != address(0), "Odeum: taxWithdrawToken not setted");
+        require(collectedFee > 0, "Odeum: no tokens to withdraw");
         uint256 amountToSwap = collectedFee;
         collectedFee = 0;
 
-        _approve(address(this), dexRouter, amountToSwap);
+        uint256 taxTokenAmount;
+        if (taxWithdrawToken == address(this)) {
+            transfer(msg.sender, amountToSwap);
 
-        uint256 taxTokenAmount = _swap(msg.sender, amountToSwap);
+            taxTokenAmount = amountToSwap;
+        } else {
+            _approve(address(this), dexRouter, amountToSwap);
+
+            taxTokenAmount = _swap(msg.sender, amountToSwap);
+        }
 
         emit FeeWithdrawed(amountToSwap, taxTokenAmount);
     }
