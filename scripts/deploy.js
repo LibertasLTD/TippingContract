@@ -4,6 +4,7 @@ const path = require("path");
 const delay = require("delay");
 require("dotenv").config();
 
+const OWNER_WALLET_ADDRESS = process.env.OWNER_WALLET_ADDRESS;
 const TEAM_WALLET_ADDRESS = process.env.TEAM_WALLET_ADDRESS;
 const POOL_WALLET_ADDRESS = process.env.POOL_WALLET_ADDRESS;
 
@@ -38,7 +39,7 @@ async function main() {
     console.log(`[${contractName}]: Start of Deployment...`);
     _contractProto = await ethers.getContractFactory(contractName);
     odeum = await upgrades.deployProxy(_contractProto, [
-        TEAM_WALLET_ADDRESS,
+        OWNER_WALLET_ADDRESS,
         POOL_WALLET_ADDRESS,
         INPUT[network.name]["Uniswap"].routerAddress
     ], {
