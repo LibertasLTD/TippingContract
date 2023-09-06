@@ -50,7 +50,7 @@ abstract contract OdeumCore is
 
 
     function configure(
-        address teamWallet,
+        address ownerWallet,
         address poolWallet,
         address dexRouter_
     ) external initializer {
@@ -58,8 +58,9 @@ abstract contract OdeumCore is
         __ERC20_init("ODEUM", "ODEUM");
         __Ownable_init();
         __UUPSUpgradeable_init();
+        transferOwnership(ownerWallet);
         uint256 poolWalletAmount = INITIAL_CAP * 500 / MAX_BP;
-        _mint(teamWallet, (INITIAL_CAP - poolWalletAmount) * (10 ** decimals()));
+        _mint(ownerWallet, (INITIAL_CAP - poolWalletAmount) * (10 ** decimals()));
         _mint(poolWallet, poolWalletAmount * (10 ** decimals()));
 
         taxFee = 500;
