@@ -36,12 +36,12 @@ abstract contract OdeumCore is
     /// @notice The amount of burnt tokens
     uint256 public totalBurnt;
 
-    event FeeWithdrawed(uint256 odeumAmount, uint256 taxTokenAmount);
+    event FeeWithdrawn(uint256 odeumAmount, uint256 taxTokenAmount);
     event PairIncludedInFee(address pair);
     event PairExcludedfromFee(address pair);
     event AccountIncludedInFee(address account);
     event AccountExcludedFromFee(address account);
-    event TaxWithdrawTokenSetted(address token);
+    event TaxWithdrawTokenSet(address token);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -74,7 +74,7 @@ abstract contract OdeumCore is
     }
 
     function withdrawFee() public virtual onlyOwner {
-        require(taxWithdrawToken != address(0), "Odeum: taxWithdrawToken not setted");
+        require(taxWithdrawToken != address(0), "Odeum: taxWithdrawToken not set");
         require(collectedFee > 0, "Odeum: no tokens to withdraw");
         uint256 amountToSwap = collectedFee;
         collectedFee = 0;
@@ -90,14 +90,14 @@ abstract contract OdeumCore is
             taxTokenAmount = _swap(msg.sender, amountToSwap);
         }
 
-        emit FeeWithdrawed(amountToSwap, taxTokenAmount);
+        emit FeeWithdrawn(amountToSwap, taxTokenAmount);
     }
 
-    function getIsPairIncludedInFee(address pair) external view returns(bool) {
+    function isPairIncludedInFee(address pair) external view returns(bool) {
         return _isPairIncludedInFee[pair];
     }
 
-    function getIsAccountExcludedFromFee(address account) external view returns(bool) {
+    function isAccountExcludedFromFee(address account) external view returns(bool) {
         return _isAccountExcludedFromFee[account];
     }
 
@@ -137,7 +137,7 @@ abstract contract OdeumCore is
         require(taxWithdrawToken_ != address(0), "Odeum: the address must not be null");
         taxWithdrawToken = taxWithdrawToken_;
 
-        emit TaxWithdrawTokenSetted(taxWithdrawToken_);
+        emit TaxWithdrawTokenSet(taxWithdrawToken_);
     }
 
     function _swap(address receiver, uint256 amountIn) internal virtual returns(uint256 amountOut);

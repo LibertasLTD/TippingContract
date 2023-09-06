@@ -184,7 +184,7 @@ describe("Odeum token", () => {
 
         it("Should be excluded from fee", async () => {
             let { odeumV2 } = await loadFixture(deploys);
-            expect(await odeumV2.getIsAccountExcludedFromFee(odeumV2.address)).to.be.true;
+            expect(await odeumV2.isAccountExcludedFromFee(odeumV2.address)).to.be.true;
         });
 
         it("Should revert reinitialization", async () => {
@@ -230,12 +230,12 @@ describe("Odeum token", () => {
                 let { odeumV2 } = await loadFixture(deploys);
                 let pair = clientAcc1;
     
-                expect(await odeumV2.getIsPairIncludedInFee(pair.address)).to.be.false;
+                expect(await odeumV2.isPairIncludedInFee(pair.address)).to.be.false;
     
                 await expect(odeumV2.includePairInFee(pair.address))
                     .to.be.emit(odeumV2, "PairIncludedInFee").withArgs(pair.address);
                 
-                expect(await odeumV2.getIsPairIncludedInFee(pair.address)).to.be.true;
+                expect(await odeumV2.isPairIncludedInFee(pair.address)).to.be.true;
             });
     
             it("Should exclude pair from fee", async () => {
@@ -244,12 +244,12 @@ describe("Odeum token", () => {
     
                 await odeumV2.includePairInFee(pair.address);
                 
-                expect(await odeumV2.getIsPairIncludedInFee(pair.address)).to.be.true;
+                expect(await odeumV2.isPairIncludedInFee(pair.address)).to.be.true;
     
                 await expect(odeumV2.excludePairFromFee(pair.address))
                     .to.be.emit(odeumV2, "PairExcludedfromFee").withArgs(pair.address);
     
-                expect(await odeumV2.getIsPairIncludedInFee(pair.address)).to.be.false;
+                expect(await odeumV2.isPairIncludedInFee(pair.address)).to.be.false;
             });
 
             it("Should revert include zero address in fee", async () => {
@@ -303,23 +303,23 @@ describe("Odeum token", () => {
                 let { odeumV2 } = await loadFixture(deploys);
                 await odeumV2.excludeAccountFromFee(clientAcc1.address);
 
-                expect(await odeumV2.getIsAccountExcludedFromFee(clientAcc1.address)).to.be.true;
+                expect(await odeumV2.isAccountExcludedFromFee(clientAcc1.address)).to.be.true;
     
                 await expect(odeumV2.includeAccountInFee(clientAcc1.address))
                     .to.be.emit(odeumV2, "AccountIncludedInFee").withArgs(clientAcc1.address);
                 
-                expect(await odeumV2.getIsAccountExcludedFromFee(clientAcc1.address)).to.be.false;
+                expect(await odeumV2.isAccountExcludedFromFee(clientAcc1.address)).to.be.false;
             });
 
             it("Should exclude account from fee", async () => {
                 let { odeumV2 } = await loadFixture(deploys);
 
-                expect(await odeumV2.getIsAccountExcludedFromFee(clientAcc1.address)).to.be.false;
+                expect(await odeumV2.isAccountExcludedFromFee(clientAcc1.address)).to.be.false;
     
                 await expect(odeumV2.excludeAccountFromFee(clientAcc1.address))
                     .to.be.emit(odeumV2, "AccountExcludedFromFee").withArgs(clientAcc1.address);
                 
-                expect(await odeumV2.getIsAccountExcludedFromFee(clientAcc1.address)).to.be.true;
+                expect(await odeumV2.isAccountExcludedFromFee(clientAcc1.address)).to.be.true;
             });
 
             it("Should revert include account in fee for zero address", async () => {
@@ -373,7 +373,7 @@ describe("Odeum token", () => {
                 expect(await odeumV2.taxWithdrawToken()).to.be.equal(zeroAddress);
 
                 await expect(odeumV2.setTaxWithdrawToken(token.address))
-                    .to.be.emit(odeumV2, "TaxWithdrawTokenSetted").withArgs(token.address);
+                    .to.be.emit(odeumV2, "TaxWithdrawTokenSet").withArgs(token.address);
 
                 expect(await odeumV2.taxWithdrawToken()).to.be.equal(token.address);
             });
@@ -384,7 +384,7 @@ describe("Odeum token", () => {
                 expect(await odeumV3.taxWithdrawPoolFee()).to.be.equal(0);
 
                 await expect(odeumV3.setTaxWithdrawPoolFee(3000))
-                    .to.be.emit(odeumV3, "TaxWithdrawPoolFeeSetted").withArgs(3000);
+                    .to.be.emit(odeumV3, "TaxWithdrawPoolFeeSet").withArgs(3000);
 
                 expect(await odeumV3.taxWithdrawPoolFee()).to.be.equal(3000);
             });
@@ -590,7 +590,7 @@ describe("Odeum token", () => {
                 let ownerTokenBalanceBefore = await token.balanceOf(ownerAcc.address);
 
                 await expect(odeumV2.withdrawFee())
-                    .to.be.emit(odeumV2, "FeeWithdrawed").withArgs(
+                    .to.be.emit(odeumV2, "FeeWithdrawn").withArgs(
                         odeumWithdrawAmount,
                         expectedTokenAmount
                     );
@@ -619,7 +619,7 @@ describe("Odeum token", () => {
                 let ownerTokenBalanceBefore = await token.balanceOf(ownerAcc.address);
 
                 await expect(odeumV3.withdrawFee())
-                    .to.be.emit(odeumV3, "FeeWithdrawed");
+                    .to.be.emit(odeumV3, "FeeWithdrawn");
 
                 expect((await token.balanceOf(ownerAcc.address)).sub(ownerTokenBalanceBefore)).to.be.closeTo(expectedTokenAmount, parseEther("0.000001"));
                 expect(await token.balanceOf(odeumV3.address)).to.be.equal(0);
@@ -640,7 +640,7 @@ describe("Odeum token", () => {
                 let ownerTokenBalanceBefore = await odeumV2.balanceOf(ownerAcc.address);
 
                 await expect(odeumV2.withdrawFee())
-                    .to.be.emit(odeumV2, "FeeWithdrawed").withArgs(
+                    .to.be.emit(odeumV2, "FeeWithdrawn").withArgs(
                         odeumWithdrawAmount,
                         odeumWithdrawAmount
                     );
@@ -663,7 +663,7 @@ describe("Odeum token", () => {
                 let ownerTokenBalanceBefore = await odeumV3.balanceOf(ownerAcc.address);
 
                 await expect(odeumV3.withdrawFee())
-                    .to.be.emit(odeumV3, "FeeWithdrawed").withArgs(
+                    .to.be.emit(odeumV3, "FeeWithdrawn").withArgs(
                         odeumWithdrawAmount,
                         odeumWithdrawAmount
                     );
@@ -692,7 +692,7 @@ describe("Odeum token", () => {
                 let { odeumV2 } = await loadFixture(deploys);
 
                 await expect(odeumV2.withdrawFee())
-                    .to.be.revertedWith("Odeum: taxWithdrawToken not setted");
+                    .to.be.revertedWith("Odeum: taxWithdrawToken not set");
             });
 
             it("Should revert withdraw fee if no collected tokens", async () => {
@@ -708,7 +708,7 @@ describe("Odeum token", () => {
                 await odeumV3.setTaxWithdrawToken(token.address);
 
                 await expect(odeumV3.withdrawFee())
-                    .to.be.revertedWith("Odeum: taxWithdrawPoolFee not setted");
+                    .to.be.revertedWith("Odeum: taxWithdrawPoolFee not set");
             });
         });
     });
