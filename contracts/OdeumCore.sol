@@ -16,9 +16,6 @@ abstract contract OdeumCore is
     UUPSUpgradeable,
     IOdeum
 {
-    /// @dev Padding 43 words of storage for upgradeability. Follows OZ's guidance.
-    uint256[43] private __gap;
-
     /// @notice The maximum possible amount of minted tokens
     uint256 public constant INITIAL_CAP = 100_000_000;
     uint256 public constant MAX_BP = 10000;
@@ -35,6 +32,9 @@ abstract contract OdeumCore is
 
     /// @notice The amount of burnt tokens
     uint256 public totalBurnt;
+
+    /// @dev Padding 43 words of storage for upgradeability. Follows OZ's guidance.
+    uint256[43] private __gap;
 
     event FeeWithdrawn(uint256 odeumAmount, uint256 taxTokenAmount);
     event PairIncludedInFee(address pair);
