@@ -198,14 +198,14 @@ describe("Odeum token", () => {
 
         it("Should revert initialization if dexRouter is zero", async () => {
             let odeumV2Tx = await ethers.getContractFactory("contracts/OdeumV2.sol:Odeum");
-            let odeumV2 = await odeumV2Tx.deploy();
-            await odeumV2.deployed();
-
-            await expect(odeumV2.configure(
+            await expect(upgrades.deployProxy(odeumV2Tx, [
                 ownerAcc.address,
                 poolAcc.address,
                 zeroAddress
-            )).to.be.revertedWith("Odeum: the address must not be null");
+            ], {
+                initializer: "configure",
+                kind: "uups",
+            })).to.be.revertedWith("Odeum: the address must not be null");
         });
     });
 

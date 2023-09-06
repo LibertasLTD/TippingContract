@@ -43,6 +43,12 @@ abstract contract OdeumCore is
     event AccountExcludedFromFee(address account);
     event TaxWithdrawTokenSetted(address token);
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+
     function configure(
         address teamWallet,
         address poolWallet,
