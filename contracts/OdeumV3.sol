@@ -7,20 +7,24 @@ import "./OdeumCore.sol";
 
 /// @title A custom ERC20 token
 contract Odeum is OdeumCore {
+    /// @notice Uniswap V3 pool(Odeum/withdrawTaxToken) fee through
+    /// which the exchange of odeum tokens will be carried out when withdrawing the fee
     uint24 public taxWithdrawPoolFee;
 
-    event TaxWithdrawPoolFeeSetted(uint24 poolFee);
+    event TaxWithdrawPoolFeeSet(uint24 poolFee);
 
+    /// @notice Function to set taxWithdrawPoolFee
+    /// @param poolFee_ The uniswap V3 pool(Odeum/withdrawTaxToken) fee
     function setTaxWithdrawPoolFee(uint24 poolFee_) external onlyOwner {
         require(poolFee_ != 0, "Odeum: poolFee must not be null");
         taxWithdrawPoolFee = poolFee_;
 
-        emit TaxWithdrawPoolFeeSetted(poolFee_);
+        emit TaxWithdrawPoolFeeSet(poolFee_);
     }
 
     function withdrawFee() public override onlyOwner {
         if (taxWithdrawToken != address(this)) {
-            require(taxWithdrawPoolFee != 0, "Odeum: taxWithdrawPoolFee not setted");
+            require(taxWithdrawPoolFee != 0, "Odeum: taxWithdrawPoolFee not set");
         }
         
         super.withdrawFee();

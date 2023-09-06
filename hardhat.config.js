@@ -12,7 +12,7 @@ require("@primitivefi/hardhat-dodoc");
 const { 
     FTMSCAN_API_KEY,
     ACC_PRIVATE_KEY,
-    ALCHEMY_ETHERIUM_API_KEY,
+    ALCHEMY_ETHEREUM_API_KEY,
     ALCHEMY_ARB_GOERLI_API_KEY,
     ALCHEMY_ARBITRUM_API_KEY,
     ARBISCAN_API_KEY
@@ -32,7 +32,7 @@ module.exports = {
         hardhat: {
             allowUnlimitedContractSize: true,
             forking: {
-                url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_ETHERIUM_API_KEY}`,
+                url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_ETHEREUM_API_KEY}`,
                 blockNumber: 18061880
             }
         },
