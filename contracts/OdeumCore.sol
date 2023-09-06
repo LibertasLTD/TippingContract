@@ -63,7 +63,7 @@ abstract contract OdeumCore is
         _mint(ownerWallet, (INITIAL_CAP - poolWalletAmount) * (10 ** decimals()));
         _mint(poolWallet, poolWalletAmount * (10 ** decimals()));
 
-        taxFee = 500;
+        taxFee = 1000;
         dexRouter = dexRouter_;
 
         _isAccountExcludedFromFee[address(this)] = true;
