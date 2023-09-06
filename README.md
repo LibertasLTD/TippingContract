@@ -185,8 +185,6 @@ Even after the upgrade, you should _use only `proxyAddress` or `proxyVerificatio
 Following contracts are upgradeable:
 
 - Odeum.sol
-- StakingPool.sol
-- Tipping.sol
 
 <a name="output"/>
 
