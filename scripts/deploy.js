@@ -32,9 +32,9 @@ async function main() {
 
     // Deploy proxy and implementation
     if (INPUT[network.name]["Uniswap"].isV2) {
-        contractName = "contracts/OdeumV2.sol:Odeum";
+        contractName = "contracts/OdeumFantom.sol:Odeum";
     } else {
-        contractName = "contracts/OdeumV3.sol:Odeum";
+        contractName = "contracts/OdeumArbitrum.sol:Odeum";
     }
     console.log(`[${contractName}]: Start of Deployment...`);
     _contractProto = await ethers.getContractFactory(contractName);

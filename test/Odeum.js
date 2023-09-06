@@ -31,7 +31,7 @@ describe("Odeum token", () => {
     async function deploys() {
         [ownerAcc, poolAcc, clientAcc1, clientAcc2] = await ethers.getSigners();
 
-        let odeumV2Tx = await ethers.getContractFactory("contracts/OdeumV2.sol:Odeum");
+        let odeumV2Tx = await ethers.getContractFactory("contracts/OdeumFantom.sol:Odeum");
         let odeumV2 = await upgrades.deployProxy(odeumV2Tx, [
             ownerAcc.address,
             poolAcc.address,
@@ -42,7 +42,7 @@ describe("Odeum token", () => {
         });
         await odeumV2.deployed();
 
-        let odeumV3Tx = await ethers.getContractFactory("contracts/OdeumV3.sol:Odeum");
+        let odeumV3Tx = await ethers.getContractFactory("contracts/OdeumArbitrum.sol:Odeum");
         let odeumV3 = await upgrades.deployProxy(odeumV3Tx, [
             ownerAcc.address,
             poolAcc.address,
@@ -197,7 +197,7 @@ describe("Odeum token", () => {
         });
 
         it("Should revert initialization if dexRouter is zero", async () => {
-            let odeumV2Tx = await ethers.getContractFactory("contracts/OdeumV2.sol:Odeum");
+            let odeumV2Tx = await ethers.getContractFactory("contracts/OdeumFantom.sol:Odeum");
             await expect(upgrades.deployProxy(odeumV2Tx, [
                 ownerAcc.address,
                 poolAcc.address,
