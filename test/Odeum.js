@@ -86,6 +86,9 @@ describe("Odeum token", () => {
         const dexPairV3 = await ethers.getContractAt(dexPoolV3Artifact.abi, await dexFactoryV3.getPool(odeumV3.address, token.address, 3000));
         await dexPairV3.initialize(sqrtPriceX96);
         console.log("pool initialized");
+        console.log(sqrtPriceX96);
+        if ("0x6453f5cC7D1B03F416a35eEa212344D955d87008" > "0x80c1C65463427Ea785fb7B03bA84B91f49f272EB")
+            console.log("True");
 
         let mintParams = {
             token0: token.address,

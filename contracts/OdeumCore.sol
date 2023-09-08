@@ -59,11 +59,11 @@ abstract contract OdeumCore is
         __Ownable_init();
         __UUPSUpgradeable_init();
         transferOwnership(ownerWallet);
-        uint256 poolWalletAmount = INITIAL_CAP * 500 / MAX_BP;
+        uint256 poolWalletAmount = INITIAL_CAP * 1000 / MAX_BP;
         _mint(ownerWallet, (INITIAL_CAP - poolWalletAmount) * (10 ** decimals()));
         _mint(poolWallet, poolWalletAmount * (10 ** decimals()));
 
-        taxFee = 1000;
+        taxFee = 500;
         dexRouter = dexRouter_;
 
         _isAccountExcludedFromFee[address(this)] = true;
