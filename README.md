@@ -56,7 +56,7 @@ npx hardhat run <script file name here> --network <network name here>
 <a name="deploy"/>
 
 ### Deploy
-
+Before deployment, check the correctness of the contents of the files `scripts/deployInput.json`(see [Structure of Deploy Input File](#input)) and `.env`.
 ```
 npx hardhat run scripts/deploy.js --network <network name here>
 ```
@@ -65,7 +65,7 @@ Deployment script takes about 5 minutes to complete. Please, be patient!
 After the contracts get deployed you can find their _addresses_ and code verification _URLs_ in the `scripts/deployOutput.json` file (see [Structure of Deploy Output File](#output)).  
 Note that this file only refreshes the addresses of contracts that have been successfully deployed (or redeployed). If you deploy only a single contract then its address would get updated and all other addresses would remain untouched and would link to _old_ contracts.
 Please, **do not** write anything to `deployOutput.json` file yourself! It is a read-only file.  
-All deployed contracts _are verified_ on [Ftmscan](https://ftmscan.com/).
+All deployed contracts _are verified_ on [Ftmscan](https://ftmscan.com/) or [Arbiscan](https://arbiscan.io/).
 
 <a name="networks"/>
 
@@ -185,8 +185,6 @@ Even after the upgrade, you should _use only `proxyAddress` or `proxyVerificatio
 Following contracts are upgradeable:
 
 - Odeum.sol
-- StakingPool.sol
-- Tipping.sol
 
 <a name="output"/>
 
@@ -194,7 +192,7 @@ Following contracts are upgradeable:
 
 This file contains the result of contracts deployment.
 
-It is separated in 2 parts. Each of them represents deployment to testnet or mainnet.  
+It is separated in 4 parts. Each of them represents deployment to fantom or arbitrum and his testnet or mainnet.  
 Each part contains information about all deployed contracts:
 
 - The address of the proxy contract (`proxyAddress`) (see [Smart Contracts Upgradeability](#proxy))
@@ -204,13 +202,33 @@ Each part contains information about all deployed contracts:
 
 **Use only `proxyAddress` or `proxyVerification` fields to interact with contracts**.
 
+<a name="input"/>
+
+### Structure of Deploy Input File
+
+This file contains uniswap information for all networks.
+
+It is separated in 4 parts. Each of them represents deployment to fantom or arbitrum and his testnet or mainnet.  
+Each part contains:
+
+- The flag `isV2`. This `true` if used uniswap V2 and `false` if used uniswap V3
+- The address of the `UniswapV2Router02` for uniswap V2 or `SwapRouter` for uniswap V3
+
 <a name="logic"/>
 
 ### Logic
 
 #### Odeum
 
-A simple ERC20 token
+A ERC20 token with the following additions:
+- Commission of 5% for sell/buy through uniswap V2 and uniswap V3
+- The collected commission is accumulated on the token contract
+- commission can be withdrawn in a Odeum token
+- when withdrawing a commission, it can be exchanged through uniswap for the specified token
+
+Implemented two versions of the token:
+- `OdeumV2` - Token contract working with uniswap V2
+- `OdeumV3` - Token contract working with uniswap V3
 
 #### StakingPool
 
