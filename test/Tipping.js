@@ -26,7 +26,7 @@ describe("Tipping contract", () => {
             teamAcc,
         ] = await ethers.getSigners();
 
-        let odeumTx = await ethers.getContractFactory("contracts/OdeumV2.sol:Odeum");
+        let odeumTx = await ethers.getContractFactory("contracts/OdeumArbitrum.sol:Odeum");
         let odeum = await upgrades.deployProxy(odeumTx, [ownerAcc.address, poolAcc.address, dex.address], {
             initializer: "configure",
             kind: "uups",
