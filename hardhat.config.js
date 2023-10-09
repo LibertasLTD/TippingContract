@@ -73,7 +73,9 @@ module.exports = {
     skipFiles: ["node_modules"],
     gasReporter: {
         enabled: true,
-        url: "http://localhost:8545",
+        currency: 'USD',
+        coinmarketcap: "59edb5da-236a-4b3d-84e2-0241fd89b641",
+        url: "https://arb1.arbitrum.io/rpc",
     },
     dodoc: {
         exclude: ["mock", "lin", "errors"],
