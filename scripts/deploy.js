@@ -81,7 +81,7 @@ async function main() {
     let odeumImpl = await ethers.getContractAt(contractName, odeumImplAddress);
     try {
         await odeumImpl.configure(
-            TEAM_WALLET_ADDRESS,
+            OWNER_WALLET_ADDRESS,
             POOL_WALLET_ADDRESS,
             INPUT[network.name]["Uniswap"].routerAddress
         );
