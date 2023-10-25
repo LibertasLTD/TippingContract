@@ -33,18 +33,18 @@
   },
   "arbitrum_mainnet": {
     "contracts/OdeumArbitrum.sol:Odeum": {
-      "proxyAddress": "",
-      "implementationAddress": "",
-      "proxyVerification": "",
-      "implementationVerification": ""
+      "proxyAddress": "0x28F4592591ff44A7825fd42C18648Cd7FB6BC39B",
+      "implementationAddress": "0x652fd46c20c7A9d17dB89069AB5792c2D34eFE7C",
+      "proxyVerification": "https://arbiscan.io/address/0x28F4592591ff44A7825fd42C18648Cd7FB6BC39B#code",
+      "implementationVerification": "https://arbiscan.io/address/0x652fd46c20c7A9d17dB89069AB5792c2D34eFE7C#code"
     },
     "StakingPool": {
-      "address": "",
-      "verification": ""
+      "address": "0xa0948BfF85aDc885fDAbCe938E280981574C4E02",
+      "verification": "https://arbiscan.io/address/0xa0948BfF85aDc885fDAbCe938E280981574C4E02#code"
     },
     "Tipping": {
-      "address": "",
-      "verification": ""
+      "address": "0x4bAD21512d31a62fE4Da7ca787cda0a91379fee0",
+      "verification": "https://arbiscan.io/address/0x4bAD21512d31a62fE4Da7ca787cda0a91379fee0#code"
     }
   },
   "arbitrum_testnet": {
