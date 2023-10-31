@@ -136,6 +136,12 @@ describe("Odeum token", () => {
             );
         });
 
+        it("Should have tax withdraw poolFee", async () => {
+            let { odeum, token } = await loadFixture(deploys);
+
+            expect(await odeum.taxWithdrawPoolFee()).to.be.equal(0);
+        });
+
         it("Should be excluded from fee", async () => {
             let { odeum } = await loadFixture(deploys);
             expect(await odeum.isAccountExcludedFromFee(odeum.address)).to.be.true;
@@ -342,17 +348,6 @@ describe("Odeum token", () => {
                 expect(await odeum.taxWithdrawToken()).to.be.equal(token.address);
             });
 
-            it("Should set tax withdraw poolFee for V3", async () => {
-                let { odeum, token } = await loadFixture(deploys);
-
-                expect(await odeum.taxWithdrawPoolFee()).to.be.equal(0);
-
-                await expect(odeum.setTaxWithdrawPoolFee(3000))
-                    .to.be.emit(odeum, "TaxWithdrawPoolFeeSet").withArgs(3000);
-
-                expect(await odeum.taxWithdrawPoolFee()).to.be.equal(3000);
-            });
-
             it("Should revert set tax withdraw token address zero", async () => {
                 let { odeum, token } = await loadFixture(deploys);
 
@@ -365,13 +360,6 @@ describe("Odeum token", () => {
 
                 await expect(odeum.connect(clientAcc1).setTaxWithdrawToken(token.address))
                     .to.be.revertedWith("Ownable: caller is not the owner");
-            });
-
-            it("Should revert set tax withdraw poolFee zero for V3", async () => {
-                let { odeum, token } = await loadFixture(deploys);
-
-                await expect(odeum.setTaxWithdrawPoolFee(0))
-                    .to.be.revertedWith("Odeum: poolFee must not be null");
             });
         });
 
@@ -545,7 +533,7 @@ describe("Odeum token", () => {
                 expect(await odeum.collectedFee()).to.be.equal(0);
             });
 
-            it("Should revert withdraw fee if called by not owner for V2", async () => {
+            it("Should revert withdraw fee if called by not owner", async () => {
                 let { odeum } = await loadFixture(deploys);
 
                 await expect(odeum.connect(clientAcc1).withdrawFee())
