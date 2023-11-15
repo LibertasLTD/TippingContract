@@ -10,12 +10,12 @@ const OUTPUT_DEPLOY = require(fileName);
 
 // List of contracts that need to be upgraded
 let oldContractNames = [
-    "contracts/OdeumFantom.sol:Odeum",
+    "contracts/OdeumArbitrum.sol:Odeum",
 ];
 
 // List of new versions of upgraded contracts
 let newContractNames = [
-    "contracts/OdeumFantom.sol:OdeumV2",
+    "contracts/OdeumArbitrumV2.sol:Odeum",
 ];
 
 if (oldContractNames.length != newContractNames.length) {
@@ -57,6 +57,7 @@ async function main() {
                     kind: "uups",
                 }
             );
+            console.log(`[${contractName}][Proxy]: Upgrade prepared!`);
             // Actually make an upgrade
             await upgrades.upgradeProxy(proxyAddress, newImpl, {
                 kind: "uups",
