@@ -221,14 +221,15 @@ Each part contains:
 #### Odeum
 
 A ERC20 token with the following additions:
-- Commission of 5% for sell/buy through uniswap V2 and uniswap V3
+- Commission of 5% for sell/buy through uniswap V2 or uniswap V3
 - The collected commission is accumulated on the token contract
 - commission can be withdrawn in a Odeum token
 - when withdrawing a commission, it can be exchanged through uniswap for the specified token
 
-Implemented two versions of the token:
-- `OdeumV2` - Token contract working with uniswap V2
-- `OdeumV3` - Token contract working with uniswap V3
+Implemented next versions of the token:
+- `OdeumFantom` - Token contract working with uniswap V2
+- `OdeumArbitrum` - Token contract working with uniswap V3
+- `OdeumArbitrumV2` - Contract to update OdumArbitrum contract to work with uniswap V2 and changed logic for taking a commission for the sell
 
 #### StakingPool
 
