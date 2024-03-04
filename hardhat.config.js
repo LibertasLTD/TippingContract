@@ -4,17 +4,14 @@ require("@openzeppelin/hardhat-upgrades");
 require("@nomiclabs/hardhat-etherscan");
 require("@nomicfoundation/hardhat-chai-matchers");
 require("hardhat-tracer");
+require("hardhat-deploy");
 require("hardhat-contract-sizer");
 require("solidity-coverage");
 require("hardhat-gas-reporter");
 require("@primitivefi/hardhat-dodoc");
 
 const { 
-    FTMSCAN_API_KEY,
     ACC_PRIVATE_KEY,
-    ALCHEMY_ETHEREUM_API_KEY,
-    ALCHEMY_ARB_GOERLI_API_KEY,
-    ALCHEMY_ARBITRUM_API_KEY,
     ARBISCAN_API_KEY
 } = process.env;
 
@@ -28,6 +25,11 @@ module.exports = {
             },
         },
     },
+    namedAccounts: {
+        deployer: {
+            default: 0,
+        }
+    },
     networks: {
         hardhat: {
             allowUnlimitedContractSize: true,
@@ -38,21 +40,14 @@ module.exports = {
         localhost: {
             url: "http://127.0.0.1:8545",
         },
-        fantom_mainnet: {
-            url: `https://rpc.ankr.com/fantom/`,
-            accounts: [ACC_PRIVATE_KEY],
-        },
-        fantom_testnet: {
-            url: `https://fantom-testnet.public.blastapi.io	`,
-            accounts: [ACC_PRIVATE_KEY],
-        },
         arbitrum_mainnet: {
-            url: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_ARBITRUM_API_KEY}`,
+            url: `https://rpc.ankr.com/arbitrum`,
             accounts: [ACC_PRIVATE_KEY],
-        },
-        arbitrum_testnet: {
-            url: `https://arb-goerli.g.alchemy.com/v2/${ALCHEMY_ARB_GOERLI_API_KEY}`,
-            accounts: [ACC_PRIVATE_KEY],
+            verify: {
+                etherscan: {
+                    apiKey: ARBISCAN_API_KEY
+                }
+            },
         },
     },
     mocha: {
@@ -63,11 +58,6 @@ module.exports = {
         tests: "./test",
         cache: "./cache",
         artifacts: "./artifacts",
-    },
-    etherscan: {
-        apiKey: {
-            polygonMumbai: FTMSCAN_API_KEY,
-        },
     },
     skipFiles: ["node_modules"],
     gasReporter: {
@@ -87,13 +77,5 @@ module.exports = {
         disambiguatePaths: true,
         strict: true,
         runOnCompile: true,
-    },
-    etherscan: {
-        apiKey: {
-            fantom: FTMSCAN_API_KEY,
-            ftmTestnet: FTMSCAN_API_KEY,
-            arbitrumOne: ARBISCAN_API_KEY,
-            arbitrumGoerli: ARBISCAN_API_KEY
-        },
     },
 };
