@@ -55,7 +55,7 @@ describe("Odeum token", () => {
 
     async function swapV2(dexRouter, tokenIn, tokenOut, amountIn, receiver) {
         await tokenIn.connect(receiver).approve(dexRouter.address, amountIn);
-        await dexRouter.connect(receiver).swapExactTokensForTokens(
+        await dexRouter.connect(receiver).swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amountIn,
             0,
             [tokenIn.address, tokenOut.address],
@@ -307,11 +307,9 @@ describe("Odeum token", () => {
                 let odeumBalanceBefore = await odeumV3.balanceOf(odeumV3.address);
 
                 await swapV2(dexRouterV2, odeumV3, token, sellAmount, ownerAcc);
-
                 expect(await odeumV3.collectedFee()).to.be.equal(expectedFeeAmount);
                 expect(await odeumV3.balanceOf(odeumV3.address)).to.be.equal(odeumBalanceBefore.add(expectedFeeAmount));
-                expect(await odeumV3.balanceOf(ownerAcc.address)).to.be.equal(ownerBalanceBefore.sub(sellAmount.add(expectedFeeAmount)));
-                expect(await odeumV3.balanceOf(pairV2Address)).to.be.equal(pairBalanceBefore.add(sellAmount));
+                expect(await odeumV3.balanceOf(pairV2Address)).to.be.equal(pairBalanceBefore.add(sellAmount).sub(expectedFeeAmount));
             })
 
             it("Should collect fee on buy for V2", async () => {

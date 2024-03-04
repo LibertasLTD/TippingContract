@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IOdeumV3.sol";
 
-import "hardhat/console.sol";
 /// @title A custom ERC20 token
 abstract contract OdeumCore is
     ERC20,
@@ -54,7 +53,6 @@ abstract contract OdeumCore is
         collectedFee = 0;
 
         uint256 taxTokenAmount;
-        console.log("TRYWITHDRAW: ", msg.sender);
         if (taxWithdrawToken == address(this)) {
             _transfer(address(this), msg.sender, amountToSwap);
 
@@ -141,14 +139,10 @@ abstract contract OdeumCore is
 
             bool takeFee = true;
 
-            console.log("THIS: ", address(this));
-            console.log("SENDER REC: ", sender, recipient);
-            console.log(_isAccountExcludedFromFee[sender], _isAccountExcludedFromFee[recipient]);
             if (_isAccountExcludedFromFee[sender] || _isAccountExcludedFromFee[recipient]) {
                 takeFee = false;
             }
 
-            console.log("TRYFEE: ", takeFee);
             if (takeFee && (_isPairIncludedInFee[recipient] || _isPairIncludedInFee[sender])) {
                 _transferWithFee(sender, recipient, amount);
             } else {
