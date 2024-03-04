@@ -32,8 +32,7 @@ module.exports = {
         hardhat: {
             allowUnlimitedContractSize: true,
             forking: {
-                url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_ETHEREUM_API_KEY}`,
-                blockNumber: 18061880
+                url: `https://rpc.ankr.com/eth`,
             }
         },
         localhost: {

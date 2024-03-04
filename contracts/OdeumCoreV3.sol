@@ -2,18 +2,15 @@
 
 pragma solidity ^0.8.18;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "./interfaces/IOdeumV2.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/IOdeumV3.sol";
 
+import "hardhat/console.sol";
 /// @title A custom ERC20 token
 abstract contract OdeumCore is
-    Initializable,
-    ERC20Upgradeable,
-    OwnableUpgradeable,
-    UUPSUpgradeable,
+    ERC20,
+    Ownable,
     IOdeum
 {
     /// @notice The maximum possible amount of minted tokens
@@ -33,9 +30,6 @@ abstract contract OdeumCore is
     /// @notice The amount of burnt tokens
     uint256 public totalBurnt;
 
-    /// @dev Padding 43 words of storage for upgradeability. Follows OZ's guidance.
-    uint256[43] private __gap;
-
     event FeeWithdrawn(uint256 odeumAmount, uint256 taxTokenAmount);
     event PairIncludedInFee(address pair);
     event PairExcludedfromFee(address pair);
@@ -44,29 +38,7 @@ abstract contract OdeumCore is
     event TaxWithdrawTokenSet(address token);
     event DexRouterChanged(address newRouter);
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
-        _disableInitializers();
-    }
-
-
-    function configure(
-        address ownerWallet,
-        address poolWallet,
-        address dexRouter_
-    ) external initializer {
-        require(dexRouter_ != address(0), "Odeum: the address must not be null");
-        __ERC20_init("ODEUM", "ODEUM");
-        __Ownable_init();
-        __UUPSUpgradeable_init();
-        transferOwnership(ownerWallet);
-        uint256 poolWalletAmount = INITIAL_CAP * 1000 / MAX_BP;
-        _mint(ownerWallet, (INITIAL_CAP - poolWalletAmount) * (10 ** decimals()));
-        _mint(poolWallet, poolWalletAmount * (10 ** decimals()));
-
-        taxFee = 500;
-        dexRouter = dexRouter_;
-
         _isAccountExcludedFromFee[address(this)] = true;
     }
 
@@ -82,6 +54,7 @@ abstract contract OdeumCore is
         collectedFee = 0;
 
         uint256 taxTokenAmount;
+        console.log("TRYWITHDRAW: ", msg.sender);
         if (taxWithdrawToken == address(this)) {
             _transfer(address(this), msg.sender, amountToSwap);
 
@@ -168,10 +141,14 @@ abstract contract OdeumCore is
 
             bool takeFee = true;
 
+            console.log("THIS: ", address(this));
+            console.log("SENDER REC: ", sender, recipient);
+            console.log(_isAccountExcludedFromFee[sender], _isAccountExcludedFromFee[recipient]);
             if (_isAccountExcludedFromFee[sender] || _isAccountExcludedFromFee[recipient]) {
                 takeFee = false;
             }
 
+            console.log("TRYFEE: ", takeFee);
             if (takeFee && (_isPairIncludedInFee[recipient] || _isPairIncludedInFee[sender])) {
                 _transferWithFee(sender, recipient, amount);
             } else {
@@ -201,8 +178,4 @@ abstract contract OdeumCore is
         totalBurnt += amount;
         super._burn(from, amount);
     }
-
-    function _authorizeUpgrade(
-        address newImplementation
-    ) internal override onlyOwner {}
 }

@@ -6,7 +6,7 @@ import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "./OdeumCoreV2.sol";
 
 /// @title A custom ERC20 token
-contract Odeum is OdeumCore {
+contract OdeumV2 is OdeumCore {
     /// @notice Uniswap V3 pool(Odeum/withdrawTaxToken) fee through
     /// which the exchange of odeum tokens will be carried out when withdrawing the fee
     /// Unused after upgrade
